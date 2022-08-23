@@ -1,0 +1,15 @@
+body { scroll-behavior: smooth; }
+main.page {
+  padding-bottom: 1rem;
+  font-family:  -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+  Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  footer {
+    font-size: 12px;
+    margin-top: 1rem;
+    width: 50%;
+    transform: translateX(50%);
+    border-top: 1px solid #eaecef;
+    padding-top: 1rem;
+    text-align: center;
+  }
+}

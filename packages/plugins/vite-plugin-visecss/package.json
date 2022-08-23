@@ -1,0 +1,35 @@
+{
+  "name": "@vise-ssr/vite-plugin-visecss",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "types"
+  ],
+  "scripts": {
+    "clean": "rimraf ./dist",
+    "build": "npm run clean && rollup -c ./rollup.config.js"
+  },
+  "dependencies": {
+    "postcss": "^8.3.8",
+    "postcss-px-to-viewport": "^1.1.1",
+    "postcss-pxtorem": "^6.0.0"
+  },
+  "devDependencies": {
+    "vite": "^2.9.12",
+    "rimraf": "^3.0.2",
+    "@rollup/plugin-commonjs": "^20.0.0",
+    "@rollup/plugin-node-resolve": "^13.0.6",
+    "@rollup/plugin-typescript": "^8.3.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "description": "",
+  "repository": {},
+  "author": "stauren@qq.com",
+  "license": "MIT"
+}

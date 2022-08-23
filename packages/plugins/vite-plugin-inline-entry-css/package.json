@@ -1,0 +1,33 @@
+{
+  "name": "@vise-ssr/vite-plugin-inline-entry-css",
+  "version": "0.0.1",
+  "description": "",
+  "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "types"
+  ],
+  "scripts": {
+    "clean": "rimraf ./dist",
+    "build": "npm run clean && rollup -c ./rollup.config.js"
+  },
+  "keywords": [],
+  "author": "stauren@qq.com",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.10",
+    "rollup": ">=2.59.0 <2.78.0",
+    "vite": "^2.9.12"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^20.0.0",
+    "@rollup/plugin-node-resolve": "^13.0.6",
+    "@rollup/plugin-typescript": "^8.3.0"
+  }
+}

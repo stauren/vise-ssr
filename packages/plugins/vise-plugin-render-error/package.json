@@ -1,0 +1,32 @@
+{
+  "name": "@vise-ssr/plugin-render-error",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "clean": "rimraf ./dist",
+    "build": "npm run clean && rollup -c ./rollup.config.js"
+  },
+  "peerDependencies": {
+    "vise-ssr": "0.6.0"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^20.0.0",
+    "@rollup/plugin-typescript": "^8.3.0",
+    "rollup": ">=2.59.0 <2.78.0",
+    "rollup-plugin-preserve-shebangs": "^0.2.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "description": "",
+  "repository": {},
+  "author": "stauren@qq.com",
+  "license": "MIT"
+}

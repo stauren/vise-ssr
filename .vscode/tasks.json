@@ -1,0 +1,23 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+    {
+      "type": "npm",
+      "script": "build",
+      "label": "[vise-core]: build",
+      "path": "packages/core/",
+      "group": "build",
+      "problemMatcher": [],
+      "detail": "rollup -c ./rollup.config.js"
+    },
+    {
+      "type": "npm",
+      "label": "[vise-core]: watch",
+      "script": "watch",
+      "path": "packages/core/",
+      "group": "build",
+      "problemMatcher": [],
+      "detail": "npm run clean:all && rollup -w -c ./rollup.config.js"
+    }
+  ]
+}

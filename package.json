@@ -1,0 +1,74 @@
+{
+  "name": "@vise-ssr/monorepo",
+  "private": "true",
+  "version": "0.1.0",
+  "description": "Vue3 SSR framework with vite & typescript",
+  "scripts": {
+    "start": "yarn install",
+    "postinstall": "git update-index --assume-unchanged ./packages/core/bin/vise.js ./packages/express-server/bin/vise-express.js",
+    "clean": "npm-run-all -p 'clean --workspaces'",
+    "build:core": "npm run build -w=packages/core",
+    "eslint": "eslint --ext .ts,.js ./",
+    "eslint:fix": "eslint --fix --ext .ts,.js ./",
+    "syncversion": "./scripts/sync-vise-version.mjs",
+    "test": "jest --json --coverage --outputFile=result.json --forceExit"
+  },
+  "repository": {},
+  "author": "stauren@qq.com",
+  "license": "MIT",
+  "workspaces": [
+    "packages/*",
+    "packages/plugins/*"
+  ],
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "dependencies": {
+    "jest-html-reporters": "^3.0.10"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.18.0",
+    "eslint-config-tencent": "^1.0.4",
+    "@types/jest": "^26.0.14",
+    "@typescript-eslint/eslint-plugin": "^4.31.0",
+    "@typescript-eslint/parser": "^4.31.0",
+    "babel-jest": "^26.6.3",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.0.1",
+    "eslint": "^7.32.0",
+    "eslint-plugin-folders": "^1.0.3",
+    "eslint-plugin-jest": "^24.1.0",
+    "eslint-plugin-unicorn": "^37.0.1",
+    "husky": "^4.3.8",
+    "jest": "^26.6.3",
+    "jest-serializer-vue": "^2.0.2",
+    "jest-transform-stub": "^2.0.0",
+    "lint-staged": "^10.4.0",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^3.0.2",
+    "rollup-plugin-terser": "^7.0.2",
+    "ts-jest": "^26.5.6",
+    "ts-node": "^9.0.0",
+    "tslib": "^2.3.1",
+    "typescript": "~4.6.3"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "jest --bail --findRelatedTests"
+    ],
+    "*.ts": [
+      "eslint --fix",
+      "jest --bail --findRelatedTests"
+    ],
+    "*.vue": [
+      "eslint --fix",
+      "jest --bail --findRelatedTests"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  }
+}

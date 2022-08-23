@@ -1,0 +1,8 @@
+{
+    "recommendations": [
+        "johnsoncodehk.volar",
+        "iceworks-team.iceworks-codemod",
+        "editorconfig.editorconfig",
+        "dbaeumer.vscode-eslint"
+    ]
+}

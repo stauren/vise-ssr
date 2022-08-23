@@ -1,0 +1,10 @@
+.DS_Store
+node_modules
+dist
+coverage
+package-lock.json
+client-stats.html
+server-stats.html
+hooks-stats.html
+jest_html_reporters.html
+result.json

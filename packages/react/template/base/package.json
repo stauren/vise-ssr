@@ -1,0 +1,28 @@
+{
+  "name": "@vise-ssr/app-react-intro",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vise dev",
+    "build": "vise build",
+    "serve": "vise-express start ."
+  },
+  "dependencies": {
+    "vise-ssr": "0.6.0",
+    "@vise-ssr/express-server": "0.6.0",
+    "@vise-ssr/react": "0.6.0",
+    "sass": "^1.50.1"
+  },
+  "devDependencies": {
+    "eslint-config-tencent": "^1.0.4",
+    "@typescript-eslint/eslint-plugin": "^4.31.0",
+    "@typescript-eslint/parser": "^4.31.0",
+    "typescript": "~4.6.3",
+    "eslint": "^7.32.0",
+    "eslint-plugin-folders": "^1.0.3",
+    "eslint-plugin-unicorn": "^37.0.1",
+    "eslint-plugin-react": "^7.30.1",
+    "eslint-plugin-react-hooks": "^4.6.0"
+  }
+}

@@ -1,0 +1,10 @@
+/build/
+/config/
+**/dist
+**/node_modules
+**/bin
+packages/express-server/client
+packages/generated-proto
+packages/react/template
+packages/vue3/template
+stats.html

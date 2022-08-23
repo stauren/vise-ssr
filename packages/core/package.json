@@ -1,0 +1,95 @@
+{
+  "name": "vise-ssr",
+  "version": "0.6.0",
+  "type": "module",
+  "bin": {
+    "vise": "bin/vise.js"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "exports": "./dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "bin",
+    "dist",
+    "types"
+  ],
+  "scripts": {
+    "clean": "rimraf ./dist",
+    "clean:all": "rimraf ./dist ./bin",
+    "build": "npm run clean:all && rollup -c ./rollup.config.js",
+    "watch": "npm run clean:all && rollup -w -c ./rollup.config.js",
+    "lint": "eslint --ext .ts,.js,.vue ./src",
+    "test": "jest --json --coverage --outputFile=result.json --forceExit"
+  },
+  "dependencies": {
+    "@rollup/plugin-node-resolve": "^13.0.6",
+    "@types/html-minifier-terser": "^6.1.0",
+    "@vitejs/plugin-legacy": "^1.6.1",
+    "@vise-ssr/shared": "0.6.0",
+    "axios": "^0.21.4",
+    "chalk": "^5.0.0",
+    "commander": "^8.1.0",
+    "cookie": "^0.4.1",
+    "copyfiles": "^2.4.1",
+    "enquirer": "^2.3.6",
+    "esbuild": "^0.14.2",
+    "esbuild-plugin-alias": "^0.2.0",
+    "express": "^4.17.1",
+    "glob": "^7.2.0",
+    "html-minifier-terser": "^6.1.0",
+    "minimist": "^1.2.5",
+    "postcss": "^8.3.8",
+    "rimraf": "^3.0.2",
+    "rollup-plugin-visualizer": "^5.5.2",
+    "serialize-javascript": "^6.0.0",
+    "tapable": "^2.2.1",
+    "vite": "^2.9.12",
+    "zx": "^6.0.7"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^20.0.0",
+    "@rollup/plugin-typescript": "^8.3.0",
+    "@types/chalk": "^2.2.0",
+    "@types/cookie": "^0.4.1",
+    "@types/copyfiles": "^2.4.1",
+    "@types/express": "^4.17.13",
+    "@types/ora": "^3.2.0",
+    "@types/rimraf": "^3.0.2",
+    "@types/serialize-javascript": "^5.0.2",
+    "rollup-plugin-executable": "^1.6.3",
+    "rollup-plugin-preserve-shebangs": "^0.2.0",
+    "typescript": "~4.6.3",
+    "ts-node": "^9.0.0"
+  },
+  "optionalDependencies": {
+    "@vise-ssr/react": "0.6.0",
+    "@vise-ssr/vue3": "0.6.0"
+  },
+  "peerDependencies": {},
+  "peerDependenciesMeta": {
+    "rollup": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=14.8.0"
+  },
+  "keywords": [
+    "vise",
+    "ssr",
+    "vite",
+    "vue3"
+  ],
+  "description": "Vise 读音[vaɪs]，是一个同构 SSR 开发框架，致力于打造开箱即用的同构 Web 页面开发体验。通过插件化方式，支持任意服务端框架与任意前端框架的组合使用。使用基于 esm、速度更快的 vite 代替常见 Webpack 作为开发构建工具，提供命令行工具支持一站式的开发、构建、发布 Web 应用，让业务项目可以关注在业务功能实现上。项目基于全方位 ESM 及 TypeScript。",
+  "homepage": "",
+  "bugs": {
+    "email": "stauren@qq.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "author": "stauren@qq.com",
+  "license": "MIT"
+}

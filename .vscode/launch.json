@@ -1,0 +1,40 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Start PentaShare Dev",
+        "preLaunchTask": "[vise-core]: build",
+        "request": "launch",
+        "cwd": "${workspaceFolder}/packages/app-penta-share",
+        "command": "npm run dev",
+        "skipFiles": [
+          "<node_internals>/**"
+        ],
+        "type": "node-terminal"
+      },
+      {
+        "name": "Start Vise Intro Dev",
+        "preLaunchTask": "[vise-core]: build",
+        "request": "launch",
+        "cwd": "${workspaceFolder}/packages/app-vue3-intro",
+        "command": "npm run dev",
+        "skipFiles": [
+          "<node_internals>/**"
+        ],
+        "type": "node-terminal"
+      },
+      {
+        "name": "Start Express Serve",
+        "request": "launch",
+        "cwd": "${workspaceFolder}/packages/express-server",
+        "command": "npm run serve",
+        "skipFiles": [
+          "<node_internals>/**"
+        ],
+        "type": "node-terminal"
+      },
+    ]
+}

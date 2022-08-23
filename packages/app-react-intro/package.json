@@ -1,0 +1,17 @@
+{
+  "name": "@vise-ssr/app-react-intro",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vise dev",
+    "build": "vise build",
+    "serve": "vise-express start ."
+  },
+  "dependencies": {
+    "vise-ssr": "0.6.0",
+    "@vise-ssr/react": "0.6.0"
+  },
+  "devDependencies": {
+  }
+}

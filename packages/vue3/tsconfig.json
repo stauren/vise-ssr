@@ -1,0 +1,25 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "target": "ESNEXT",
+    "baseUrl": "./",
+    "sourceMap": true,
+    "declaration": true,
+    "paths": {
+      "enquirer": ["./types/enquirer.d.ts"]
+    }
+  },
+  "include": [
+    "src",
+    "types",
+    "rollup.config.js"
+  ],
+  "exclude": [
+    "**/__test__",
+    "node_modules",
+    "bin",
+    "build",
+    "dist"
+  ]
+}
+

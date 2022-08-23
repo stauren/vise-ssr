@@ -1,0 +1,48 @@
+{
+  "name": "@vise-ssr/app-vue3-intro",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Introduction to vise as a vise app.",
+  "dependencies": {
+    "vise-ssr": "0.6.0",
+    "@vise-ssr/vue3": "0.6.0",
+    "axios": "^0.21.4",
+    "highlight.js": "^11.2.0",
+    "markdown-it": "^12.2.3",
+    "markdown-it-anchor": "^8.3.1",
+    "markdown-it-toc-done-right": "^4.2.0",
+    "postcss-px-to-viewport": "^1.1.1",
+    "postcss-pxtorem": "^6.0.0",
+    "sass": "^1.42.0"
+  },
+  "devDependencies": {
+    "@types/markdown-it": "^12.2.3",
+    "@rollup/plugin-node-resolve": "^13.0.4",
+    "@vue/test-utils": "^2.0.0",
+    "vue-jest": "^5.0.0-alpha.10"
+  },
+  "peerDependenciesMeta": {
+    "vue": {
+      "optional": true
+    },
+    "rollup": {
+      "optional": true
+    }
+  },
+  "scripts": {
+    "md:generate": "./scripts/generate-markdown-pages.js",
+    "md:clean": "./scripts/clean-markdown-pages.js",
+    "dev": "npm run md:generate && vise dev",
+    "build": "npm run md:generate && vise build",
+    "serve": "vise-express start .",
+    "clean": "rimraf ./dist && npm run md:clean",
+    "lint": "eslint --ext .ts,.js,.vue ./src",
+    "test": "jest --json --coverage --outputFile=result.json --forceExit",
+    "benchmark-serve": "vise serve -r 100 ."
+  },
+  "repository": {},
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "author": "stauren@qq.com"
+}

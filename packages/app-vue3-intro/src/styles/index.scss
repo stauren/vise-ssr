@@ -1,0 +1,47 @@
+// 样式用了 vuepress 的
+@use 'vars';
+@use 'vars-dark';
+@use 'normalize';
+
+@use 'arrow';
+@use 'badge';
+@use 'code';
+@use 'code-group';
+@use 'custom-container';
+@use 'dropdown';
+@use 'home';
+@use 'layout';
+@use 'navbar';
+@use 'page';
+@use 'sidebar';
+@use 'sr-only';
+@use 'toc';
+@use 'transitions';
+
+body { scroll-behavior: smooth; }
+.markdown-content {
+  h1, h2, h3, h4, h5, h6 {
+    padding-top: 3.6rem;
+    margin-top: -3.6rem;
+  }
+}
+main.page {
+  padding-bottom: 1rem;
+  footer {
+    font-size: 12px;
+    margin-top: 1rem;
+    border-top: 1px solid var(--c-border);
+    padding-top: 1rem;
+    text-align: center;
+  }
+}
+
+.benchmark-page {
+  padding-left: 1rem;
+}
+
+.benchmark-container div {
+  padding: 1px;
+  display: inline-block;
+  border: 1px solid #ccc;
+}
