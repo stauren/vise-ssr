@@ -1,6 +1,6 @@
 {
   "name": "vise-ssr",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "type": "module",
   "bin": {
     "vise": "bin/vise.js"
@@ -26,7 +26,7 @@
     "@rollup/plugin-node-resolve": "^13.0.6",
     "@types/html-minifier-terser": "^6.1.0",
     "@vitejs/plugin-legacy": "^1.6.1",
-    "@vise-ssr/shared": "0.6.2",
+    "@vise-ssr/shared": "0.6.3",
     "axios": "^0.21.4",
     "chalk": "^5.0.0",
     "commander": "^8.1.0",
@@ -63,8 +63,8 @@
     "ts-node": "^9.0.0"
   },
   "optionalDependencies": {
-    "@vise-ssr/react": "0.6.2",
-    "@vise-ssr/vue3": "0.6.2"
+    "@vise-ssr/react": "0.6.3",
+    "@vise-ssr/vue3": "0.6.3"
   },
   "peerDependencies": {},
   "peerDependenciesMeta": {

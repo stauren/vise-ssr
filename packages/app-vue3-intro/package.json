@@ -4,8 +4,8 @@
   "type": "module",
   "description": "Introduction to vise as a vise app.",
   "dependencies": {
-    "vise-ssr": "0.6.2",
-    "@vise-ssr/vue3": "0.6.2",
+    "vise-ssr": "0.6.3",
+    "@vise-ssr/vue3": "0.6.3",
     "axios": "^0.21.4",
     "highlight.js": "^11.2.0",
     "markdown-it": "^12.2.3",

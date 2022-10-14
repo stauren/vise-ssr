@@ -1,3 +1,6 @@
+# [0.6.3](https://github.com/stauren/vise-ssr/tree/v0.6.4) (2022-09-23)
+### Bug Fixes
+  - fix wrong parameter in server-hooks.ts of react template.
 # [0.6.2](https://github.com/stauren/vise-ssr/tree/v0.6.2) (2022-08-30)
 ### Bug Fixes
   - fix wrong dependencies config of @vise-ssr/vue3

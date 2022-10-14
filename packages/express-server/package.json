@@ -1,6 +1,6 @@
 {
   "name": "@vise-ssr/express-server",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "HTTP server based on express for vise-ssr",
   "type": "module",
   "bin": {
@@ -27,7 +27,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "pm2": "^5.2.0",
-    "vise-ssr": "0.6.2",
+    "vise-ssr": "0.6.3",
     "zx": "^6.0.7"
   },
   "devDependencies": {
