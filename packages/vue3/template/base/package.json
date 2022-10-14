@@ -10,8 +10,8 @@
     "sass": "^1.50.1"
   },
   "devDependencies": {
-    "vise-ssr": "0.7.0",
-    "@vise-ssr/express-server": "0.7.0",
+    "vise-ssr": "0.7.1",
+    "@vise-ssr/express-server": "0.7.1",
     "eslint-config-tencent": "^1.0.4",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
     "@typescript-eslint/parser": "^4.31.0",

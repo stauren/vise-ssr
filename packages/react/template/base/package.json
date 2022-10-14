@@ -9,9 +9,9 @@
     "serve": "vise serve"
   },
   "dependencies": {
-    "vise-ssr": "0.7.0",
-    "@vise-ssr/express-server": "0.7.0",
-    "@vise-ssr/react": "0.7.0",
+    "vise-ssr": "0.7.1",
+    "@vise-ssr/express-server": "0.7.1",
+    "@vise-ssr/react": "0.7.1",
     "sass": "^1.50.1"
   },
   "devDependencies": {
