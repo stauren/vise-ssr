@@ -1,3 +1,9 @@
+# [0.7.2](https://github.com/stauren/vise-ssr/tree/v0.7.2) (2022-10-13)
+### Features
+- using vitest to replace jest
+- add unit test to vise created temlate projects
+### Bug Fixes
+- fix a bug in vise create caused by random execute order of copy
 # [0.7.0](https://github.com/stauren/vise-ssr/tree/v0.7.0) (2022-10-09)
 ### Features
 - upgrade vite 2.0 to vite 3.0

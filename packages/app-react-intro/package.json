@@ -22,8 +22,8 @@
   "devDependencies": {
     "@types/react": "^18.0.0",
     "@types/react-router-dom": "^5.3.3",
-    "@vise-ssr/react": "0.7.1",
+    "@vise-ssr/react": "0.7.2",
     "rollup": "~2.78.0",
-    "vise-ssr": "0.7.1"
+    "vise-ssr": "0.7.2"
   }
 }

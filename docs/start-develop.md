@@ -44,7 +44,7 @@ permalink: /start-develop.html
   ✔ 📄  Created public
   ✔ 📄  Created vise.config.ts
   ✔ 📄  Created tsconfig.json  
-  ✔ 📄  Created jest.config.ts
+  ✔ 📄  Created vitest.config.ts
   ✔ 📄  Created .eslintrc.cjs
   ✔ 📄  Created package.json
   ✔ 📄  Created src  

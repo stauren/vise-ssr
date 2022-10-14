@@ -1,5 +1,6 @@
 import { promises as fs } from 'fs';
 import logger from './logger';
+import { replacePlaceholderWithValue } from './strings';
 
 /**
  * 判断文件是否存在
@@ -34,6 +35,25 @@ export async function copyJsonWithChange(src: string, target: string, changes: C
     logger.error(`读取 ${src} 失败`);
     throw e;
   }
-  const newData = { ...data, ...changes, dependencies: { ...data.dependencies, ...changes.dependencies } };
-  await fs.writeFile(target, JSON.stringify(newData, null, 2));
+  const newData = {
+    ...data,
+    ...changes,
+    dependencies: { ...data.dependencies, ...changes.dependencies },
+  };
+  return fs.writeFile(target, JSON.stringify(newData, null, 2));
+}
+
+export async function copyFileWithChange(src: string, destination: string, changed: Record<string, string>) {
+  let source: string;
+  try {
+    source = await fs.readFile(src, 'utf-8');
+  } catch (e) {
+    logger.error(`读取 ${src} 失败`);
+    throw e;
+  }
+  const result = Object.keys(changed).reduce(
+    (content: string, replaceKey) => replacePlaceholderWithValue(content, replaceKey, changed[replaceKey]),
+    source,
+  );
+  return fs.writeFile(destination, result, 'utf-8');
 }

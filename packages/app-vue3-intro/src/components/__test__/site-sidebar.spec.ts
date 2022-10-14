@@ -1,7 +1,7 @@
+import { describe, it, expect, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
 import SiteSidebar from '../site-sidebar.vue';
 import SIDEBAR_ITEMS from '@/data/sidebar-items.json';
-// import { JSDOM } from 'jsdom';
 
 const sidebarToc: Record<string, string> = {
   introduction: '<p>intro content</p>',
@@ -18,7 +18,7 @@ const sidebarToc: Record<string, string> = {
   viseReact: '<p>vise react</p>',
 };
 
-jest.mock('@/store/', () => ({
+vi.mock('@/store/index', () => ({
   useStore: () => ({
     state: {
       sidebarToc,

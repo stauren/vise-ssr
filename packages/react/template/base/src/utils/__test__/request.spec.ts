@@ -21,3 +21,4 @@ describe('getRandom 功能测试', () => {
     expect(value).toBeLessThanOrEqual(10000);
   });
 });
+

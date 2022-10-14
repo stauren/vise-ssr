@@ -17,11 +17,10 @@
     "sass": "^1.50.1"
   },
   "devDependencies": {
-    "vise-ssr": "0.7.1",
+    "vise-ssr": "0.7.2",
     "rollup": "~2.78.0",
     "@types/markdown-it": "^12.2.3",
     "@vue/test-utils": "^2.0.0",
-    "vue-jest": "^5.0.0-alpha.10",
     "zx": "^6.0.7"
   },
   "peerDependenciesMeta": {
@@ -37,7 +36,6 @@
     "serve": "vise-express start .",
     "clean": "rimraf ./dist && npm run md:clean",
     "lint": "eslint --ext .ts,.js,.vue ./src",
-    "test": "jest --json --coverage --outputFile=result.json --forceExit",
     "benchmark-serve": "vise serve -r 100 ."
   },
   "repository": {},

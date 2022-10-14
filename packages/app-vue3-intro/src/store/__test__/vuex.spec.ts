@@ -1,6 +1,7 @@
+import { describe, it, expect, vi } from 'vitest';
 import { createStore, MutationTypes } from '../';
 
-jest.mock('@/data/env', () => ({
+vi.mock('@/data/env', () => ({
   IS_SSR: false,
 }));
 

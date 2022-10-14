@@ -6,8 +6,8 @@ import chalk from 'chalk';
 import {
   fileExist,
   logger,
-  replacePlaceholderWithValue,
   copyJsonWithChange,
+  copyFileWithChange,
 } from '@vise-ssr/shared';
 import { DIR_NAME } from './dirname';
 
@@ -31,7 +31,7 @@ type UserDefinedViseConfig = {
 const TEMPLATE_FILE_NAMES = [
   '_gitignore',
   '.eslintrc.cjs',
-  // 'jest.config.ts',
+  'vitest.config.ts',
   'tsconfig.json',
   'vise.config.ts',
   'package.json',
@@ -40,7 +40,7 @@ const TEMPLATE_FILE_NAMES = [
   'src/server-hooks.ts',
 ] as const;
 
-// 获取当前运行的 npm 包中模板 runtime 目录 node_modules/@vise-ssr/vue3/template/base
+// 获取当前运行的 npm 包中模板 runtime 目录 node_modules/@vise-ssr/react/template/base
 function getTemplateBasePath() {
   return path.resolve(DIR_NAME, '../template/base');
 }
@@ -50,7 +50,7 @@ async function getViseVersion() {
   return JSON.parse(PKG).version;
 }
 
-export default async function newVue3App() {
+export default async function newReactApp() {
   const confirmCreation: IConfirm = await enquirer.prompt([
     {
       type: 'confirm',
@@ -136,28 +136,34 @@ const createTemplateFiles = (
   mySpinner.color = 'green';
   // 这里并不关心最后这个数组的值，所以用 any 直接概括了
   return Promise.all<Promise<any>>(TEMPLATE_FILE_NAMES.map((item) => {
-    let mainJobDone;
+    let mainJobDone: Promise<any>;
     switch (item) {
       case 'package.json':
         mainJobDone = copyJsonWithChange(
           path.join(appTemplatePath, item),
           path.join(newAppPath, item),
-          { author, description: desc, name: `@vise-ssr/app-${appName}`, dependencies: {
-            'vise-ssr': viseVersion,
-          } },
+          {
+            author,
+            description: desc,
+            name: `@vise-ssr/app-${appName}`,
+            dependencies: {
+              'vise-ssr': viseVersion,
+            },
+          },
         );
         break;
-      case 'vise.config.ts': {
-        const viseConfigTemplate = setViseConfigTemplate(devPort, defaultTitle);
-        mainJobDone = $`echo ${viseConfigTemplate} > ${path.join(newAppPath, item)}`;
-        break;
-      }
-      case 'src/server-hooks.ts':
-        mainJobDone = createServerHooksTemplate(
+      case 'vise.config.ts':
+        mainJobDone = copyFileWithChange(
           path.join(appTemplatePath, item),
           path.join(newAppPath, item),
-          appName,
+          {
+            devPort: JSON.stringify(parseInt(devPort, 10)),
+            defaultTitle: defaultTitle.replace(/'/g, '\\\''),
+          },
         );
+        break;
+      case 'src/server-hooks.ts':
+        mainJobDone = Promise.resolve();
         break;
       case '_gitignore':
         mainJobDone = $`cp -r ${path.join(appTemplatePath, item)} ${path.join(newAppPath, '.gitignore')}`;
@@ -167,39 +173,23 @@ const createTemplateFiles = (
         break;
     }
     mainJobDone.then(() => {
-      mySpinner.succeed(`📄  Created ${item === '_gitignore' ? '.gitignore' : item}`);
+      if (item !== 'src/server-hooks.ts') {
+        mySpinner.succeed(`📄  Created ${item === '_gitignore'
+          ? '.gitignore'
+          : item}`);
+      }
     });
     return mainJobDone;
-  }));
-};
-
-const setViseConfigTemplate = (devPort: string, defaultTitle: string) => {
-  const configTemplate = `import type { ViseConfig } from 'vise-ssr';
-
-const config: ViseConfig = {
-  devPort: ${parseInt(devPort, 10)},
-  hmrPort: 3008,
-  scaffold: 'react-app',
-  htmlClass: '',
-  defaultTitle: '${defaultTitle}',
-  faviconLink: '',
-  useFlexible: false,
-  base: '/',
-  routerBase: '/',
-  strictInitState: false,
-};
-
-export default config;`;
-
-  return configTemplate;
-};
-
-const createServerHooksTemplate = async (srcFile: string, targetFile: string, appName: string) => {
-  const oldServerHooks = (await $`cat ${srcFile}`).stdout;
-  const newServerHooks = replacePlaceholderWithValue(
-    oldServerHooks,
-    'serverHooksAppName',
-    appName,
-  );
-  return $`echo ${newServerHooks} > ${targetFile}`;
+  })).then(() => {
+    const filePath = path.join(newAppPath, 'src/server-hooks.ts');
+    return copyFileWithChange(
+      filePath,
+      filePath,
+      {
+        serverHooksAppName: appName,
+      },
+    ).then(() => {
+      mySpinner.succeed('📄  Created src/server-hooks.ts');
+    });
+  });
 };

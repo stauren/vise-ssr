@@ -1,6 +1,6 @@
 {
   "name": "@vise-ssr/react",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -14,11 +14,11 @@
     "build": "npm run clean && rollup -c ./rollup.config.js"
   },
   "peerDependencies": {
-    "vise-ssr": "0.7.1"
+    "vise-ssr": "0.7.2"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.8.2",
-    "@vise-ssr/shared": "0.7.1",
+    "@vise-ssr/shared": "0.7.2",
     "chalk": "^5.0.0",
     "enquirer": "^2.3.6",
     "jsdom": "^18.1.0",

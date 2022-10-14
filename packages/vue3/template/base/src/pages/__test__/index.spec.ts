@@ -1,12 +1,13 @@
+import { describe, it, expect, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
 import IndexPage from '../index.vue';
 
-jest.mock('@/data/env', () => ({
+vi.mock('@/data/env', () => ({
   IS_SSR: false,
 }));
 
-jest.mock('@/store/', () => {
-  const originModule = jest.requireActual('@/store/');
+vi.mock('@/store/index', async () => {
+  const originModule = await vi.importActual<typeof import('@/store/')>('@/store/');
 
   return {
     ...originModule,
@@ -14,7 +15,7 @@ jest.mock('@/store/', () => {
   };
 });
 
-jest.mock('@/services', () => ({
+vi.mock('@/services', () => ({
   fetchLuckyNumber: () => 100,
 }));
 

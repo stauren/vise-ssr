@@ -6,15 +6,9 @@ permalink: /unit-test.html
 Vise app 目前使用全套 typescript + esm 配置进行单元测试。使用的工具如下：
 ```JSON
   "@vue/test-utils": "^2.0.0",
-  "babel-jest": "^26.6.3",
-  "jest": "^26.6.3",
-  "jest-serializer-vue": "^2.0.2",
-  "jest-transform-stub": "^2.0.0",
-  "ts-jest": "^26.5.6",
-  "typescript": "~4.6.3",
-  "vue-jest": "^5.0.0-alpha.10" 
+  "vitest": "^0.24.1"
 ```
-在 workspaces 根目录已经配置好 `jest.base.ts`，单个项目从此配置继承创建 `packages/app-myproject/jest.config.ts` 即可，配置内容可以参考 [jest.config.ts](https://github.com/stauren/vise-ssr/blob/main/packages/app-vue3-intro/jest.config.ts)，新建项目后，不要忘记在根目录 `jest.config.ts` 的 projects 配置中添加项目 jest 配置文件。
+测试配置文件请参考 [vitest 文档](https://vitest.dev/).
 
 ## 单元测试规范
 ### 全面 typescript 及 esm

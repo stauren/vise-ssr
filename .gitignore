@@ -16,7 +16,6 @@ packages/**/client-stats.html
 packages/**/server-stats.html
 packages/**/hooks-stats.html
 /coverage/
-jest_html_reporters.html
 /result.json
 packages/**/coverage
 packages/**/result.json

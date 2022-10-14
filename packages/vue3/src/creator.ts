@@ -6,8 +6,8 @@ import chalk from 'chalk';
 import {
   fileExist,
   logger,
-  replacePlaceholderWithValue,
   copyJsonWithChange,
+  copyFileWithChange,
 } from '@vise-ssr/shared';
 import { DIR_NAME } from './dirname';
 
@@ -31,7 +31,7 @@ type UserDefinedViseConfig = {
 const TEMPLATE_FILE_NAMES = [
   '_gitignore',
   '.eslintrc.cjs',
-  'jest.config.ts',
+  'vitest.config.ts',
   'tsconfig.json',
   'vise.config.ts',
   'package.json',
@@ -142,22 +142,29 @@ const createTemplateFiles = (
         mainJobDone = copyJsonWithChange(
           path.join(appTemplatePath, item),
           path.join(newAppPath, item),
-          { author, description: desc, name: `@vise-ssr/app-${appName}`, dependencies: {
-            'vise-ssr': viseVersion,
-          } },
+          {
+            author,
+            description: desc,
+            name: `@vise-ssr/app-${appName}`,
+            dependencies: {
+              'vise-ssr': viseVersion,
+            },
+          },
         );
         break;
       case 'vise.config.ts': {
-        const viseConfigTemplate = setViseConfigTemplate(devPort, defaultTitle);
-        mainJobDone = $`echo ${viseConfigTemplate} > ${path.join(newAppPath, item)}`;
+        mainJobDone = copyFileWithChange(
+          path.join(appTemplatePath, item),
+          path.join(newAppPath, item),
+          {
+            devPort: JSON.stringify(parseInt(devPort, 10)),
+            defaultTitle: defaultTitle.replace(/'/g, '\\\''),
+          },
+        );
         break;
       }
       case 'src/server-hooks.ts':
-        mainJobDone = createServerHooksTemplate(
-          path.join(appTemplatePath, item),
-          path.join(newAppPath, item),
-          appName,
-        );
+        mainJobDone = Promise.resolve();
         break;
       case '_gitignore':
         mainJobDone = $`cp -r ${path.join(appTemplatePath, item)} ${path.join(newAppPath, '.gitignore')}`;
@@ -167,38 +174,23 @@ const createTemplateFiles = (
         break;
     }
     mainJobDone.then(() => {
-      mySpinner.succeed(`📄  Created ${item === '_gitignore' ? '.gitignore' : item}`);
+      if (item !== 'src/server-hooks.ts') {
+        mySpinner.succeed(`📄  Created ${item === '_gitignore'
+          ? '.gitignore'
+          : item}`);
+      }
     });
     return mainJobDone;
-  }));
-};
-
-const setViseConfigTemplate = (devPort: string, defaultTitle: string) => {
-  const configTemplate = `import type { ViseConfig } from 'vise-ssr';
-
-const config: ViseConfig = {
-  devPort: ${parseInt(devPort, 10)},
-  hmrPort: 3008,
-  htmlClass: '',
-  defaultTitle: '${defaultTitle}',
-  faviconLink: '',
-  useFlexible: false,
-  base: '/',
-  routerBase: '/',
-  strictInitState: false,
-};
-
-export default config;`;
-
-  return configTemplate;
-};
-
-const createServerHooksTemplate = async (srcFile: string, targetFile: string, appName: string) => {
-  const oldServerHooks = (await $`cat ${srcFile}`).stdout;
-  const newServerHooks = replacePlaceholderWithValue(
-    oldServerHooks,
-    'serverHooksAppName',
-    appName,
-  );
-  return $`echo ${newServerHooks} > ${targetFile}`;
+  })).then(() => {
+    const filePath = path.join(newAppPath, 'src/server-hooks.ts');
+    return copyFileWithChange(
+      filePath,
+      filePath,
+      {
+        serverHooksAppName: appName,
+      },
+    ).then(() => {
+      mySpinner.succeed('📄  Created src/server-hooks.ts');
+    });
+  });
 };

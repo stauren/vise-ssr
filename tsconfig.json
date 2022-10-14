@@ -34,12 +34,11 @@
     "packages/**/vise.config.ts",
     "packages/**/generate-cache-key.ts",
     "packages/**/rollup.config.js",
-    "packages/**/jest.config.ts",
     "packages/**/.eslintrc.cjs",
     "packages/**/scripts/*.js",
     "packages/**/src/**/*.tsx",
     "scripts/*.mjs",
-    "jest.config.ts",
+    "vitest.config.ts",
     ".eslintrc.js"
   ],
   "exclude": [

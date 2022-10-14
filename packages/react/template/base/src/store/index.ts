@@ -5,13 +5,10 @@ import viseIntroSlice, { getInitState as getViseIntroInitState } from './slices/
 type MyState = {
   viseIntro: ViseIntroState,
 };
-export function createStore(preloadedState: MyState) {
-  const defaultState = {
-    viseIntro: getViseIntroInitState(),
-  };
+export function createStore(preloadedState?: MyState) {
   return configureStore({
     preloadedState: {
-      viseIntro: Object.assign(getViseIntroInitState(), preloadedState.viseIntro),
+      viseIntro: Object.assign(getViseIntroInitState(), preloadedState?.viseIntro ?? {}),
     },
     reducer: {
       viseIntro: viseIntroSlice,
@@ -19,6 +16,6 @@ export function createStore(preloadedState: MyState) {
   });
 }
 
-type AppStore = ReturnType<typeof createStore>;
+export type AppStore = ReturnType<typeof createStore>;
 export type RootState = ReturnType<AppStore['getState']>;
 export type AppDispatch = AppStore['dispatch'];

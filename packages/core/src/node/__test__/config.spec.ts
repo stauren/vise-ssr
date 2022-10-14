@@ -1,19 +1,22 @@
+import { describe, it, expect, vi } from 'vitest';
 import path from 'path';
 import {
   getViteDevConfig,
 } from '../config';
 
-jest.mock('../app-config', () => async () => ({
-  htmlClass: 'dark',
-  devPort: 3000,
-  scaffold: 'react-app',
+vi.mock('../app-config', () => ({
+  default: async () => ({
+    htmlClass: 'dark',
+    devPort: 3000,
+    scaffold: 'react-app',
+  }),
 }));
 
-jest.mock('../dirname', () => ({
+vi.mock('../dirname', () => ({
   DIR_NAME: path.resolve(__dirname, '../../../bin'),
 }));
 
-jest.mock('zx', () => ({
+vi.mock('zx', () => ({
   $: async () => {},
 }));
 
@@ -31,7 +34,7 @@ function getAppVisePath({
     : path.join(root, 'node_modules', rootDirName);
 }
 
-jest.mock('@vise-ssr/shared', () => ({
+vi.mock('@vise-ssr/shared', () => ({
   getAppRoot,
   getAppVisePath,
   ScaffoldToPackage: {
@@ -40,32 +43,15 @@ jest.mock('@vise-ssr/shared', () => ({
   },
 }));
 
-jest.mock('@vise-ssr/vue3', () => ({
+vi.mock('@vise-ssr/vue3', () => ({
   getScaffoldPlugins: () => [],
 }));
 
-jest.mock('@vise-ssr/react', () => ({
+vi.mock('@vise-ssr/react', () => ({
   getScaffoldPlugins: () => [],
 }));
 
 describe('getConfigs', () => {
-  /*
-    @start_h5_test
-    {
-      "FT": "Vise Core",
-      "模块": "vise/packages/core/src/node/config.ts",
-      "功能": "网络请求",
-      "管理者": "staurenliu",
-      "测试分类": "功能",
-      "测试阶段": "全用例",
-      "用例等级": "P0",
-      "用例类型": 5,
-      "被测函数": "getViteDevConfig",
-      "用例描述": "能否正确获取测试配置",
-      "上线": true
-    }
-    @end_h5_test
-  */
   it('getDevConfig', async () => {
     const rootDir = '.';
     const config = await getViteDevConfig(rootDir);

@@ -1,10 +1,12 @@
+import { describe, it, expect, vi } from 'vitest';
 import useCount from '../use-count';
 
-jest.mock('@/data/env', () => ({
+vi.mock('@/data/env', () => ({
   IS_SSR: false,
 }));
-jest.mock('@/store/', () => {
-  const originModule = jest.requireActual('@/store/');
+
+vi.mock('@/store/index', async () => {
+  const originModule = await vi.importActual<typeof import('@/store/')>('@/store/');
 
   return {
     ...originModule,
