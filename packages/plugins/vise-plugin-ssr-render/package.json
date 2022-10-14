@@ -14,7 +14,7 @@
     "build": "npm run clean && rollup -c ./rollup.config.js"
   },
   "peerDependencies": {
-    "vise-ssr": "0.6.0"
+    "vise-ssr": "0.6.2"
   },
   "dependencies": {},
   "devDependencies": {

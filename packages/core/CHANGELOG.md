@@ -1,3 +1,9 @@
+# [0.6.2](https://github.com/stauren/vise-ssr/tree/v0.6.2) (2022-08-30)
+### Bug Fixes
+  - fix wrong dependencies config of @vise-ssr/vue3
+# 0.6.1 (2022-08-25)
+### Bug Fixes
+- update for documents on npm and github
 # [0.6.0](https://github.com/stauren/vise-ssr/tree/v0.6.0) (2022-08-24)
 ### Features
 - 第一个公开发布到 npm 的 [vise-ssr](https://www.npmjs.com/package/vise-ssr)

@@ -13,6 +13,9 @@
     "allowSyntheticDefaultImports": true,
     "allowJs": false,
     "lib": ["esnext", "dom"],
+    "types": [
+      "vite/client", // if using vite
+    ],
     "paths": {
       "@/*": ["./src/*"]
     },

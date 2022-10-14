@@ -4,9 +4,9 @@
   "type": "module",
   "description": "",
   "dependencies": {
-    "vise-ssr": "0.6.0",
-    "@vise-ssr/vue3": "0.6.0",
-    "@vise-ssr/express-server": "0.6.0",
+    "vise-ssr": "0.6.2",
+    "@vise-ssr/vue3": "0.6.2",
+    "@vise-ssr/express-server": "0.6.2",
     "sass": "^1.50.1"
   },
   "devDependencies": {

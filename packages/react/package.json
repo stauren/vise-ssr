@@ -1,6 +1,6 @@
 {
   "name": "@vise-ssr/react",
-  "version": "0.6.0",
+  "version": "0.6.2",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -14,7 +14,7 @@
     "build": "npm run clean && rollup -c ./rollup.config.js"
   },
   "peerDependencies": {
-    "vise-ssr": "0.6.0"
+    "vise-ssr": "0.6.2"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.8.2",
@@ -42,8 +42,12 @@
   "engines": {
     "node": ">=16.0.0"
   },
-  "description": "",
-  "repository": {},
+  "description": "React template & scaffold for React app used in vise-ssr",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stauren/vise-ssr.git",
+    "directory": "packages/react"
+  },
   "author": "stauren@qq.com",
   "license": "MIT"
 }

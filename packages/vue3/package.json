@@ -1,6 +1,6 @@
 {
   "name": "@vise-ssr/vue3",
-  "version": "0.6.0",
+  "version": "0.6.2",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -14,9 +14,10 @@
     "build": "npm run clean && rollup -c ./rollup.config.js"
   },
   "peerDependencies": {
-    "vise-ssr": "0.6.0"
+    "vise-ssr": "0.6.2"
   },
   "dependencies": {
+    "@vitejs/plugin-vue": "^2.2.4",
     "chalk": "^5.0.0",
     "enquirer": "^2.3.6",
     "jsdom": "^18.1.0",
@@ -30,7 +31,6 @@
     "@types/jsdom": "^16.2.13",
     "@rollup/plugin-commonjs": "^20.0.0",
     "@rollup/plugin-typescript": "^8.3.0",
-    "@vitejs/plugin-vue": "^2.2.4",
     "eslint-plugin-vue": "^7.17.0",
     "rollup": ">=2.59.0 <2.78.0",
     "rollup-plugin-preserve-shebangs": "^0.2.0",
@@ -42,8 +42,12 @@
   "engines": {
     "node": ">=16.0.0"
   },
-  "description": "",
-  "repository": {},
+  "description": "Vue3 template & scaffold for Vue3 app used in vise-ssr",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stauren/vise-ssr.git",
+    "directory": "packages/vue3"
+  },
   "author": "stauren@qq.com",
   "license": "MIT"
 }

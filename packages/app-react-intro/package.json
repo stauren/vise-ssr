@@ -9,8 +9,8 @@
     "serve": "vise-express start ."
   },
   "dependencies": {
-    "vise-ssr": "0.6.0",
-    "@vise-ssr/react": "0.6.0"
+    "vise-ssr": "0.6.2",
+    "@vise-ssr/react": "0.6.2"
   },
   "devDependencies": {
   }

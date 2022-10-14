@@ -6382,9 +6382,9 @@ pm2-sysmonit@^1.2.8:
     systeminformation "^5.7"
     tx2 "~1.0.4"
 
-pm2@^5.1.1:
+pm2@^5.2.0:
   version "5.2.0"
-  resolved "https://registry.yarnpkg.com/pm2/-/pm2-5.2.0.tgz#fda71fab4b8fcfa5b7f546ca55a6e59e9ec5a68d"
+  resolved "http://bnpm.byted.org/pm2/-/pm2-5.2.0.tgz#fda71fab4b8fcfa5b7f546ca55a6e59e9ec5a68d"
   integrity sha512-PO5hMVhQ85cTszFM++6v07Me9hPJMkFbHjkFigtMMk+La8ty2wCi2dlBTeZYJDhPUSjK8Ccltpq2buNRcyMOTw==
   dependencies:
     "@pm2/agent" "~2.0.0"

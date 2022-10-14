@@ -1,7 +1,7 @@
 {
   "name": "@vise-ssr/express-server",
-  "version": "0.7.0",
-  "description": "express server for vise SSR",
+  "version": "0.6.2",
+  "description": "HTTP server based on express for vise-ssr",
   "type": "module",
   "bin": {
     "vise-express": "bin/vise-express.js"
@@ -26,8 +26,8 @@
     "cookie": "^0.4.1",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "pm2": "^5.1.1",
-    "vise-ssr": "0.6.0",
+    "pm2": "^5.2.0",
+    "vise-ssr": "0.6.2",
     "zx": "^6.0.7"
   },
   "devDependencies": {
@@ -45,5 +45,10 @@
     "node": ">=16.0.0"
   },
   "author": "stauren@qq.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stauren/vise-ssr.git",
+    "directory": "packages/express-server"
+  },
   "license": "MIT"
 }

@@ -4,6 +4,12 @@ import { $ } from 'zx';
 import 'zx/globals';
 
 const mainPackageJson = './packages/core/package.json';
+const majorPackageJsons = [
+  './packages/vue3/package.json',
+  './packages/react/package.json',
+  './packages/shared/package.json',
+  './packages/express-server/package.json',
+];
 const packagesDependCore = [
   './packages/core/package.json',
   './packages/vue3/package.json',
@@ -25,13 +31,23 @@ async function getCoreVersion() {
   return JSON.parse(json).version;
 }
 
-async function main() {
-  $.verbose = false;
-  const version = await getCoreVersion();
+async function replaceDepsVersion(version) {
   await $`sed -i '' -E 's/("vise-ssr": ")[0-9^.]+"/\\1${version}"/' ${packagesDependCore}`;
   await $`sed -i '' -E 's/("@vise-ssr\\/shared": ")[0-9^.]+"/\\1${version}"/' ${packagesDependCore}`;
   await $`sed -i '' -E 's/("@vise-ssr\\/vue3": ")[0-9^.]+"/\\1${version}"/' ${packagesDependCore}`;
   await $`sed -i '' -E 's/("@vise-ssr\\/react": ")[0-9^.]+"/\\1${version}"/' ${packagesDependCore}`;
+  await $`sed -i '' -E 's/("@vise-ssr\\/express-server": ")[0-9^.]+"/\\1${version}"/' ${packagesDependCore}`;
+}
+
+async function replaceMajorPackageVersion(version) {
+  await $`sed -i '' -E 's/("version": ")[0-9^.]+"/\\1${version}"/' ${majorPackageJsons}`;
+}
+
+async function main() {
+  $.verbose = false;
+  const version = await getCoreVersion();
+  await replaceDepsVersion(version);
+  await replaceMajorPackageVersion(version);
   console.log('version synced.');
 }
 
