@@ -31,7 +31,7 @@ import { reactive, computed, defineComponent, onMounted, ref } from 'vue';
 import useMarkdown from '@/composable/use-markdown';
 import useCount from '@/composable/use-count';
 import useTitle from '@/composable/use-title';
-import mdContent from '@/data/markdown/home.md?raw';
+import mdContent from '@/data/markdown/index.md?raw';
 import { useStore, MutationTypes } from '@/store/';
 import { fetchLuckyNumber } from '@/services';
 import BenchmarkNav from '@/components/benchmark-nav.vue';
@@ -55,11 +55,11 @@ export default defineComponent({
     const loadingLuckyNumber = ref(false);
     const fetchLuckyNum = () => {
       loadingLuckyNumber.value = true;
-      setTimeout(async () => {
+      setTimeout((() => async () => {
         const newLuckyNumber = await fetchLuckyNumber();
         store.commit(MutationTypes.UPDATE_LUCKY_NUM, { newLuckyNumber });
         loadingLuckyNumber.value = false;
-      }, 100);
+      })(), 100);
     };
     onMounted(() => {
       if (luckyNumber.value === -1) {

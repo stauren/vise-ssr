@@ -8,3 +8,4 @@ src/pages/start-develop.vue
 src/pages/tapable-hooks.vue
 src/pages/unit-test.vue
 src/pages/vise-config.vue
+src/data/markdown/*.md
