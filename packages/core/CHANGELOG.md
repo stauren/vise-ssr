@@ -1,4 +1,11 @@
-# [0.6.3](https://github.com/stauren/vise-ssr/tree/v0.6.4) (2022-09-23)
+# [0.7.0](https://github.com/stauren/vise-ssr/tree/v0.7.0) (2022-10-09)
+### Features
+- upgrade vite 2.0 to vite 3.0
+- using pnpm to replace yarn
+### Bug Fixes
+- phantom dependencies;
+- prebundle dependencies missing issue;
+# [0.6.3](https://github.com/stauren/vise-ssr/tree/v0.6.3) (2022-09-23)
 ### Bug Fixes
   - fix wrong parameter in server-hooks.ts of react template.
 # [0.6.2](https://github.com/stauren/vise-ssr/tree/v0.6.2) (2022-08-30)

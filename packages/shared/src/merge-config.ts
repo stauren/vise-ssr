@@ -23,44 +23,41 @@ export default function mergeConfig<T>(
   const merged = { ...defaults };
 
   overrides.forEach((override) => {
-    (Object.keys(override) as Array<keyof T>).forEach((key) => {
-      const value = override[key];
+    (Object.keys(override as {}) as Array<keyof DeepPartial<T>>).forEach((key) => {
+      const value = override[key] as unknown as T[keyof T];
 
       if (value === undefined) {
         return;
       }
 
-      const existing = merged[key];
+      const existing = merged[key as keyof T];
 
       if (existing === null || existing === undefined) {
-        merged[key] = value as T[keyof T];
+        merged[key as keyof T] = value;
         return;
       }
 
       if (Array.isArray(value)) {
         if (Array.isArray(existing)) {
-          // ts 识别不出来这个转换，是因为 Array.isArray 的 type guard
-          // 给 value 增添了新的类型：arg is any[]，使用 unknown 转换
-          merged[key] = [...existing, ...value] as unknown as T[keyof T];
+          // isArray 添加了 any 属性导致类型转换需要先转 unknown
+          const mergedArray = [...existing, ...value] as unknown as T[keyof T];
+          merged[key as keyof T] = mergedArray;
         }
         return;
       }
 
       if (isObject(existing)) {
-        if (isObject(value)) {
-          merged[key] = mergeConfig(
+        if (isObject(value) && value !== null) {
+          merged[key as keyof T] = mergeConfig(
             existing,
-            // 此处有个看起来比较愚蠢的不能识别的 Partial 类型匹配…
-            // Argument of type 'DeepPartial<T>[keyof T]' is not
-            // assignable to parameter of type 'DeepPartial<T[keyof T]>'
-            value as unknown as DeepPartial<T[keyof T]>,
+            value as DeepPartial<T[keyof T]>,
           );
         }
         return;
       }
 
       if (typeof value === typeof existing) {
-        merged[key] = value as T[keyof T];
+        merged[key as keyof T] = value;
       }
     });
   });

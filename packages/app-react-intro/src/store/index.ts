@@ -1,13 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { mergeConfig } from '@vise-ssr/shared/client';
+import type { ViseIntroState } from './slices/vise-intro';
 import viseIntroSlice, { getInitState as getViseIntroInitState } from './slices/vise-intro';
 
-export function createStore(preloadedState: any) {
-  const defaultState = {
-    viseIntro: getViseIntroInitState(),
-  };
+type MyState = {
+  viseIntro: ViseIntroState,
+};
+export function createStore(preloadedState: MyState) {
   return configureStore({
-    preloadedState: mergeConfig(defaultState, preloadedState),
+    preloadedState: {
+      viseIntro: Object.assign(getViseIntroInitState(), preloadedState.viseIntro),
+    },
     reducer: {
       viseIntro: viseIntroSlice,
     },

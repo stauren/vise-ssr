@@ -48,7 +48,9 @@ async function mergeWithBaseAndCustomConfig(appRoot: string, modeConfig: UserCon
       emptyOutDir: true,
     },
     optimizeDeps: {
-      include: userConfig.scaffold === 'react-app' ? ['react-dom/client'] : [],
+      include: userConfig.scaffold === 'react-app'
+        ? ['react-dom/client', 'react-redux']
+        : ['vue'],
     },
     resolve: {
       extensions: ['.ts', '.js', '.tsx', '.jsx'],
@@ -101,8 +103,9 @@ async function mergeWithBaseAndCustomConfig(appRoot: string, modeConfig: UserCon
 export async function getViteDevConfig(appRoot: string): Promise<UserConfigVite> {
   return mergeWithBaseAndCustomConfig(appRoot, {
     mode: 'development',
+    appType: 'custom',
     server: {
-      middlewareMode: 'ssr',
+      middlewareMode: true,
       watch: {
         // During tests we edit the files too fast and sometimes chokidar
         // misses change events, so enforce polling for consistency
@@ -113,14 +116,9 @@ export async function getViteDevConfig(appRoot: string): Promise<UserConfigVite>
     ssr: {
       external: [
         'vise-ssr',
-        'cookie',
-        'redux',
-        'react-redux',
-        'react-router-dom/*',
-        'url',
         ...(await getDepsOfCore()),
       ],
-      noExternal: ['@reduxjs/toolkit'],
+      noExternal: [],
     },
     build: {
       rollupOptions: {
@@ -140,6 +138,9 @@ export async function getViteDevConfig(appRoot: string): Promise<UserConfigVite>
 export async function getViteClientConfig(appRoot: string): Promise<UserConfigVite> {
   return mergeWithBaseAndCustomConfig(appRoot, {
     mode: 'production',
+    define: {
+      'process.env.NODE_ENV': JSON.stringify('production'),
+    },
     build: {
       sourcemap: true,
       manifest: true,
@@ -169,6 +170,9 @@ export async function getViteClientConfig(appRoot: string): Promise<UserConfigVi
 export async function getViteServerConfig(appRoot: string): Promise<UserConfigVite> {
   const config = await mergeWithBaseAndCustomConfig(appRoot, {
     mode: 'production',
+    define: {
+      'process.env.NODE_ENV': JSON.stringify('production'),
+    },
     build: {
       rollupOptions: {
         input: [
@@ -190,13 +194,9 @@ export async function getViteServerConfig(appRoot: string): Promise<UserConfigVi
     ssr: {
       external: [
         'vise-ssr',
-        'cookie',
-        'redux',
-        'react-redux',
-        'react-router-dom/*',
-        'url',
+        ...(await getDepsOfCore()),
       ],
-      noExternal: ['@reduxjs/toolkit'],
+      noExternal: ['@reduxjs/toolkit', 'redux-thunk'],
     },
     plugins: [
       visualizer({

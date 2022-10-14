@@ -8,7 +8,10 @@ export default async function request(config: SsrFetchConfig): Promise<SsrFetchR
     data: '',
   };
   try {
-    const num: number[] = (await axios(config)).data;
+    const num: number[] = (await axios({
+      ...config,
+      timeout: 1000,
+    })).data;
     if (typeof num[0] === 'number') {
       result = {
         code: 0,

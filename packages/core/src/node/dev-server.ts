@@ -1,6 +1,6 @@
 import path from 'path';
 import express, { Express, Response } from 'express';
-import vite from 'vite';
+import { createServer as viteCreateServer } from 'vite';
 import type { ViteDevServer } from 'vite';
 import type { SupportedScaffold } from '@vise-ssr/shared';
 import { mergeConfig, ScaffoldToPackage } from '@vise-ssr/shared';
@@ -88,10 +88,8 @@ class ViseDevServer {
     this.appRoot = appRoot;
     this.appVisePath = getAppVisePath({ root: appRoot });
     this.scaffold = scaffold;
-    this.initScaffoldFiles();
     this.port = port;
     this.express = express();
-    this.initHooks();
   }
 
   public start() {
@@ -100,17 +98,14 @@ class ViseDevServer {
     });
   }
 
-  public async createServer() {
+  public async init() {
     await prepareViseDir(this.appVisePath);
-    this.setupExpress();
-
-    return {
-      app: this.express,
-      vite: this.viteServer,
-    };
+    await this.importScaffoldFiles();
+    await this.initHooks();
+    await this.setupExpress();
   }
 
-  private async initScaffoldFiles() {
+  private async importScaffoldFiles() {
     this.mapScaffoldFiles = (await import(ScaffoldToPackage[this.scaffold])).SCAFFOLD_FILES;
   }
 
@@ -154,7 +149,6 @@ class ViseDevServer {
       console.error('[Vise] loadServerHooks fail', e);
       throw e;
     }
-    this.createServer();
   }
 
   private addServerPlugin(appHookConfig: ViseHooks): ViseHooks {
@@ -232,7 +226,7 @@ class ViseDevServer {
       logLevel: isTest ? 'error' : 'info',
     });
 
-    const viteServer = await vite.createServer(config);
+    const viteServer = await viteCreateServer(config);
     this.viteServer = viteServer;
 
     return viteServer;
@@ -254,6 +248,7 @@ class ViseDevServer {
 }
 
 export default function createServer(projectScaffold: SupportedScaffold, port: number) {
-  const root = getAppRoot();
-  return new ViseDevServer(root, projectScaffold, port);
+  const server = new ViseDevServer(getAppRoot(), projectScaffold, port);
+  server.init();
+  return server;
 }

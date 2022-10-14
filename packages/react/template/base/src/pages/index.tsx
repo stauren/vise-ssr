@@ -64,7 +64,7 @@ function PageIndex() {
           <a
             target="_blank"
             className="link-item doc"
-            href=""
+            href="https://stauren.github.io/vise-ssr/"
           >项目文档</a>
         </div>&nbsp;&nbsp;&nbsp;
         <div className="link-btn">
@@ -106,13 +106,6 @@ function PageIndex() {
             📃 &nbsp; 已发布 vise-ssr 到 npm
           </section>
         </div>
-        <h1>整体设计</h1>
-        <p>
-          <img
-            src="https://cdn.rawgit.com/stauren/vise-ssr/main/packages/app-vue3-intro/public/ssr.drawio.png"
-            alt="Vise SSR framework 整体设计"
-          />
-        </p>
       </div>
     </div>
   );

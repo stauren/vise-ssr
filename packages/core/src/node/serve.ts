@@ -70,5 +70,6 @@ const callViseExpress = async (
     typeCommand = '-b';
   }
   const optionsCommand = `-p ${options.port} -c ${options.enableCache} -r ${options.repeatRender}`;
-  return await $`vise-express start ${typeCommand} ${optionsCommand} ${targetAppDir}`;
+  $.verbose = false;
+  return await $`vise-express start ${typeCommand} ${optionsCommand} ${targetAppDir}`.pipe(process.stdout);;
 };

@@ -25,6 +25,10 @@ export function replaceContentBetweenMarks({
   const startPosition = source.indexOf(startMark);
   const endPosition = source.indexOf(endMark);
 
+  if (startPosition === -1 || endPosition === -1) {
+    return source;
+  }
+
   // 如果 replacement 参数为 true，则使用当前 Marks 之间的内容替换(去除对外输出中的 marks)
   const realReplacement = replacement === true
     ? source.substring(startPosition + startMark.length, endPosition)

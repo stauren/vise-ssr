@@ -9,9 +9,21 @@
     "serve": "vise-express start ."
   },
   "dependencies": {
-    "vise-ssr": "0.6.3",
-    "@vise-ssr/react": "0.6.3"
+    "@reduxjs/toolkit": "^1.8.2",
+    "axios": "^0.21.4",
+    "cookie": "^0.4.1",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-redux": "^8.0.2",
+    "react-router-dom": "^6.3.0",
+    "redux": "^4.1.2",
+    "sass": "^1.50.1"
   },
   "devDependencies": {
+    "@types/react": "^18.0.0",
+    "@types/react-router-dom": "^5.3.3",
+    "@vise-ssr/react": "0.7.0",
+    "rollup": "~2.78.0",
+    "vise-ssr": "0.7.0"
   }
 }

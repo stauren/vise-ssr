@@ -75,10 +75,13 @@ export function viseScaffold({ modules }: ScaffoldConfig) {
       }
     },
 
-    async transformIndexHtml(html: string) {
-      if (html !== '') return html;
-      const content = typeof indexModule === 'string' ? indexModule : indexModule!.content;
-      return typeof content === 'string' ? content : await content();
+    transformIndexHtml: {
+      enforce: 'pre',
+      transform: async function transformIndexHtml(html: string) {
+        if (html !== '') return html;
+        const content = typeof indexModule === 'string' ? indexModule : indexModule!.content;
+        return typeof content === 'string' ? content : await content();
+      },
     },
   };
 }

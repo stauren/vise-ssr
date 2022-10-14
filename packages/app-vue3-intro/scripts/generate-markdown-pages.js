@@ -80,9 +80,12 @@ async function generateMarkdown() {
         const content = await fsPromise.readFile(filePath, 'utf8');
         const contentInfo = parseFrontMatter(content);
         const destPath = `${destDir}${filePath.substring(filePath.lastIndexOf('/'))}`;
-        const result = `[[toc]]
+        const header = `[[toc]]
 # ${contentInfo.title}
-${contentInfo.body}`;
+`;
+        const result = filePath.endsWith('index.md')
+          ? contentInfo.body
+          : `${header}${contentInfo.body}`;
         return fsPromise.writeFile(destPath, result, 'utf8');
       });
     await Promise.all(writeJobs);

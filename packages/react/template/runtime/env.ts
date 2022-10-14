@@ -9,5 +9,5 @@ export const ENV = import.meta.env;
 export const appPages =
   // <!--START_APP_PAGES
   // 内容会被替换，url 只为示意
-  import.meta.globEager('../src/pages/*.tsx');
+  import.meta.glob('../src/pages/*.tsx', { eager: true });
   // END_APP_PAGES-->

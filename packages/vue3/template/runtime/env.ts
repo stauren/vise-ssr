@@ -17,5 +17,5 @@ export const appPages =
 export const syncAppPages =
   // <!--START_SYNC_APP_PAGES
   // 内容会被替换，url 只为示意
-  import.meta.globEager('src/pages/*.vue');
+  import.meta.glob('src/pages/*.vue', { eager: true });
   // END_SYNC_APP_PAGES-->

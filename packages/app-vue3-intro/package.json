@@ -4,27 +4,27 @@
   "type": "module",
   "description": "Introduction to vise as a vise app.",
   "dependencies": {
-    "vise-ssr": "0.6.3",
-    "@vise-ssr/vue3": "0.6.3",
+    "cookie": "^0.4.1",
+    "vue": "^3.2.25",
+    "vue-router": "^4.0.14",
+    "vuex": "^4.0.2",
     "axios": "^0.21.4",
     "highlight.js": "^11.2.0",
     "markdown-it": "^12.2.3",
     "markdown-it-anchor": "^8.3.1",
     "markdown-it-toc-done-right": "^4.2.0",
     "postcss-px-to-viewport": "^1.1.1",
-    "postcss-pxtorem": "^6.0.0",
-    "sass": "^1.42.0"
+    "sass": "^1.50.1"
   },
   "devDependencies": {
+    "vise-ssr": "0.7.0",
+    "rollup": "~2.78.0",
     "@types/markdown-it": "^12.2.3",
-    "@rollup/plugin-node-resolve": "^13.0.4",
     "@vue/test-utils": "^2.0.0",
-    "vue-jest": "^5.0.0-alpha.10"
+    "vue-jest": "^5.0.0-alpha.10",
+    "zx": "^6.0.7"
   },
   "peerDependenciesMeta": {
-    "vue": {
-      "optional": true
-    },
     "rollup": {
       "optional": true
     }

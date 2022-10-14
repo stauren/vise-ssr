@@ -68,13 +68,6 @@
         📃 &nbsp; 已发布 vise-ssr 到 npm
       </section>
     </div>
-    <h1>整体设计</h1>
-    <p>
-      <img
-        src="https://cdn.rawgit.com/stauren/vise-ssr/main/packages/app-vue3-intro/public/ssr.drawio.png"
-        alt="Vise SSR framework 整体设计"
-      >
-    </p>
   </div>
 </template>
 <script lang="ts" setup>

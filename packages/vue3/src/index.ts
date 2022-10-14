@@ -36,8 +36,8 @@ function getScaffoldPlugins(appRoot: string, isProduction: boolean, userConfig: 
       modules: getScaffoldModules(appRoot, isProduction, userConfig),
     }) as PluginOption,
     vuePlugin({
+      // ssr: true,
       template: {
-        ssr: true,
         compilerOptions: {
           directiveTransforms: userConfig.directiveTransforms,
           whitespace: 'condense',

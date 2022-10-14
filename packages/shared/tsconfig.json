@@ -4,6 +4,7 @@
     "target": "ESNEXT",
     "baseUrl": "./",
     "sourceMap": true,
+    "types": ["node"],
     "declaration": true
   },
   "include": [

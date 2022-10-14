@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 type BenchmarkNavProps = {
   active?: string,
@@ -16,7 +17,29 @@ const list = [{
 }, {
   link: '/react/benchmark',
   name: 'React',
+  // inner: true,
 }];
+
+type MyLinkProps = {
+  to: string,
+  inner: boolean,
+  name: string,
+};
+
+const MyLink = ({ to, inner, name }: MyLinkProps) => (
+  <>
+    { inner
+      ? <Link to={to}>{ name }</Link>
+      : <a
+          href={to}
+          target="_blank"
+          rel="noreferrer"
+        >
+          { name }
+        </a>
+    }
+  </>
+);
 
 export default function BenchmarkNav({ active }: BenchmarkNavProps) {
   return (
@@ -28,15 +51,11 @@ export default function BenchmarkNav({ active }: BenchmarkNavProps) {
             <React.Fragment key={item.name}>
               { item.name === active
                 ? <span>{item.name}</span>
-                : <>
-                    <a
-                      href={item.link}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      { item.name }
-                    </a>
-                  </>
+                : <MyLink
+                    to={item.link}
+                    name={item.name}
+                    inner={!!item.inner}
+                   />
               }
               { idx === list.length - 1 ? undefined : '|'}
             </React.Fragment>

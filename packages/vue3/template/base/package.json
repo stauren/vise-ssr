@@ -4,12 +4,14 @@
   "type": "module",
   "description": "",
   "dependencies": {
-    "vise-ssr": "0.6.3",
-    "@vise-ssr/vue3": "0.6.3",
-    "@vise-ssr/express-server": "0.6.3",
+    "vue": "^3.2.25",
+    "vue-router": "^4.0.14",
+    "vuex": "^4.0.2",
     "sass": "^1.50.1"
   },
   "devDependencies": {
+    "vise-ssr": "0.7.0",
+    "@vise-ssr/express-server": "0.7.0",
     "eslint-config-tencent": "^1.0.4",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
     "@typescript-eslint/parser": "^4.31.0",
@@ -22,9 +24,6 @@
     "eslint-plugin-vue": "^7.17.0"
   },
   "peerDependenciesMeta": {
-    "vue": {
-      "optional": true
-    },
     "rollup": {
       "optional": true
     }

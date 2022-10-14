@@ -30,7 +30,11 @@ export interface HtmlFixedPositionFragment {
   content: string | (() => string);
 }
 
-type ParsedViseConfig = {
+type ViseConfigVue3 = {
+  directiveTransforms: CompilerOptions['directiveTransforms'],
+};
+
+type ParsedViseConfig = ViseConfigVue3 & {
   // 开发时 vite 使用的 http 服务端口
   devPort: number,
   // 构建时生成在 <html> 标签上的 className
@@ -46,8 +50,6 @@ type ParsedViseConfig = {
   hmrPort: number,
   // 是否需要加上 amfe-flexible 脚本
   useFlexible: boolean,
-  // directiveTransforms
-  directiveTransforms: CompilerOptions['directiveTransforms'],
   // ssr 选项
   ssr: SSROptions,
   /**

@@ -6,12 +6,12 @@
   "scripts": {
     "dev": "vise dev",
     "build": "vise build",
-    "serve": "vise-express start ."
+    "serve": "vise serve"
   },
   "dependencies": {
-    "vise-ssr": "0.6.3",
-    "@vise-ssr/express-server": "0.6.3",
-    "@vise-ssr/react": "0.6.3",
+    "vise-ssr": "0.7.0",
+    "@vise-ssr/express-server": "0.7.0",
+    "@vise-ssr/react": "0.7.0",
     "sass": "^1.50.1"
   },
   "devDependencies": {

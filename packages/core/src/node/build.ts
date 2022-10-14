@@ -3,7 +3,7 @@
  * @usage:
  * @FilePath: /vise/packages/core/src/node/build.ts
  */
-import vite from 'vite';
+import { build } from 'vite';
 import path from 'path';
 import glob from 'glob';
 import { rename, copyFile } from 'fs/promises';
@@ -24,8 +24,8 @@ export default async function buildProject() {
   const viteServerConfig = await getViteServerConfig(appRoot);
 
   await prepareViseDir(appVisePath);
-  await vite.build(viteClientConfig);
-  await vite.build(viteServerConfig);
+  await build(viteClientConfig);
+  await build(viteServerConfig);
   await rename(
     `${appRoot}/dist/client/ssr-manifest.json`,
     `${appRoot}/dist/server/ssr-manifest.json`,

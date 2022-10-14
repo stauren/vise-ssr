@@ -5,19 +5,8 @@
     "version": "0.2.0",
     "configurations": [
       {
-        "name": "Start PentaShare Dev",
-        "preLaunchTask": "[vise-core]: build",
-        "request": "launch",
-        "cwd": "${workspaceFolder}/packages/app-penta-share",
-        "command": "npm run dev",
-        "skipFiles": [
-          "<node_internals>/**"
-        ],
-        "type": "node-terminal"
-      },
-      {
         "name": "Start Vise Intro Dev",
-        "preLaunchTask": "[vise-core]: build",
+        "preLaunchTask": "",
         "request": "launch",
         "cwd": "${workspaceFolder}/packages/app-vue3-intro",
         "command": "npm run dev",

@@ -1,6 +1,6 @@
 {
   "name": "@vise-ssr/react",
-  "version": "0.6.3",
+  "version": "0.7.0",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -14,16 +14,22 @@
     "build": "npm run clean && rollup -c ./rollup.config.js"
   },
   "peerDependencies": {
-    "vise-ssr": "0.6.3"
+    "vise-ssr": "0.7.0"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.8.2",
+    "@vise-ssr/shared": "0.7.0",
+    "chalk": "^5.0.0",
+    "enquirer": "^2.3.6",
     "jsdom": "^18.1.0",
+    "ora": "^6.1.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-redux": "^8.0.2",
-    "@vitejs/plugin-react": "^1.3.0",
-    "react-router-dom": "^6.3.0"
+    "@vitejs/plugin-react": "^2.1.0",
+    "vite": "^3.1.4",
+    "react-router-dom": "^6.3.0",
+    "zx": "^6.0.7"
   },
   "devDependencies": {
     "@types/jsdom": "^16.2.13",
@@ -34,9 +40,11 @@
     "@types/react-router-dom": "^5.3.3",
     "rollup-plugin-visualizer": "^5.5.2",
     "eslint-plugin-react": "^7.30.1",
+    "eslint": "^7.32.0",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "rollup": ">=2.59.0 <2.78.0",
+    "rollup": "~2.78.0",
     "rollup-plugin-preserve-shebangs": "^0.2.0",
+    "rollup-plugin-terser": "^7.0.2",
     "typescript": "~4.6.3"
   },
   "engines": {
