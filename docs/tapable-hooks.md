@@ -1,4 +1,9 @@
-## Tapable hooks 概述
+---
+layout: page
+title: "Tapable hooks"
+permalink: /tapable-hooks.html
+---
+## 概述
 在进行 SSR 页面渲染的时候，从服务器收到客户度发来的 HTTP Request 请求，到服务端完成构建并发出 HTTP Response 响应的整个阶段中，调用 Vue 等框架的服务端渲染包如 `vue/server-renderer` 将关键的 Vue app 渲染为 HTML 字符串是关键的一步（Vise 框架不止限于支持 Vue 框架，Vise 是可以跨框架完成 SSR 渲染的，以下举例仍然使用 Vue），Vise 框架也是围绕这个 app 渲染步骤来进行的构建。
 
 同样重要的是，业务在服务端需要除去 Vue 渲染的其它逻辑，如
@@ -226,7 +231,7 @@ const serverHooks: ViseHooks = {
     // 为首页请求额外接口数据
     if (renderContext.request.url === '/') {
       const apiResult = await request({
-        url: 'https://vise.com/random-num',
+        url: 'https://www.randomnumberapi.com/api/v1.0/random?min=1000&max=9999&count=1',
       });
       return {
         ...renderContext,

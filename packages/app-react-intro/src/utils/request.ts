@@ -1,31 +1,23 @@
 import axios from 'axios';
 import { SsrFetchConfig, SsrFetchResult } from 'vise-ssr';
-import { IS_SSR } from '@/data/env';
 
 export default async function request(config: SsrFetchConfig): Promise<SsrFetchResult> {
-  let result: SsrFetchResult;
-  let finalConfig = config;
-  if (IS_SSR) {
-    let { url } = config;
-    // 这里是为了避免被 rollup 干掉所以不用 dot notation
-    // eslint-disable-next-line @typescript-eslint/dot-notation
-    if (process.env['VISE_INTRO'] && url?.startsWith('https://vise.com/')) {
-      // vise.com 域名上，本机请求本机的 443 端口会被 refuse
-      url = url.replace(
-        /^https:\/\/vise\.com\//,
-        'http://127.0.0.1/',
-      );
-    }
-    finalConfig = { ...config, url };
-  }
+  let result: SsrFetchResult = {
+    code: -1,
+    msg: 'fetch fail',
+    data: '',
+  };
   try {
-    result = (await axios(finalConfig)).data;
-  } catch {
-    result = {
-      code: -1,
-      msg: 'fetch fail',
-      data: '',
-    };
-  }
+    const num: number[] = (await axios(config)).data;
+    if (typeof num[0] === 'number') {
+      result = {
+        code: 0,
+        msg: 'ok',
+        data: {
+          value: num[0],
+        },
+      };
+    }
+  } catch {}
   return result;
 }

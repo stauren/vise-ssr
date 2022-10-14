@@ -1,5 +1,8 @@
-# 快速开始
-
+---
+layout: page
+title: "开始开发"
+permalink: /start-develop.html
+---
 ## 名词解释
 - SSR、CSR、同构的解释请参考 [Server-Side Rendering Guide
 ](https://v3.vuejs.org/guide/ssr/introduction.html)

@@ -106,7 +106,7 @@ const fetchLuckyNum = async () => {
 export async function fetchLuckyNumber(ssrFetcher?: SsrServerFetcher): Promise<number> {
   const fetcher = import.meta.env.SSR ? ssrFetcher : clientFetcher;
   const fetchConfig: SsrFetchConfig = {
-    url: 'https://vise.com/random-num',
+    url: 'https://www.randomnumberapi.com/api/v1.0/random?min=1000&max=9999&count=1',
   };
   const result = await fetcher(fetchConfig).catch((error) => {
     // error handle

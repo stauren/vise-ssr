@@ -9,7 +9,7 @@ module.exports = {
       watch: true,
       env: {
         NODE_ENV: 'production',
-        VISE_INTRO: true, // 供应用读取以便区分正式 vise.com 环境
+        VISE_INTRO: true, // 供应用读取以便区分正式环境
         NODE_PORT: 80,
       },
     },

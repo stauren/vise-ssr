@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: "en" }}">
+
+  {%- include head.html -%}
+
+  <body>
+    <div class="theme-container">
+
+      {%- include header.html -%}
+
+      <main class="page">
+        <div class="theme-default-content">
+          <article class="post">
+
+            <header class="post-header">
+              <h1 class="post-title">{{ page.title | escape }}</h1>
+            </header>
+
+            <div class="post-content">
+              {{ content }}
+            </div>
+
+          </article>
+        </div>
+        <footer> Vise </footer>
+      </main>
+
+      <aside class="sidebar">
+        <ul class="sidebar-links">
+          <p class="sidebar-heading sidebar-item active"> 使用向导 </p>
+          <ul class="item-ctn">
+            <li id="sidebar-introduction"><a aria-current="page" href="./" class="nav-link sidebar-item">介绍</a></li>
+            <li id="sidebar-start-develop"><a href="./start-develop.html" class="nav-link sidebar-item">开始开发</a></li>
+            <div></div>
+            <li id="sidebar-tapable-hooks"><a href="./tapable-hooks.html" class="nav-link sidebar-item">Tapable Hooks</a></li>
+            <div></div>
+            <li id="sidebar-data-fetch"><a href="./data-fetch.html" class="nav-link sidebar-item">数据加载及传输</a></li>
+            <div></div>
+            <li id="sidebar-server-api"><a href="./server-api.html" class="nav-link sidebar-item">服务端 SSR 渲染</a></li>
+            <div></div>
+            <li id="sidebar-cache-key"><a href="./cache-key.html" class="nav-link sidebar-item">SSR 缓存及唯一 key</a></li>
+            <div></div>
+            <li id="sidebar-commandline-tool"><a href="./commandline-tool.html" class="nav-link sidebar-item">命令行工具</a></li>
+            <div></div>
+            <li id="sidebar-key-data-types"><a href="./key-data-types.html" class="nav-link sidebar-item">关键数据类型</a></li>
+            <div></div>
+            <li id="sidebar-vise-config"><a href="./vise-config.html" class="nav-link sidebar-item">Vise 配置文件</a></li>
+            <div></div>
+            <li id="sidebar-unit-test"><a href="./unit-test.html" class="nav-link sidebar-item">单元测试</a></li>
+            <div></div>
+            <li id="sidebar-doc-resource"><a href="./doc-resource.html" class="nav-link sidebar-item">文档资料及常见问题</a></li>
+            <div></div>
+          </ul>
+        </ul>
+      </aside>
+    </div>
+
+  </body>
+
+</html>

@@ -1,4 +1,8 @@
-# 背景介绍
+---
+layout: page
+title: "数据加载及传输"
+permalink: /data-fetch.html
+---
 SSR 服务端渲染，重要的问题就是生成页面需要的数据如何加载和传输，以及如何完成页面同构。
 
 ## 整体设计
@@ -104,7 +108,7 @@ const fetchLuckyNum = async () => {
 export async function fetchLuckyNumber(ssrFetcher?: SsrServerFetcher): Promise<number> {
   const fetcher = import.meta.env.SSR ? ssrFetcher : clientFetcher;
   const fetchConfig: SsrFetchConfig = {
-    url: 'https://vise.com/random-num',
+    url: 'https://www.randomnumberapi.com/api/v1.0/random?min=1000&max=9999&count=1',
   };
   const result = await fetcher(fetchConfig).catch((error) => {
     // error handle

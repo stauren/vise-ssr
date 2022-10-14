@@ -64,7 +64,7 @@
                   </li>
                   <li class="dropdown-subitem">
                     <a
-                      href="https://github.com/stauren/vise-ssr/blob/main/CHANGELOG.md"
+                      href="https://github.com/stauren/vise-ssr/blob/main/packages/core/CHANGELOG.md"
                       class="nav-link"
                     > CHANGELOG </a>
                   </li>

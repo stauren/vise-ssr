@@ -3,7 +3,7 @@
 
 This package provide the HTTP server based on express for [vise-ssr](https://www.npmjs.com/package/vise-ssr).
 
-Vise Express Server 是 Vise 框架中的基于 Express 的 HTTP server，整合并适配了 Vise 的 [Hook API](https://vise.com/tapable-hooks.html#server-%E5%BC%80%E5%8F%91%E8%80%85)，可用作 Vise 的构建产物的 HTTP 服务容器。在 `vise serve` 命令中，依赖本 package 提供 HTTP 服务。
+Vise Express Server 是 Vise 框架中的基于 Express 的 HTTP server，整合并适配了 Vise 的 [Hook API](https://stauren.github.io/vise-ssr/tapable-hooks.html#server-%E5%BC%80%E5%8F%91%E8%80%85)，可用作 Vise 的构建产物的 HTTP 服务容器。在 `vise serve` 命令中，依赖本 package 提供 HTTP 服务。
 
 Vise Express Server 提供 `vise-express` 命令行工具，支持如下调用以特定 Vise App 项目目录启动 Express Server：
 
@@ -56,4 +56,4 @@ vise-app-bundles (该级目录名称随意)
 
 在未传入 `-m` 参数的情况下，如果为非 `-b` 模式，会自动使用 `{"${appName}":"/"}` 将访问路径映射到根路径下；如果为 `-b` 模式，将默认使用 `/${appName}/` 作为各个 app 对外访问 url 路径。
 
-Vise 是一个同构 SSR 开发框架，更多信息请参考 [Vise 官网](https://vise.com)
+Vise 是一个同构 SSR 开发框架，更多信息请参考 [Vise 官网](https://stauren.github.io/vise-ssr/)

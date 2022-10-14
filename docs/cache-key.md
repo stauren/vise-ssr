@@ -1,4 +1,8 @@
-# 背景介绍
+---
+layout: page
+title: "SSR 缓存及唯一 key"
+permalink: /cache-key.html
+---
 为提升 SSR 服务器性能，将生成的 HTML 页面放入缓存以便后续请求到达时直接使用是非常有效的，为了能有效利用缓存，应用需要一个有效的方式与服务沟通缓存适用场景，Vise 使用唯一缓存 key 来实现这一点。
 
 ## 生成缓存唯一 key

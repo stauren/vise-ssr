@@ -22,3 +22,7 @@ packages/**/coverage
 packages/**/result.json
 scripts/make-deploy.sh
 *.js.map
+docs/.jekyll-cache
+docs/_site
+docs/Gemfile
+docs/Gemfile.lock

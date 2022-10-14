@@ -26,7 +26,7 @@
       <a
         target="_blank"
         class="link-item doc"
-        href="https://vise.com/"
+        href="https://stauren.github.io/vise-ssr/"
       >项目文档</a>
     </div>&nbsp;&nbsp;&nbsp;
     <div class="link-btn">

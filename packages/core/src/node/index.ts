@@ -14,7 +14,7 @@ async function init() {
 
   program
     .name('vise')
-    .description('Vise is a SSR framework for website. More info: https://vise.com/')
+    .description('Vise is a SSR framework for website. More info: https://stauren.github.io/vise-ssr/')
     .version(await getViseVersion());
 
   program

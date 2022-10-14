@@ -8,7 +8,7 @@ import { State } from '@/store';
 
 type LuckNumFetchResult = SsrFetchResultOf<{ value: number | string }>;
 
-// server hooks 具体用法请参考官网: https://vise.com/
+// server hooks 具体用法请参考官网: https://stauren.github.io/vise-ssr/
 const serverHooks: ViseHooks = {
   // app 名称，注意不要包含 app- 的前缀
   appName: '<!--ssr-server-hooks-app-name-->',

@@ -64,7 +64,7 @@ function PageIndex() {
           <a
             target="_blank"
             className="link-item doc"
-            href="https://vise.com/"
+            href=""
           >项目文档</a>
         </div>&nbsp;&nbsp;&nbsp;
         <div className="link-btn">

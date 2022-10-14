@@ -1,4 +1,8 @@
-## 介绍
+---
+layout: page
+title: "命令行工具"
+permalink: /commandline-tool.html
+---
 Vise 提供了内置的命令行工具，支持项目从创建 → 开发 → 构建 → 提供服务的全生命周期支持。
 
 ## 命令行种类

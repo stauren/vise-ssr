@@ -1,10 +1,21 @@
 title: Vise - Isomorphic SSR framework based on Vite.js
-author:
-  name: stauren
-  email: stauren@qq.com
+author: stauren@qq.com
 description: >
   Vise 是一个 Web 同构 SSR 开发框架，包含项目创建、开发、打包等功能，提供了远快于 Webpack 的基于 Vite 的基于 esm 的开发调试服务器，提供了基于 express 的 Node.js HTTP 服务器，目标是让业务项目可以关注在业务功能实现上。
 show_excerpts: false # set to true to show excerpts on the homepage
+
+# header_pages:
+#   - index.md
+#   - start-develop.md
+#   - tapable-hooks.md
+#   - data-fetch.md
+#   - server-api.md
+#   - cache-key.md
+#   - commandline-tool.md
+#   - key-data-types.md
+#   - vise-config.md
+#   - unit-test.md
+#   - doc-resource.md
 
 # Minima date format
 # refer to https://shopify.github.io/liquid/filters/date/ if you want to customize this
@@ -43,11 +54,6 @@ minima:
     #   instance: example.com
     # - username: jekyll2
     #   instance: example.com
-
-# If you want to link only specific pages in your header, uncomment
-# this and add the path to the pages in order as they should show up
-#header_pages:
-# - about.md
 
 # Build settings
 theme: minima

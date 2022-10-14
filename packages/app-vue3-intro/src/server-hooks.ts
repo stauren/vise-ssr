@@ -129,7 +129,7 @@ const serverHooks: ViseHooks = {
     // 为首页请求额外接口数据
     if (url === '/') {
       const apiResult = await request({
-        url: 'https://vise.com/random-num',
+        url: 'https://www.randomnumberapi.com/api/v1.0/random?min=1000&max=9999&count=1',
       }) as LuckNumFetchResult;
       extraInitState = {
         luckyNumber: apiResult.code === 0 ? formatLuckyNumber(apiResult) : -1,
