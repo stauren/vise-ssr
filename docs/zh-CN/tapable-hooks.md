@@ -1,10 +1,8 @@
 ---
 layout: page
 title: "Tapable hooks"
-permalink: /tapable-hooks.html
-lang: en
+permalink: /zh-CN/tapable-hooks.html
 ---
-translation in progress
 ## 概述
 在进行 SSR 页面渲染的时候，从服务器收到客户度发来的 HTTP Request 请求，到服务端完成构建并发出 HTTP Response 响应的整个阶段中，调用 Vue 等框架的服务端渲染包如 `vue/server-renderer` 将关键的 Vue app 渲染为 HTML 字符串是关键的一步（Vise 框架不止限于支持 Vue 框架，Vise 是可以跨框架完成 SSR 渲染的，以下举例仍然使用 Vue），Vise 框架也是围绕这个 app 渲染步骤来进行的构建。
 
@@ -22,7 +20,7 @@ translation in progress
 1. hooks 使用灵活、可扩展，各个服务端的流程通过 hooks 标准化，服务器开发者和业务 app 开发者、插件开发者可以把各自的逻辑通过 hooks 整合到一起；
 
 ## Server Hooks 流程图
-![Vise tapable hooks 整体流程](./images/tapable-hooks.png)
+![Vise tapable hooks 整体流程](../images/tapable-hooks.png)
 
 ## 第三方依赖
 hooks 基于 tapable 实现，具体可参考：

@@ -174,3 +174,28 @@
     height: 1.25rem;
   }
 }
+
+a.nav-link:hover {
+  text-decoration: none;
+}
+.dropdown-subitem a.nav-link:hover {
+  text-decoration: underline;
+}
+
+.visually-hidden {
+  visibility: hidden;
+}
+
+.navbar-links .navbar-links-item svg {
+  color: rgba(60, 60, 60, 0.7);
+  fill: currentColor;
+  width: 1rem;
+  height: 1rem;
+}
+.navbar-links a.external svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+.navbar-links a.external.git-link svg {
+  vertical-align: text-bottom;
+}

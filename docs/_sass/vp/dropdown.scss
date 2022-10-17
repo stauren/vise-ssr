@@ -64,6 +64,7 @@
       .dropdown-subitem-wrapper {
         padding: 0;
         list-style: none;
+        margin-left: 0;
 
         .dropdown-subitem {
           font-size: 0.9em;
@@ -173,7 +174,7 @@
       overflow-y: auto;
       position: absolute;
       top: 100%;
-      right: 0;
+      right: -10px;
       background-color: var(--c-bg-navbar);
       padding: 0.6rem 0;
       border: 1px solid var(--c-border);

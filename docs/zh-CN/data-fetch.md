@@ -1,15 +1,12 @@
 ---
 layout: page
 title: "数据加载及传输"
-permalink: /data-fetch.html
-lang: en
+permalink: /zh-CN/data-fetch.html
 ---
-translation in progress
-
 SSR 服务端渲染，重要的问题就是生成页面需要的数据如何加载和传输，以及如何完成页面同构。
 
 ## 整体设计
-![Data Flow](./images/data-flow.png)
+![Data Flow](../images/data-flow.png)
 
 ## 数据流程
 - 请阅读文档了解数据传递的数据类型：[RenderContext](./key-data-types.html#rendercontext)

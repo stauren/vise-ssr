@@ -5,8 +5,6 @@
 
 @import 'arrow';
 @import 'badge';
-@import 'code';
-@import 'code-group';
 @import 'custom-container';
 @import 'dropdown';
 @import 'home';
@@ -50,8 +48,8 @@ main.page {
 .theme-default-content div.highlight,
 pre code.language-JSON,
 .theme-default-content div.highlight pre.highlight {
-  background: #0d1117;
-  color: #c9d1d9;
+  color: #f8f8f2;
+  background-color: #272822;
   font-size: 16px;
   font-style: normal;
   font-family: var(--font-family-code);

@@ -61,3 +61,10 @@ theme: minima
 plugins:
  - jekyll-feed
  - jekyll-seo-tag
+
+markdown: kramdown
+highlighter: rouge
+
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge

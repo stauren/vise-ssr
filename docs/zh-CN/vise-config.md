@@ -1,11 +1,8 @@
 ---
 layout: page
 title: "Vise config 配置文件"
-permalink: /vise-config.html
-lang: en
+permalink: /zh-CN/vise-config.html
 ---
-translation in progress
-
 Vise 配置文件为 app 项目根目录中的 `vise.config.ts`，支持 typescript 格式。
 
 ## 可用配置项

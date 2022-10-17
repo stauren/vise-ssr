@@ -1,11 +1,8 @@
 ---
 layout: page
 title: "关键数据类型"
-permalink: /key-data-types.html
-lang: en
+permalink: /zh-CN/key-data-types.html
 ---
-translation in progress
-
 ## 概述
 以下介绍在 app 开发、插件开发中可能用到的数据类型（均从 npm 包 `vise-ssr` 中 export）
 

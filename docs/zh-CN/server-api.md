@@ -1,11 +1,8 @@
 ---
 layout: page
 title: "服务端 SSR 渲染"
-permalink: /server-api.html
-lang: en
+permalink: /zh-CN/server-api.html
 ---
-translation in progress
-
 ## 概述
 Vise 框架提供了 [express-server](https://github.com/stauren/vise-ssr/blob/main/packages/express-server)，同时 Vise 支持使用任何自定义的 Node.js 服务器提供 SSR 服务，只需满足 Vise 生成的 SSR bundle 相关接口要求即可。
 

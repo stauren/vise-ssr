@@ -1,11 +1,19 @@
 # Vise
-Vise 是一个 Web 同构 SSR 开发框架，包含项目创建、开发、打包等功能，提供了远快于 Webpack 的基于 [Vite][vite] 的基于 esm 的开发调试服务器，提供了基于 [express](https://expressjs.com/) 的 Node.js HTTP 服务器，目标是让业务项目可以关注在业务功能实现上。
+English | [简体中文](./README-zh_CN.md)
 
-查看项目详细文档，请点击：[https://stauren.github.io/vise-ssr/](https://stauren.github.io/vise-ssr/)
+Vise (pronounced [vaɪs]) is an isomorphic Web SSR framework based on [Vite][vite], dedicated to provide an out of the box SSR develop experience as easy as SPA. It can work with multiple web user interface libraries such as React, Vue. By abstract app specific logic into server hooks, multiple apps could be deployed onto the same server and multiple hooks could be combined as special purpose hooks plugins. 
 
-下载 npm 包：[vise-ssr](https://www.npmjs.com/package/vise-ssr)
+- Commandline: `create, dev, build, serve` commands to cover the whole dev cycle of web apps.
+- Server Hooks: There are 9 [tapable-hooks](https://stauren.github.io/vise-ssr/tapable-hooks.html) in which app specific server logic could be defined in, so multiple apps could be deployed on the same server.
+- React & Vue3: Currently web user interface libraries such as [React](https://www.npmjs.com/package/@vise-ssr/react), [Vue3](https://www.npmjs.com/package/@vise-ssr/vue3) are supported. And more are coming.
+- HTTP Server: By default [Express](https://expressjs.com/) is used as the HTTP server for SSR, more servers such as Koa.js, Nest.js will be supported in the near future.
+- Full esm & typescript support
 
-# 整体设计
+Full Documentation: [https://stauren.github.io/vise-ssr/](https://stauren.github.io/vise-ssr/)
+
+Download from npm: [vise-ssr](https://www.npmjs.com/package/vise-ssr)
+
+# Design
 ![Vise SSR framework](https://cdn.rawgit.com/stauren/vise-ssr/main/packages/app-vue3-intro/public/images/ssr.drawio.png)
 
 [vite]: <https://vitejs.dev/>

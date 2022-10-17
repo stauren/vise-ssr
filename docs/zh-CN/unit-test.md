@@ -1,11 +1,8 @@
 ---
 layout: page
 title: "单元测试"
-permalink: /unit-test.html
-lang: en
+permalink: /zh-CN/unit-test.html
 ---
-translation in progress
-
 Vise app 目前使用全套 typescript + esm 配置进行单元测试。使用的工具如下：
 ```JSON
   "@vue/test-utils": "^2.0.0",

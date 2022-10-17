@@ -56,7 +56,7 @@ export default async function newReactApp() {
       type: 'confirm',
       name: 'confirm',
       initial: true,
-      message: `是否在 ${process.cwd()} 下创建项目`,
+      message: `Create app in ${process.cwd()}`,
     },
   ]);
 
@@ -71,7 +71,7 @@ export default async function newReactApp() {
   const newAppPath = path.resolve(process.cwd(), `./app-${appName}`);
 
   if (await fileExist(newAppPath)) {
-    logger.error(`已存在 app-${appName}，请勿重复创建`);
+    logger.error(`app-${appName} exists, please choose another name`);
     return;
   }
 
@@ -79,8 +79,8 @@ export default async function newReactApp() {
   await $`mkdir ${newAppPath}`;
 
   const allDone = await createTemplateFiles(newAppPath, viseVersion, appName, config);
-  logger.success(`🎉  app-${appName} 创建成功\n`);
-  logger.info(`👉  使用以下指令开始快速开发:
+  logger.success(`🎉  app-${appName} created.\n`);
+  logger.info(`👉 Use following commands to start develop:
 
   ${chalk.cyan(`$ cd app-${appName}`)}
   ${chalk.cyan('$ npm install')}
@@ -98,12 +98,12 @@ const vue3AppAns = async () => {
     {
       type: 'input',
       name: 'appName',
-      message: '项目名称',
+      message: 'Please input app name',
       validate(value: string) {
         // 项目名称必须是以小写字母开头仅包含小写字母、数字和连接号 (-)
         const pattern = /^[a-z]+([0-9a-z-]*[0-9a-z]+)?$/;
         if (!pattern.test(value)) {
-          return '项目名称必须是以小写字母开头仅包含小写字母、数字和连接号 (-)';
+          return 'App name must start with lower case letter and only contain lower case letter, number and - symbol';
         }
         return true;
       },
@@ -111,7 +111,7 @@ const vue3AppAns = async () => {
     {
       type: 'form',
       name: 'config',
-      message: '请输入项目信息（上下箭头切换）',
+      message: 'Please input app information (Use arrow to move up and down)',
       choices: [
         { name: 'author', message: 'Author', initial: defaultUser },
         { name: 'desc', message: 'Description', initial: 'a Vise SSR project' },

@@ -9,7 +9,7 @@ export async function createNewApp() {
   const answers: IAppName = await enquirer.prompt([
     {
       type: 'select',
-      message: '请选择项目类型：',
+      message: 'Please Choose app scaffold:',
       name: 'templateType',
 
       // 目前有 vue3, react app 模板，后续考虑增加 plugin 等

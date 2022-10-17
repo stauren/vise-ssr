@@ -4,13 +4,15 @@
   "version": "0.1.0",
   "description": "Vue3 SSR framework with vite & typescript",
   "scripts": {
-    "start": "yarn install",
+    "start": "pnpm install",
     "postinstall": "git update-index --assume-unchanged ./packages/core/bin/vise.js ./packages/express-server/bin/vise-express.js",
     "clean": "npm-run-all -p 'clean --workspaces'",
     "build:core": "npm run build -w=packages/core",
     "eslint": "eslint --ext .ts,.js ./",
     "eslint:fix": "eslint --fix --ext .ts,.js ./",
     "syncversion": "./scripts/sync-vise-version.mjs",
+    "jekyll:install": "(cd ./docs && bundle install --path ./.bundle)",
+    "jekyll": "(cd ./docs && bundle exec jekyll serve -o)",
     "test": "vitest run -c vitest.config.ts"
   },
   "repository": {},

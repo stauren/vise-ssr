@@ -1,11 +1,8 @@
 ---
 layout: page
 title: "FAQ 及文档资料"
-permalink: /doc-resource.html
-lang: en
+permalink: /zh-CN/doc-resource.html
 ---
-translation in progress
-
 ## Vise 系列 npm 包
 - [vise-ssr](https://www.npmjs.com/package/vise-ssr)
 - [@vise-ssr/express-server](https://www.npmjs.com/package/@vise-ssr/express-server)

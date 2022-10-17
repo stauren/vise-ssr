@@ -1,11 +1,8 @@
 ---
 layout: page
 title: "命令行工具"
-permalink: /commandline-tool.html
-lang: en
+permalink: /zh-CN/commandline-tool.html
 ---
-translation in progress
-
 Vise 提供了内置的命令行工具，支持项目从创建 → 开发 → 构建 → 提供服务的全生命周期支持。
 
 ## 命令行种类
@@ -78,5 +75,5 @@ $ vise serve ./path/to/vise-app-bundles
 支持 SSG ，跟据用户配置生成静态 HTML 页面，支持定时渲染含有动态数据的网站
 
 ## Vise 命令行总体设计图
-![Vise SSR framework 整体设计](./images/command-line.png)
+![Vise SSR framework 整体设计](../images/command-line.png)
 

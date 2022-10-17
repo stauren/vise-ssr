@@ -71,6 +71,7 @@ async function generateMarkdown() {
   const sourceDir = path.resolve(DIR_NAME, '../../../docs/');
   const destDir = path.resolve(DIR_NAME, '../src/data/markdown');
   try {
+    await $`mkdir -p ${destDir}/`;
     await $`rm -f ${destDir}/*.md`;
     const writeJobs = (await $`ls -1 ${sourceDir}/*.md`).stdout.split('\n')
       .map(async (filePath) => {
@@ -91,8 +92,8 @@ async function generateMarkdown() {
     await Promise.all(writeJobs);
   } catch (po) {
     console.log(po);
-    console.log(`Exit code: ${p.exitCode}`);
-    console.log(`Error: ${p.stderr}`);
+    console.log(`Exit code: ${po.exitCode}`);
+    console.log(`Error: ${po.stderr}`);
   }
 }
 
