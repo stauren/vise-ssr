@@ -15,15 +15,15 @@ It's also important that web applications may need other logics on the server du
 1. Generation of HTML fragments outside the `<App>` tag.
 1. Statistics and reporting of data.
 
-Some of these logics could be put in hooks of web user interface libraries such as `created`, but the downside is server logic and client logic is mixed. Sometimes they have totally different 3rd party dependencies, may cause the generated client bundle to contain unnecessary sever packages and impact user experience.
+Some of these logics could be put in hooks of web user interface libraries such as `created`, but the downside is that server logic and client logic are mixed. Sometimes they have totally different 3rd party dependencies, which may cause the generated client bundle to contain unnecessary sever packages and impact user experience.
 
 Another way is putting those logics in HTTP servers, which is the early choice of Vise. But it's proved to cause scalability issues, since as the apps grows bigger and more apps deployed on the sever, the codes written in the HTTP servers could easily lose control.
 
 Vise defined the server life cycle, which is based on [tapable] and exposes multiple hooks from the point a server receiving an HTTP request from the user to the server sending the HTTP response of the request:
 1. Server logics of certain app belongs to the app but not the HTTP server anymore. 
-1. Server only packages do not exist in the generated client bundles.
+1. Server-only packages do not exist in the generated client bundles.
 1. Multiple apps could be deployed in the same server and scale up.
-1. Hooks is standard, flexible and extendable. Certain server side process could be abstracted as an Vise hooks plugin composed of several coordinated hooks and be reused easily.
+1. Hooks are standard, flexible and extendable. Certain server side process could be abstracted as an Vise hooks plugin composed of several coordinated hooks and be reused easily.
 
 ## Vise Server Hooks Lifecycle
 ![Vise server hooks lifecycle](./images/tapable-hooks.png)
@@ -55,7 +55,7 @@ If default rendering is bypassed, the next hook is `hooks.afterRender`.
 | Return Value | Omit<RenderResult, 'type' \| 'renderBy'> \| void |
 
 ### hooks.requestResolved
-Tapped functions receive a `ResolveRequest` and return a `ResolveRequest`. Marks could be added to context of certain requests for later process. Be careful of [hydration mismatch] if you change data in the HTTPRequest.
+Tapped functions receive a `ResolvedRequest` and return a `ResolvedRequest`. Marks could be added to context of certain requests for later process. Be careful of [hydration mismatch] if you change data in the HTTPRequest.
 
 Multiple tapped functions execute one by one in order.
 
@@ -91,7 +91,7 @@ Any tapped function return string will invalidate the return value of other tapp
 | Return Value | string \| void |
 
 ### hooks.hitCache
-Tapped functions will be notified a successful cache hit event.
+Tapped functions will be notified with a successful cache hit event.
 
 | Key | Content |
 | ----------- | ----------- |
@@ -101,7 +101,7 @@ Tapped functions will be notified a successful cache hit event.
 | Return Value | void |
 
 ### hooks.beforeRender
-Tapped functions will be called one by one before rendering HTML with server renderer provided by web UI libraries. Typically this could be used to fetch data for SSR. Data should be transferred in `RenderContext.extra`.
+Tapped functions will be called in order before rendering HTML with server renderer provided by web UI libraries. Typically this could be used to fetch data for SSR. Data should be transferred in `RenderContext.extra`.
 
 | Key | Content |
 | ----------- | ----------- |
@@ -121,7 +121,7 @@ HTTP server should tap this hook, import app's render bundle and render the HTML
 | Return Value | RenderResult |
 
 ### hooks.afterRender
-Tapped functions will be called one by one after render finishes, processing the result of a successful rendering or handle the error of a failed rendering.
+Tapped functions will be called in order after render finishes, processing the result of a successful rendering or handle the error of a failed rendering.
 Failed SSR could be downgraded to CSR here.
 Be careful of [hydration mismatch].
 
@@ -133,7 +133,7 @@ Be careful of [hydration mismatch].
 | Retuan Value | RenderResult |
 
 ### hooks.beforeResponse
-Tapped functions will be called after `afterRender`. This is the last hook before HTTP Response is sent and it's mainly used for compose the HTTP Response, which could be generated with all data in the `RenderResult` which contains the `RenderContext`.
+Tapped functions will be called after `afterRender`. This is the last hook before HTTP Response is sent and it's mainly used for composing the HTTP Response, which could be generated with all data in the `RenderResult` containing the `RenderContext`.
 
 Any tapped function returns an HTTPResponse will invalidate the return value of other tapped functions.
 
@@ -146,7 +146,7 @@ Any tapped function returns an HTTPResponse will invalidate the return value of 
 
 ## Hooks Usage
 ### App developer
-App developer use [Vise command line tool](./commandline-tool.html) to created scaffold of an app first, then there will be a app directory described in [App Directory Structure](./start-develop.html#app-directory-structure).
+App developers can use [Vise command line tool](./commandline-tool.html) to create scaffold of an app, then there will be a app directory as described in [App Directory Structure](./start-develop.html#app-directory-structure).
 
 Then app's logics could be added to the `app-my-project/src/server-hooks.ts` file. Typically you'll want preload data in the `beforeRender` hook.
 
@@ -193,7 +193,7 @@ const serverHooks: ViseHooks = {
   }],
 
   /**
-   * Tapped functions receive a `ResolveRequest` and return a `ResolveRequest`.
+   * Tapped functions receive a `ResolvedRequest` and return a `ResolvedRequest`.
    * Marks could be added to context of certain requests for later process.
    * Be careful of [hydration mismatch] if you change data in the HTTPRequest.
    */
@@ -236,13 +236,13 @@ const serverHooks: ViseHooks = {
     return result;
   },
 
-  // Tapped functions will be notified a successful cache hit event.
+  // Tapped functions will be notified with a successful cache hit event.
   hitCache: async (hitCache) => {
     console.log(`Use cache with key: ${hitCache.key}`);
   },
 
   /**
-   * Tapped functions will be called one by one before rendering HTML with server renderer provided by web UI libraries
+   * Tapped functions will be called in order before rendering HTML with server renderer provided by web UI libraries
    * Typically this could be used to fetch data for SSR. Data should be transferred in `RenderContext.extra`
    */
   beforeRender: async (renderContext) => {
@@ -261,7 +261,7 @@ const serverHooks: ViseHooks = {
   },
 
   /**
-   * Tapped functions will be called one by one after render finishes
+   * Tapped functions will be called in order after render finishes
    * Processing the result of a successful rendering or handle the error of a failed rendering.
    * Failed SSR could be downgraded to CSR here.
    * Be careful of [hydration mismatch].
@@ -300,9 +300,9 @@ const serverHooks: ViseHooks = {
   /**
    * Tapped functions will be called after `afterRender`
    * This is the last hook before HTTP Response is sent
-   * and it's mainly used for compose the HTTP Response
+   * and it's mainly used for composing the HTTP Response
    * Which could be generated with all data in the
-   * `RenderResult` which contains the `RenderContext`
+   * `RenderResult` containing the `RenderContext`
    */
   beforeResponse: async (renderResult) => {
     if (renderResult.type === RenderResultCategory.render) {
@@ -351,7 +351,7 @@ From the example we could see:
 #### Core Hook Classes
 Vise defined multiple hook related Classes which HTTP Server developer need to understand and use:
 - HookLifeCycle: accept `ViseHooks` config which contains all the tapped functions as parameter, defined whole SSR life cycle. The HTTP Server should create an instance with merged ViseHooks config and hand over the HTTP request to it.
-- HookManager: define core hooks data structure, hook type, tapped function I/O data type
+- HookManager: define core hook data structure, hook type, tapped function I/O data type
 - HookCaller: responsible to call certain hook and log active tapped function activities
 - HookLogger: Default logger which provide brief information in the HookLifeCycle, could be overridden
 - HookPlugin: support Vise Plugin which combines several tapped functions of different hooks to accomplish a related goal

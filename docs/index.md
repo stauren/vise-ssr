@@ -22,3 +22,5 @@ Vise (pronounced [vaɪs]) is an isomorphic Web SSR framework based on [Vite][vit
 ![Data Flow](./images/data-flow.png)
 ![Render Process](./images/render-process.png)
 ![SSR Cache](./images/ssr-cache.png)
+
+[vite]: <https://vitejs.dev/>

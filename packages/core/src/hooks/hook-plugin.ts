@@ -57,7 +57,7 @@ function getHighOrderFunction(pluginName: string, hookName: HookNames, callback:
         return finalRenderResult;
       };
     case 'requestResolved':
-      // 确保用户不会修改 ResolveRequest.original 内容
+      // 确保用户不会修改 ResolvedRequest.original 内容
       return async function (resolvedRequest: ResolvedRequest) {
         const cbWithType = callback as HookCallback['requestResolved'];
         const original = cloneDeep(resolvedRequest.original) as RenderContext;

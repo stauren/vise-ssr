@@ -40,7 +40,7 @@ const serverHooks: ViseHooks = {
   },
 
   /**
-   * Tapped functions receive a `ResolveRequest` and return a `ResolveRequest`.
+   * Tapped functions receive a `ResolvedRequest` and return a `ResolvedRequest`.
    * Marks could be added to context of certain requests for later process.
    * Be careful of [hydration mismatch] if you change data in the HTTPRequest.
    */
@@ -53,12 +53,12 @@ const serverHooks: ViseHooks = {
   beforeUseCache: async (renderRequest) => {
   },
 
-  // Tapped functions will be notified a successful cache hit event.
+  // Tapped functions will be notified with a successful cache hit event.
   hitCache: async (hitCache) => {
   },
 
   /**
-   * Tapped functions will be called one by one before rendering HTML with server renderer provided by web UI libraries
+   * Tapped functions will be called in order before rendering HTML with server renderer provided by web UI libraries
    * Typically this could be used to fetch data for SSR. Data should be transferred in `RenderContext.extra`
    */
   beforeRender: async (renderContext) => {
@@ -88,7 +88,7 @@ const serverHooks: ViseHooks = {
   },
 
   /**
-   * Tapped functions will be called one by one after render finishes
+   * Tapped functions will be called in order after render finishes
    * Processing the result of a successful rendering or handle the error of a failed rendering.
    * Failed SSR could be downgraded to CSR here.
    * Be careful of [hydration mismatch].
@@ -103,9 +103,9 @@ const serverHooks: ViseHooks = {
   /**
    * Tapped functions will be called after `afterRender`
    * This is the last hook before HTTP Response is sent
-   * and it's mainly used for compose the HTTP Response
+   * and it's mainly used for composing the HTTP Response
    * Which could be generated with all data in the
-   * `RenderResult` which contains the `RenderContext`
+   * `RenderResult` containing the `RenderContext`
    */
   beforeResponse: async (renderResult) => {
     // successful render
