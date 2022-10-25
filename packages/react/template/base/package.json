@@ -10,10 +10,10 @@
     "test": "vitest run -c ./vitest.config.ts"
   },
   "dependencies": {
-    "@vise-ssr/express-server": "0.7.2",
-    "@vise-ssr/react": "0.7.2",
+    "@vise-ssr/express-server": "0.8.0",
+    "@vise-ssr/react": "0.8.0",
     "sass": "^1.50.1",
-    "vise-ssr": "0.7.2"
+    "vise-ssr": "0.8.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.0",

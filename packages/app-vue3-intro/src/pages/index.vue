@@ -96,4 +96,7 @@ export default defineComponent({
 .main-logo {
   width: 30vw;
 }
+.theme-default-content .theme-default-content {
+  text-align: left;
+}
 </style>

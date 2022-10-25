@@ -59,7 +59,7 @@ Then you will see the app created notice and develop guide:
 
   $ cd app-my-project
   $ npm install
-  $ vise dev          
+  $ npm run dev          
   ```
 
 ## Start developing
@@ -84,7 +84,7 @@ Build the app with the following command:
 $ npm run build
 ```
 After the command finish running, there will be 3 generated bundles:
-- client bundle: the SPA part of the app loaded in the client browser
+- client bundle: the SPA part of the app loaded on the client browser
 - server bundle: aka server render bundle, which transform an app into string or Stream
 - vise hooks bundle: app's specific server logic in [vise hooks](./tapable-hooks.html)
 

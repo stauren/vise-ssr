@@ -18,11 +18,7 @@ export {
   ALL_HOOKS,
   RenderResultCategory,
 
-  // types
-  HTTPRequest,
-  HTTPResponse,
   RenderContext,
-  RenderContextExtra,
   ResolvedRequest,
   CacheInfo,
   HitCache,

@@ -26,9 +26,11 @@ async function getViseAppName(base: string): Promise<string | false> {
   try {
     const readOutput = await $`cat ${base}/package.json`;
     const pkgJson = JSON.parse(readOutput.toString());
-    if (Object.keys(pkgJson.dependencies)
-      .some(key => key === 'vise-ssr')
-    ) {
+    const allDeps = {
+      ...pkgJson.dependencies,
+      ...pkgJson.devDependencies,
+    };
+    if (Object.keys(allDeps).some(key => key === 'vise-ssr')) {
       const serverHooks = await import(path.resolve(base, 'dist/server/server-hooks.js'));
       return serverHooks.default.appName;
     }

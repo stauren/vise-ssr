@@ -1,8 +1,11 @@
 import type {
   HTTPRequest,
   HTTPResponse,
+  RenderContextMeta,
+  SsrContext,
+} from '../';
+import type {
   RenderContext,
-  RenderContextExtra,
   RenderError,
   RenderResult,
   ViseHooks,
@@ -46,31 +49,34 @@ class HookLifeCycle {
 
   public async start(
     httpRequest: HTTPRequest,
-    sessionExtra: RenderContextExtra = {},
+    sessionMeta: RenderContextMeta = {},
+    sessionExtra: SsrContext['extra'] = {},
   ): Promise<HTTPResponse> {
-    const defaultExtra = {
+    const initMeta: RenderContextMeta = {
       title: '',
-      noCache: false,
+      cache: true,
       initState: {},
       routerBase: '/',
-      ...sessionExtra,
+      ...sessionMeta,
     };
-    const { routerBase } = defaultExtra;
+    const { routerBase } = initMeta;
     const { url } = httpRequest;
-    let urlInLifeCycle = url.substring(url.indexOf(routerBase) + routerBase.length); // path: 去除前半截的 routerBase 后剩余的部分
-    // 统一以 / 开头
+
+    // url in lifecycle start with '/' and do NOT have routerBase prefix
+    let urlInLifeCycle = url.substring(url.indexOf(routerBase!) + routerBase!.length);
     if (!urlInLifeCycle.startsWith('/')) {
       urlInLifeCycle = `/${urlInLifeCycle}`;
     }
-    const httpRequestPro = {
+    const originalRequest = {
       ...httpRequest,
       url: urlInLifeCycle,
     };
-    const defaultContext = {
-      request: httpRequestPro,
-      extra: defaultExtra,
+    const originalContext = {
+      request: originalRequest,
+      meta: initMeta,
+      extra: sessionExtra,
     };
-    const interceptedResult = await this.hookCaller.receiveRequest(httpRequestPro);
+    const interceptedResult = await this.hookCaller.receiveRequest(originalRequest);
     if (interceptedResult !== undefined) {
       return this.end({
         type: 'receiveRequest',
@@ -80,8 +86,12 @@ class HookLifeCycle {
     }
 
     const { resolved: resolvedContext } = await this.hookCaller.requestResolved({
-      original: defaultContext,
-      resolved: { request: { ...httpRequestPro }, extra: { ...defaultExtra } },
+      original: originalContext,
+      resolved: {
+        request: { ...originalRequest },
+        meta: { ...initMeta },
+        extra: { ...sessionExtra },
+      },
     });
 
     const cacheResult = await this.callCacheHooks(resolvedContext);
@@ -177,7 +187,7 @@ class HookLifeCycle {
         body = 'Fatal Error: Hooks intercept the request with receiveRequest without finish rendering';
         break;
       default: // render
-        body = renderResult.ssrResult.html;
+        body = renderResult.html;
     }
 
     return {

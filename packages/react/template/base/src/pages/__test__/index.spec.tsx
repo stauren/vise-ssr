@@ -15,7 +15,14 @@ function toJSON(component: ReactTestRenderer.ReactTestRenderer) {
 }
 
 describe('index', () => {
-  const renderer = renderWithProviders(<IndexPage />, {
+  const ssrContext = {
+    context: {
+      meta: {},
+      extra: {},
+    },
+    updateContext() {},
+  };
+  const renderer = renderWithProviders(<IndexPage ssrContext={ssrContext} />, {
     preloadedState: {
       viseIntro: {
         startTime: -1,

@@ -42,6 +42,10 @@ export default class SSRServer {
     return parseInt(process.env.NODE_PORT || '3000', 10);
   }
 
+  private static getCacheKey(app: string, cacheKey: string) {
+    return `${app}-${cacheKey}`;
+  }
+
   private express = express();
   private cacheService = new MemCache();
   private useCache: boolean;
@@ -86,10 +90,11 @@ export default class SSRServer {
     },
     async afterRender(this: SSRServer, renderResult) { // 固定为最后一个 callback
       if (renderResult.type === RenderResultCategory.render) {
-        const { ssrResult, cacheInfo, context } = renderResult;
+        const { html, cacheInfo, context } = renderResult;
         const key = cacheInfo?.key;
-        if (key && !context.extra.noCache) {
-          this.cacheService.set(key, ssrResult.html);
+        if (key && context.meta.cache) {
+          const cacheKey = SSRServer.getCacheKey(key, context.extra.app as string);
+          this.cacheService.set(cacheKey, html);
           log(`render and cache with: ${key}`);
         } else {
           log('render without cache');
@@ -210,8 +215,9 @@ export default class SSRServer {
             headers: req.headers,
             body: req.body,
           }, {
-            app: projectName,
             routerBase,
+          }, {
+            app: projectName,
           });
           this.sendResponse(res, response);
         } catch (e) {
@@ -271,7 +277,7 @@ export default class SSRServer {
 
   private findCacheByInfo(cacheInfo: CacheInfo): string | undefined {
     // TODO 处理 cacheInfo.expire 和 stale 相关逻辑
-    const app = cacheInfo.context.extra.app as string;
-    return this.cacheService.get(`${app}-${cacheInfo.key}`);
+    const key = SSRServer.getCacheKey(cacheInfo.key, cacheInfo.context.extra.app as string);
+    return this.cacheService.get(key);
   }
 }

@@ -7,28 +7,45 @@ permalink: /zh-CN/key-data-types.html
 以下介绍在 app 开发、插件开发中可能用到的数据类型（均从 npm 包 `vise-ssr` 中 export）
 
 ## RenderContext
-RenderContext 主要用来在某一次请求期间传递数据，各个 hooks 使用者可以将自定义数据放入 RenderContext.extra 中。能从参数中读取 RenderContext 的 hooks有：`requestResolved`, `beforeUseCache`, `beforeRender`, `render`, `afterRender`, `beforeResponse`
+RenderContext 主要用来在某一次请求期间传递数据，各个 hooks 使用者可以将自定义数据放入 RenderContext.extra 中。能从参数中读取 RenderContext 的 hooks有：`requestResolved`, `beforeUseCache`, `findCache`, `beforeRender`, `render`, `afterRender`, `beforeResponse`
 
-在一个典型的场景中，App 在 `requestResolved` 中解析收到的请求，有可能在此阶段根据用户信息请求 AB实验接口以确定用户实验分支，在此阶段将实验相关信息放入 RenderContext.extra；在 `beforeUseCache` 中，App 将某些缓存相关信息存入 RenderContext.extra 供后续的生成页面缓存脚注等使用（如果是全新 render，可以在 afterRender 中读取到 CacheInfo 信息，但如果是 `hitCache` 场景，afterRender 中无法读取）；在 `beforeRender` 中，App 请求页面依赖的接口数据，并放入 RenderContext.extra.initState；在 `render` 阶段，Vue 等页面框架通过 SSRContext 获取前面钩子保存在 RenderContextExtra 中的值，并将 `render` 的改动写回。`afterRender` 和 `beforeResponse` 阶段，App 主要读取之前设置的 extra 信息，以便决定最后的页面生成逻辑（如利用 `render` 阶段返回的 title 生成页面标题）。
+在一个典型的场景中，App 在 `requestResolved` 中解析收到的请求，有可能在此阶段根据用户信息请求 AB实验接口以确定用户实验分支，在此阶段将实验相关信息放入 RenderContext.extra；在 `beforeUseCache` 中，App 将某些缓存相关信息存入 RenderContext.extra 供后续的生成页面缓存脚注等使用（如果是全新 render，可以在 afterRender 中读取到 CacheInfo 信息，但如果是 `hitCache` 场景，afterRender 中无法读取）；在 `beforeRender` 中，App 请求页面依赖的接口数据，并放入 RenderContext.meta.initState；在 `render` 阶段，Vue 等页面框架通过 SSRContext 获取前面钩子保存在 RenderContext 中的值，并将 `render` 的改动写回。`afterRender` 和 `beforeResponse` 阶段，App 主要读取之前 hooks 设置的信息，以便决定最后的页面生成逻辑（如利用 `render` 阶段返回的 title 生成页面标题）。
 
-`RenderContext.extra` 是一个有固定字段的，但可扩展的数据临时存放变量，其值与 `render` 期间的 SSRContext 对应。其中有 title, noCache, initState 3个固定字段：
+`RenderContext.meta` 是一个有固定字段的，存放 Vise 框架定义的数据的变量，其值可以在 `render` 期间的 SSRContext 中访问和修改。其中有以下固定字段：
 - title: `render` 过程中，被渲染页面根据设置，返回当前页面标题
-- noCache: `render` 过程中，页面通知后续 hooks，本次渲染结果不可缓存（如发生了渲染异常）
+- cache: `render` 过程中，页面通知后续 hooks，本次渲染结果不可缓存（如发生了渲染异常）
 - initState: `render` 之前的钩子，通过接口数据等构建的页面初始化 state 数据。如果配置了 ViseConfig.strictInitState === true，Vise 会忽略 `render` 期间对 initState 的改动，将 `render` 之前的快照传递到客户端
-- 其它字段使用方可以任意扩展
+- routerBase: context 中传递的 HTTP request 的 url 只包含 app 中路由部分，前半截的路由 base 在此查询
+- app: UI library 将 app 渲染后得到的 string
+- template: 渲染使用的 HTML 页面模板，可以修改其中自动后使用 fillSsrTemplate 重新填充页面
+- preloadLinks: 页面需要预加载的资源 HTML 标签
 
 ```typescript
-export type RenderContextExtra = JSONObject & {
+type RenderContextMeta = Partial<{
+  // page title
   title: string,
-  noCache: boolean,
+  // should SSR result be cached
+  cache: boolean,
+  // initState used for store
   initState: JSONObject,
-};
+  // url in HTTP request passed around hooks do not have
+  // routerBase prefix
+  routerBase: string,
+  // UI library app rendered as string
+  // be careful of hydration mismatch
+  app: string,
+  // HTML template
+  template: string,
+  // preload link as string for the rendered page
+  preloadLinks: string,
+}>;
 
 // HTTP 渲染上下文，主要用来传递 HTTP 请求内容和在 extra 中存储各个钩子的额外数据
-export type RenderContext = {
+type RenderContext = {
   request: HTTPRequest,
-  extra: RenderContextExtra,
-  error?: RenderError, // 当各个钩子发生异常时，可以在渲染上下文携带该error信息
+  meta: RenderContextMeta,
+  extra: JSONObject,
+  error?: RenderError, // 当各个钩子发生异常时，可以在渲染上下文携带该 error 信息
 };
 ```
 ## RenderResult
@@ -45,8 +62,7 @@ export type SuccessRenderResult = RenderResultBase & {
   // 完成了全新 SSR 渲染时触发
   type: 'render',
   // SSR 渲染结果
-  // 注意不要修改 SsrBundleSuccess.app 部分，会造成 hydration mismatch
-  ssrResult: Record<SsrBundleSuccessKey, string>,
+  html: string,
   // afterRender hooks 需要 cacheInfo 来更新缓存，如果 beforeUseCache 有返回则会带入
   cacheInfo?: CacheInfo,
 };

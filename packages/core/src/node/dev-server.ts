@@ -5,6 +5,7 @@ import type { ViteDevServer } from 'vite';
 import type { SupportedScaffold } from '@vise-ssr/shared';
 import { mergeConfig, ScaffoldToPackage } from '@vise-ssr/shared';
 import type {
+  HTTPResponse,
   SsrBundleRender,
 } from '../';
 import { getAppRoot, getAppVisePath } from './utils/path';
@@ -13,7 +14,6 @@ import { getViteDevConfig } from './config';
 import { refillRenderResult } from './utils/strings';
 import matchAppForUrl from './utils/match-app';
 import type {
-  HTTPResponse,
   ViseHooks,
   HookCallback,
   HookRouterBase,
@@ -60,17 +60,18 @@ class ViseDevServer {
           context: renderContext,
         };
       }
-      const { extra, ...newSsrResult } = ssrResult;
+      const { extra, meta, html } = ssrResult;
       const result: SuccessRenderResult = {
         renderBy: DEV_RENDERER,
         type: 'render',
         context: mergeConfig(renderContext, {
+          meta: {
+            ...meta,
+            template,
+          },
           extra,
         }),
-        ssrResult: {
-          ...newSsrResult,
-          template,
-        },
+        html,
       };
       return refillRenderResult(result);
     },

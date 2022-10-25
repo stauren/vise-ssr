@@ -4,6 +4,7 @@ import type {
   FindCacheResult,
   HookCallback,
   RenderResult,
+  RenderContext,
 } from './hook-manager';
 
 type HookLogProcessor = (interception: JSONValue, fullLog?: boolean) => string;
@@ -12,30 +13,57 @@ type HookReturnType = {
   [K in HookNames]: UnPromise<ReturnType<HookCallback[K]>>;
 };
 
+function simplifyHeaders(context: RenderContext) {
+  const { request } = context;
+  return {
+    ...context,
+    request: {
+      ...request,
+      headers: Object.keys(request.headers).length > 5 ? '[Object]' : request.headers,
+    },
+  };
+}
+
+function shorterText(txt: string) {
+  return txt.length > 100 ? `${txt.substring(0, 100)}...` : txt;
+}
+
 export default class HookLogger {
   public static mapHookLogProcessor: Partial<Record<HookNames, HookLogProcessor>> = {
     receiveRequest(interception, fullLog) {
       const data = interception as RenderResult;
       return JSON.stringify(fullLog ? data : {
-        renderBy: data!.renderBy, extra: data!.context.extra,
+        renderBy: data!.renderBy,
+        meta: data!.context.meta,
+        extra: data!.context.extra,
       });
     },
     requestResolved(interception, fullLog) {
       const { resolved } = interception as HookReturnType['requestResolved'];
       const { extra } = resolved;
       return JSON.stringify(fullLog ? resolved : {
-        ...resolved,
+        ...simplifyHeaders(resolved),
         extra: {
           ...extra,
-          initState: extra.initState ? JSON.stringify(extra.initState).substring(0, 100) : null,
+          initState: extra.initState ? shorterText(JSON.stringify(extra.initState)) : null,
         },
       });
+    },
+    beforeUseCache(interception, fullLog) {
+      const data = interception as HookReturnType['beforeUseCache'];
+      if (fullLog) {
+        return JSON.stringify(data);
+      }
+      return JSON.stringify(data ? {
+        ...data,
+        context: simplifyHeaders(data.context),
+      } : data);
     },
     findCache(interception, fullLog) {
       const data = interception as FindCacheResult;
       return JSON.stringify(fullLog ? data : {
         renderBy: data.renderBy,
-        content: `${data.content.substring(0, 100)}...`,
+        content: shorterText(data.content),
       });
     },
     render(interception, fullLog) {
@@ -47,23 +75,36 @@ export default class HookLogger {
         if (fullLog) {
           return JSON.stringify(data);
         }
-        txt = `${data.ssrResult.app.substring(0, 100)}...`;
+        txt = shorterText(data.context.meta.app!);
       }
       return JSON.stringify({
         renderBy: data.renderBy,
         result: txt,
       });
     },
+    beforeRender(interception, fullLog) {
+      const data = interception as HookReturnType['beforeRender'];
+      if (fullLog) {
+        return JSON.stringify(data);
+      }
+      return JSON.stringify(simplifyHeaders(data));
+    },
     afterRender(interception, fullLog) {
       const data = interception as HookReturnType['afterRender'];
       if (fullLog) {
         return JSON.stringify(data);
       }
+      const simpleContext = simplifyHeaders(data.context);
       const tmp = {
         renderBy: data.renderBy,
         context: {
-          request: { url: data.context.request.url },
-          extra: data.context.extra,
+          ...simpleContext,
+          meta: {
+            ...simpleContext.meta,
+            template: shorterText(simpleContext.meta.template ?? ''),
+            preloadLinks: shorterText(simpleContext.meta.preloadLinks ?? ''),
+            app: shorterText(simpleContext.meta.app ?? ''),
+          },
         },
       } as any; // 临时 log 用数据，类型无所谓
       if (data.type === 'error') {

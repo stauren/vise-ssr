@@ -73,8 +73,13 @@
 <script lang="ts" setup>
 import { reactive, computed, onMounted } from 'vue';
 import useCount from '@/composable/use-count';
+import useTitle from '@/composable/use-title';
 import { useStore, MutationTypes } from '@/store/';
 import { fetchLuckyNumber } from '@/services';
+
+const { setTitle } = useTitle();
+const title = 'Vise: SSR with Vite + TypeScript + Server Hooks';
+setTitle(title);
 
 const store = useStore();
 const { count, increaseCount } = useCount();

@@ -1,3 +1,4 @@
+import cookie from 'cookie';
 import type {
   ViseHooks,
 } from 'vise-ssr';
@@ -42,6 +43,7 @@ const serverHooks: ViseHooks = {
       result = {
         context: {
           request: httpRequest,
+          meta: {},
           extra: { // add marks to context.extra
             jumpTo: 'https://www.qq.com/',
           },
@@ -57,7 +59,7 @@ const serverHooks: ViseHooks = {
    * Be careful of [hydration mismatch] if you change data in the HTTPRequest.
    */
   requestResolved: [async (resolvedRequest) => {
-    const { original } = resolvedRequest;
+    const { original, resolved } = resolvedRequest;
     const { url } = original.request;
     const extraData: Record<string, string> = {};
 
@@ -72,11 +74,19 @@ const serverHooks: ViseHooks = {
   }, {
     // multiple tapped functions allowed
     callback: async (resolvedRequest) => {
-      console.log(resolvedRequest.original.request.url);
-      return resolvedRequest;
+      const { original: { request: { headers } } } = resolvedRequest;
+      return mergeConfig(resolvedRequest, {
+        resolved: {
+          // pass user agent and cookie as context extra data, which could be accessed as ssr context
+          extra: {
+            userAgent: headers['user-agent'] || '',
+            cookies: cookie.parse(headers.cookie as string ?? ''),
+          },
+        },
+      });
     },
     // enforcing execution order of Waterfall type hooks
-    enforce: 'post',
+    enforce: 'pre',
   }],
 
   /**
@@ -130,7 +140,7 @@ const serverHooks: ViseHooks = {
       ...extraInitState,
     };
     return mergeConfig(renderContext, {
-      extra: {
+      meta: {
         initState,
       },
     });
@@ -146,17 +156,17 @@ const serverHooks: ViseHooks = {
     if (renderResult.type === RenderResultCategory.render) {
       const { url } = renderResult.context.request;
 
-      let newExtra = mergeConfig(renderResult.context.extra, {
+      let newMeta = mergeConfig(renderResult.context.meta, {
         initState: { renderEndTime: Date.now() },
       });
       if (url === '/hook-jump') {
-        newExtra = mergeConfig(newExtra, {
+        newMeta = mergeConfig(newMeta, {
           title: 'render finish override2',
         });
       }
       return refillRenderResult(mergeConfig(renderResult, {
         context: {
-          extra: newExtra,
+          meta: newMeta,
         },
       }));
     }
@@ -186,7 +196,7 @@ const serverHooks: ViseHooks = {
         headers: {
           'content-type': 'text/html;charset=utf-8',
         },
-        body: renderResult.ssrResult.html,
+        body: renderResult.html,
       };
     }
 

@@ -1,6 +1,8 @@
 import type {
-  HookNames,
   HTTPRequest,
+} from '../index';
+import type {
+  HookNames,
   RenderContext,
   RenderResult,
   ResolvedRequest,

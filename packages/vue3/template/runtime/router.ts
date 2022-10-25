@@ -6,9 +6,8 @@ import {
   RouteRecordRaw,
 } from 'vue-router';
 
-import { ViseRouteComponent, ViseRouter } from '@vise-ssr/vue3';
+import { ViseRouter } from '@vise-ssr/vue3';
 import { MyStore } from '@/store/';
-import { State } from '@/store/state';
 import { IS_SSR, appPages, syncAppPages } from './env';
 
 const allAppPages = {
@@ -77,46 +76,6 @@ export function createRouter(store: MyStore, base = '/') {
         hash,
       });
       return;
-    }
-    if (IS_SSR) {
-      const firstMatch = to.matched[0];
-      const matchedComponent = firstMatch?.components.default;
-      const isViseComponent = (x: any):
-        x is ViseRouteComponent<State> => typeof x?.fetch === 'function';
-      if (isViseComponent(matchedComponent)) {
-        try {
-          const {
-            headers,
-          } = router.$ssrContext!;
-          const result = await matchedComponent.fetch.call(null, {
-            to,
-            headers,
-          });
-          if (typeof result === 'function') {
-            result(store);
-          } else {
-            console.error(`Fetch for ${to.fullPath} failed with: ${result}`);
-          }
-          next();
-        } catch (e) {
-          const originalSetup = 'setup' in matchedComponent ? matchedComponent.setup : (() => {});
-
-          // 不关心具体参数类型，只是原样传递
-          matchedComponent.setup = (...args: any[]) => {
-            const ssrContext = useSSRContext();
-            ssrContext!.noCache = true;
-
-            // 防止内存泄露
-            matchedComponent.setup = originalSetup;
-            // 这里不关心类型，只是原样传递参数
-            // eslint-disable-next-line prefer-spread
-            return originalSetup.apply(null, args);
-          };
-          console.error(`Fetch for ${to.fullPath} failed with: ${e}`, e);
-          next();
-        }
-        return;
-      }
     }
 
     next();

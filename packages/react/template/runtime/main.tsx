@@ -1,11 +1,11 @@
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { RenderContext } from 'vise-ssr';
 import { StaticRouter } from 'react-router-dom/server.mjs'
 import App from '@/app';
-import type { ContextValue } from '@/hooks/ssr-context.ts';
-import { SSRContext } from '@/hooks/ssr-context.ts';
+import type { ContextValue } from './ssr-context.ts';
+import { SSRContext } from './ssr-context.ts';
 import RouterView from './router.tsx';
 
 type AppCreatorParams = {
@@ -20,6 +20,28 @@ const ROUTE_BASE = '/';
 
 function joinPath(base: string, subPath: string) {
   return `${base}${subPath.substring(1)}`;
+}
+
+function AppWithSSRContext({ ssrContext, Router, location, basename }: {
+  ssrContext: ContextValue,
+  Router: typeof StaticRouter,
+  location: string,
+  basename: string
+}) {
+  const [context, updateContext] = React.useState(ssrContext);
+  const realUpdate = React.useCallback(function(newContext) {
+    // assign SsrContext back to the server
+    Object.assign(ssrContext, newContext);
+    return updateContext(newContext);
+  }, []);
+
+  return (
+    <Router location={location} basename={basename}>
+      <SSRContext.Provider value={{ context, updateContext: realUpdate }}>
+        <App RouterView={RouterView} />
+      </SSRContext.Provider>
+    </Router>
+  );
 }
 export function createApp({
   store,
@@ -53,11 +75,12 @@ export function createApp({
 
   const appWithRouter = ssrContext ?
     // HookLifeCycle 不向 render 中传递 base 前部分
-    (<Router location={joinPath(routerBase, initUrl!)} basename={routerBase}>
-      <SSRContext.Provider value={ssrContext}>
-        <App RouterView={RouterView} />
-      </SSRContext.Provider>
-    </Router>) :
+    <AppWithSSRContext
+      ssrContext={ssrContext}
+      Router={Router}
+      location={joinPath(routerBase, initUrl!)}
+      basename={routerBase}
+    /> :
     (<Router basename={routerBase}>
       <App RouterView={RouterView} />
     </Router>);

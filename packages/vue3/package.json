@@ -1,6 +1,6 @@
 {
   "name": "@vise-ssr/vue3",
-  "version": "0.7.2",
+  "version": "0.8.0",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -14,11 +14,11 @@
     "build": "npm run clean && rollup -c ./rollup.config.js"
   },
   "peerDependencies": {
-    "vise-ssr": "0.7.2"
+    "vise-ssr": "0.8.0"
   },
   "dependencies": {
     "@vitejs/plugin-vue": "^3.1.0",
-    "@vise-ssr/shared": "0.7.2",
+    "@vise-ssr/shared": "0.8.0",
     "chalk": "^5.0.0",
     "enquirer": "^2.3.6",
     "jsdom": "^18.1.0",
@@ -40,6 +40,7 @@
     "rollup-plugin-terser": "^7.0.2",
     "@vue/compiler-core": "^3.2.25",
     "typescript": "~4.6.3",
+    "vise-ssr": "0.8.0",
     "vite": "^3.1.4",
     "vue-tsc": "^0.40.0"
   },

@@ -9,29 +9,53 @@ import type {
   HttpHeaders,
 } from '@vise-ssr/shared';
 
-import type { RenderContext, RenderError, RenderContextExtra } from './hooks/';
+import type { RenderContext, RenderError } from './hooks/';
 
-// shared package
-export {
-  injectors,
-  replaceContentBetweenMarks,
-  replacePlaceholderWithValue,
-  getPlaceholderOf,
-  getAppVisePath,
-  mergeConfig,
-} from '@vise-ssr/shared';
+// describe an HTTP request in RenderContext
+type HTTPRequest = {
+  // url passed between hooks will remove routerBase prefix
+  // eg, https://example.com/path/to/app-name/page-a/ will be /page-a/
+  readonly url: string,
+  readonly headers: HttpHeaders,
+  readonly body?: string,
+};
+
+// used by HTTP server to send real response
+type HTTPResponse = {
+  code: number,
+  headers: HttpHeaders,
+  body?: string,
+};
+
+/**
+ * data used by vise during SSR
+ * HTTP server can send initState, routerBase to render bundle
+ * render bundle can send back title, cache, updated initState
+ */
+type RenderContextMeta = Partial<{
+  title: string,          // page title
+  cache: boolean,         // should SSR result be cached
+  initState: JSONObject,  // initState used for store
+
+  // url in HTTP request passed around hooks do not have
+  // routerBase prefix
+  routerBase: string,
+  app: string,            // UI library app rendered as string
+  template: string,       // HTML template
+  preloadLinks: string,   // preload link as string for the rendered page
+}>;
 
 // server entry 打包生成的 server-render-bundle
 type ViseRenderBundle = {
   render: SsrBundleRender;
 };
 
-type HashMap = {
-  [key: string]: JSONValue;
+type SsrContext = {
+  meta: RenderContextMeta,
+  extra: JSONObject,
 };
 
-type SsrBundleSuccessKey = 'app' | 'html' | 'template' | 'preloadLinks';
-type SsrBundleSuccess = Record<SsrBundleSuccessKey, string> & Record<'extra', RenderContextExtra>;
+type SsrBundleSuccess = Record<'html', string> & SsrContext;
 type SsrBundleResult = SsrBundleSuccess | RenderError;
 type SsrBundleRender = (renderContext: RenderContext) => Promise<SsrBundleResult>;
 
@@ -60,21 +84,33 @@ export type {
   JSONValue,
   JSONArray,
   JSONObject,
-  HashMap,
   EHtmlFixedPositions,
+
+  HTTPRequest,
+  HTTPResponse,
+  RenderContextMeta,
+  SsrContext,
 
   ParsedViseConfig,
   HttpHeaders,
-  RenderContextExtra,
   SsrBundleSuccess,
   SsrBundleResult,
-  SsrBundleSuccessKey,
   SsrBundleRender,
   SsrFetchConfig,
   SsrFetchResultOf,
   SsrFetchResult,
   ViseRenderBundle,
 };
+
+// shared package
+export {
+  injectors,
+  replaceContentBetweenMarks,
+  replacePlaceholderWithValue,
+  getPlaceholderOf,
+  getAppVisePath,
+  mergeConfig,
+} from '@vise-ssr/shared';
 
 // utils 相关
 export { default as isEqual } from './node/utils/is-equal';
@@ -94,8 +130,6 @@ export type {
 // hooks 相关 export
 export {
   // types
-  HTTPRequest,
-  HTTPResponse,
   ResolvedRequest,
   CacheInfo,
   HitCache,

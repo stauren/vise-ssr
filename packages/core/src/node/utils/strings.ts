@@ -6,8 +6,7 @@ import {
 } from '@vise-ssr/shared';
 import type {
   JSONObject,
-  RenderContextExtra,
-  SsrBundleSuccess,
+  RenderContext,
 } from '../../';
 import type {
   SuccessRenderResult,
@@ -17,23 +16,23 @@ function getInitStateScript(initState: JSONObject) {
   return `<script>try { window.Vise.initState = ${serialize(initState)}; } catch (err) { console.error('[Vise] fail to read initState.'); }</script>`;
 }
 
-type PureSsrBundleResult = Omit<SsrBundleSuccess, 'extra'>;
-
 export {
   replaceContentBetweenMarks,
   replacePlaceholderWithValue,
 };
-export function fillSsrTemplate(
-  ssrResult: PureSsrBundleResult,
-  extra: RenderContextExtra,
-): string {
-  let html = ssrResult.template;
+
+const fieldsToFill = <const>[
+  'app',
+  'preloadLinks',
+];
+export function fillSsrTemplate({ meta }: RenderContext): string {
+  let html = meta.template!;
   // 使用 vue 中通过 useSSRContext 传出的变量控制页面，可以通过 RenderContext.extra 取回
   // 目前暂时只处理 title 和 initState
-  if (extra.title) {
+  if (meta.title) {
     // true 的含义是把 marks 换掉，避免输出内容出现不明注释
-    const replacement = extra.title
-      ? `<title>${String(extra.title)}</title>`
+    const replacement = meta.title
+      ? `<title>${String(meta.title)}</title>`
       : true;
     // <title> 已经使用 vise config 中的配置在 html 模板中替换了一次，
     // 但依旧带着 mark 注释，为了这里使用动态数据再次替换
@@ -48,21 +47,18 @@ export function fillSsrTemplate(
   html = replacePlaceholderWithValue(
     html,
     'initState',
-    getInitStateScript(extra.initState || {}),
+    getInitStateScript(meta.initState || {}),
   );
 
-  type BundleKeys = (keyof PureSsrBundleResult)[];
-  return (Object.keys(ssrResult) as BundleKeys)
+  return fieldsToFill
     .reduce((lastValue, key) => {
-      const value = ssrResult[key] ?? '';
+      const value = meta[key] ?? '';
       return replacePlaceholderWithValue(lastValue, key, value);
     }, html);
 }
 
 export function refillRenderResult(renderResult: SuccessRenderResult): SuccessRenderResult {
   return mergeConfig(renderResult, {
-    ssrResult: {
-      html: fillSsrTemplate(renderResult.ssrResult, renderResult.context.extra),
-    },
+    html: fillSsrTemplate(renderResult.context),
   });
 }
