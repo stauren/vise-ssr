@@ -1,4 +1,3 @@
-import cookie from 'cookie';
 import { renderToString, SSRContext } from 'vue/server-renderer';
 import {
   SsrBundleResult,
@@ -47,17 +46,13 @@ export function parseUrl(url: string) {
 }
 
 export async function render(renderContext: RenderContext): Promise<SsrBundleResult> {
-  const { request, extra } = renderContext;
-  const { routerBase = '/' } = extra;
+  const { request, extra, meta } = renderContext;
+  const { routerBase = '/' } = meta;
   const { app: vueApp, router, store } = createApp(routerBase);
   const { headers } = request;
 
-  const cookies = cookie.parse(headers.cookie as string || '');
-  // 'user-agent often used in the SSR initialization phase
-  const userAgent = headers['user-agent'] as string || '';
-  router.$ssrContext = {
-    headers,
-  };
+  // const cookies = cookie.parse(headers.cookie as string || '');
+  // const userAgent = headers['user-agent'] as string || '';
 
   const goToRoute = parseUrl(request.url);
   if (router.resolve(goToRoute).matched.length === 0) {
@@ -76,7 +71,7 @@ export async function render(renderContext: RenderContext): Promise<SsrBundleRes
 
   const beforeRenderInitState = cloneDeep({
     ...store.state,
-    ...(isObject(extra.initState) ? extra.initState : {}),
+    ...(isObject(meta.initState) ? meta.initState : {}),
   });
   store.replaceState(cloneDeep(beforeRenderInitState));
 
@@ -85,9 +80,8 @@ export async function render(renderContext: RenderContext): Promise<SsrBundleRes
   // itself on ctx.modules. After the render, ctx.modules would contain all the
   // components that have been instantiated during this render call.
   const ssrContext: SSRContext = {
-    cookies,
-    userAgent,
-    ...extra,
+    meta,
+    extra,
   };
   const app = await renderToString(vueApp, ssrContext);
   const stateToTransport = strictInitState
@@ -99,37 +93,31 @@ export async function render(renderContext: RenderContext): Promise<SsrBundleRes
   // request.
   // manifest will be injected in MACRO-like way at build time.
   const preloadLinks = renderPreloadLinks(ssrContext.modules, manifest);
-  const newExtra = Object.keys(ssrContext).reduce((lastValue, key) => {
-    if (isPrimitive(ssrContext[key])) {
-      return {
+
+  const newContext: RenderContext = {
+    request,
+    meta: {
+      routerBase: meta.routerBase,
+      initState: stateToTransport,
+      title: ssrContext.meta.title,
+      cache: ssrContext.meta.cache,
+      template,
+      preloadLinks,
+      app,
+    },
+    extra: Object.entries(ssrContext.extra)
+      .filter(([key, value]) => isPrimitive(value))
+      .reduce((lastValue, [key, value]) => ({
         ...lastValue,
-        [key]: ssrContext[key],
-      };
-    }
-    return lastValue;
-  }, {
-    initState: stateToTransport,
-    title: '',
-    noCache: ssrContext.noCache === true,
-  });
+        [key]: value,
+      }), {}),
+  };
 
-  const html = template === '' ? '' : fillSsrTemplate({
-    app,
-    template,
-    preloadLinks,
-    html: '',
-  }, {
-    ...newExtra,
-  });
-
-  router.$ssrContext = undefined;
+  const html = template === '' ? '' : fillSsrTemplate(newContext);
 
   return {
-    extra: newExtra,
-    app,
-    preloadLinks,
-    template,
     html,
+    ...newContext,
   };
 }
 

@@ -9,7 +9,7 @@ Vise 将服务端渲染拆分为多个核心阶段，为每个阶段提供了基
 
 官网及详细文档: [https://stauren.github.io/vise-ssr/](https://stauren.github.io/vise-ssr/)
 
-版本发布日志: [CHANGELOG](https://github.com/stauren/vise-ssr/blob/main/packages/core/CHANGELOG.md)
+版本发布日志: [CHANGELOG](https://github.com/stauren/vise-ssr/blob/main/CHANGELOG.md)
 
 # 整体设计
 ![Vise SSR framework 整体设计](https://cdn.rawgit.com/stauren/vise-ssr/main/packages/app-vue3-intro/public/images/ssr.drawio.png)

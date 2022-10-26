@@ -1,5 +1,9 @@
 import tapable, { AsyncHook } from 'tapable';
-import type { HttpHeaders, JSONObject, SsrBundleSuccessKey } from '../';
+import type {
+  HTTPRequest,
+  HTTPResponse,
+  SsrContext,
+} from '../';
 import type { VisePlugin } from './hook-plugin';
 
 export const ALL_HOOKS = [
@@ -23,36 +27,12 @@ export type HookNames = typeof ALL_HOOKS[number];
 
 export type InnerHookNames = typeof HOOK_TO_INNER[keyof typeof HOOK_TO_INNER];
 
-// 渲染上下文中描述 HTTP 请求类型对象
-export type HTTPRequest = {
-  // 注意 url 不是完整 url，是去除前缀之后的 pathname 部分
-  // 如线上路径是 https://example.com/path/to/app-name/page-a/ 对的 url 是 /page-a/
-  readonly url: string,
-  readonly headers: HttpHeaders,
-  readonly body?: string,
-};
-
-// 钩子拦截的时候，返回的人造 HTTP 响应对象
-export type HTTPResponse = {
-  code: number,
-  headers: HttpHeaders,
-  body?: string,
-};
-
-// 供渲染期间传递参数使用
-export type RenderContextExtra = JSONObject & Partial<{
-  title: string,
-  noCache: boolean,
-  initState: JSONObject,
-  routerBase: string,
-}>;
-
-// HTTP 渲染上下文，主要用来传递 HTTP 请求内容和在 extra 中存储各个钩子的额外数据
+// SSR Render Context, used for store the HTTP request
+// and the data shared between multiple hooks
 export type RenderContext = {
   request: HTTPRequest,
-  extra: RenderContextExtra,
   error?: RenderError, // 当各个钩子发生异常时，可以在渲染上下文携带该error信息
-};
+} & SsrContext;
 
 // 渲染解析类型，存储原始渲染上下文及解析后上下文
 export type ResolvedRequest = {
@@ -106,8 +86,7 @@ export type SuccessRenderResult = RenderResultBase & {
   // 完成了全新 SSR 渲染时触发
   type: 'render',
   // SSR 渲染结果
-  // 注意不要修改 SsrBundleSuccess.app 部分，会造成 hydration mismatch
-  ssrResult: Record<SsrBundleSuccessKey, string>,
+  html: string,
   // afterRender hooks 需要 cacheInfo 来更新缓存，如果 beforeUseCache 有返回则会带入
   cacheInfo?: CacheInfo,
 };

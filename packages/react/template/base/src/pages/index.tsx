@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import type { RenderContext } from 'vise-ssr';
 import '@/styles/page-index.scss';
 import { useAppDispatch, useAppSelector } from '@/hooks/store';
 import {
@@ -9,7 +10,13 @@ import {
 } from '@/store/slices/vise-intro';
 import { fetchLuckyNumber } from '@/services';
 
-function PageIndex() {
+type PageIndexAttr = {
+  ssrContext: {
+    context: Pick<RenderContext, 'meta' | 'extra'>,
+    updateContext: (context: Pick<RenderContext, 'meta' | 'extra'>) => void,
+  }
+};
+function PageIndex({ ssrContext: { context, updateContext } }: PageIndexAttr) {
   const dispatch = useAppDispatch();
 
   const [localCount, setCount] = useState(0);
@@ -19,7 +26,7 @@ function PageIndex() {
   const updateLuckyNumber = () => {
     setLuckyNumberToDisplay('--');
     setTimeout(() => {
-      // 额外包装一层是为了规避 @typescript-eslint/no-misused-promises 报错
+      // avoid @typescript-eslint/no-misused-promises error
       (async () => {
         const num = await fetchLuckyNumber();
         dispatch(setLuckyNumber(num));
@@ -30,6 +37,13 @@ function PageIndex() {
 
   const countInStore = useAppSelector(selectCount);
   const title = 'Vise: SSR with Vite + TypeScript + Server Hooks';
+  updateContext({
+    ...context,
+    meta: {
+      ...context.meta,
+      title,
+    },
+  });
 
   return (
     <div className="theme-default-content page-index">

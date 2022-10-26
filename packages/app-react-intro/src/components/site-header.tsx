@@ -88,7 +88,7 @@ export default function SiteHeader() {
                     </li>
                     <li className="dropdown-subitem">
                       <a
-                        href="https://github.com/stauren/vise-ssr/blob/main/packages/core/CHANGELOG.md"
+                        href="https://github.com/stauren/vise-ssr/blob/main/CHANGELOG.md"
                         className="nav-link"
                       > CHANGELOG </a>
                     </li>

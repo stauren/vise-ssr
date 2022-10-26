@@ -27,6 +27,7 @@ export const SCAFFOLD_FILES = {
   router: 'router.tsx',
   serverEntry: 'entry-server.ts',
   clientEntry: 'entry-client.ts',
+  ssrContext: 'ssr-context.ts',
 } as const;
 
 const scaffoldContents: Partial<Record<keyof typeof SCAFFOLD_FILES, string>> = {};
@@ -248,6 +249,10 @@ export function getScaffoldModules(
         return await getHooksContents(userConfig);
       },
     },
-
+    [path.resolve(appVisePath, SCAFFOLD_FILES.ssrContext)]: {
+      async content() {
+        return await getScaffoldContent('ssrContext');
+      },
+    },
   };
 }

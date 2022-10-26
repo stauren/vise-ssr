@@ -1,4 +1,3 @@
-import cookie from 'cookie';
 import { renderToString } from 'react-dom/server'
 import { StaticRouter } from 'react-router-dom/server.mjs'
 import {
@@ -51,11 +50,7 @@ export function parseUrl(url: string) {
 }
 
 export async function render(renderContext: RenderContext): Promise<SsrBundleResult> {
-  const { request, extra } = renderContext;
-  const { headers } = request;
-
-  const cookies = cookie.parse(headers.cookie as string || '');
-  const userAgent = headers['user-agent'] as string || '';
+  const { request, extra, meta } = renderContext;
 
   const goToRoute = parseUrl(request.url);
   if (!matchUrl(goToRoute)) {
@@ -76,8 +71,7 @@ export async function render(renderContext: RenderContext): Promise<SsrBundleRes
   });
 
   const ssrContext = {
-    cookies,
-    userAgent,
+    meta,
     extra,
   };
   const reactApp = createApp({
@@ -91,36 +85,30 @@ export async function render(renderContext: RenderContext): Promise<SsrBundleRes
     ? beforeRenderInitState
     : store.getState();
 
-  const newExtra = Object.keys(ssrContext).reduce((lastValue, key) => {
-    if (isPrimitive(ssrContext[key])) {
-      return {
+  const newContext: RenderContext = {
+    request,
+    meta: {
+      routerBase: meta.routerBase,
+      initState: stateToTransport,
+      title: ssrContext.meta.title,
+      cache: ssrContext.meta.cache,
+      template,
+      preloadLinks: '',
+      app,
+    },
+    extra: Object.entries(ssrContext.extra)
+      .filter(([key, value]) => isPrimitive(value))
+      .reduce((lastValue, [key, value]) => ({
         ...lastValue,
-        [key]: ssrContext[key],
-      };
-    }
-    return lastValue;
-  }, {
-    initState: stateToTransport,
-    title: '',
-    noCache: ssrContext.noCache === true,
-  });
+        [key]: value,
+      }), {}),
+  };
 
-  const preloadLinks = '';
-  const html = template === '' ? '' : fillSsrTemplate({
-    app,
-    template,
-    preloadLinks,
-    html: '',
-  }, {
-    ...newExtra,
-  });
+  const html = template === '' ? '' : fillSsrTemplate(newContext);
 
   return {
-    extra: newExtra,
-    app,
-    preloadLinks,
-    template,
     html,
+    ...newContext,
   };
 }
 

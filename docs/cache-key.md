@@ -53,14 +53,14 @@ const config: ViseConfig = {
 ## 防止缓存错误结果
 在 SSR 构建页面过程中，可能会发生诸如接口超时等错误，此时构建出来的是一个带有错误信息或者空白内容的页面，可能需要在浏览器端重试接口后重新渲染页面。
 
-在这种情况下，必须阻止服务端缓存此错误页面，以免把临时网络抖动的异常页面提供给后续的大量可以本来可以看到正常页面的用户。Vise 通过 `useSSRContext`，让 Vue 通知设置 `ssrContext.noCache = true;` 服务器，不要缓存此页面：
+在这种情况下，必须阻止服务端缓存此错误页面，以免把临时网络抖动的异常页面提供给后续的大量可以本来可以看到正常页面的用户。Vise 通过 `useSSRContext`，让 Vue 通知设置 `ssrContext.meta.cache = false;` 服务器，不要缓存此页面：
 ```typescript
 // comePageOrComponent.vue
 export default defineComponent({
   setup() {
     const ssrContext = useSSRContext();
     //... fetch & init the page, some error happens
-    ssrContext.noCache = true;
+    ssrContext.meta.cache = true;
   }
 
 });

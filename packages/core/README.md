@@ -13,7 +13,7 @@ Vise (pronounced [vaɪs]) is an isomorphic Web SSR framework based on [Vite][vit
 
 Full Documentation: [https://stauren.github.io/vise-ssr/](https://stauren.github.io/vise-ssr/)
 
-CHANGELOG: [CHANGELOG](https://github.com/stauren/vise-ssr/blob/main/packages/core/CHANGELOG.md)
+CHANGELOG: [CHANGELOG](https://github.com/stauren/vise-ssr/blob/main/CHANGELOG.md)
 
 Download from npm: [vise-ssr](https://www.npmjs.com/package/vise-ssr)
 

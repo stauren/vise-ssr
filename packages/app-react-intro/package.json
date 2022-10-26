@@ -20,10 +20,11 @@
     "sass": "^1.50.1"
   },
   "devDependencies": {
+    "@types/cookie": "^0.4.1",
     "@types/react": "^18.0.0",
     "@types/react-router-dom": "^5.3.3",
-    "@vise-ssr/react": "0.7.2",
+    "@vise-ssr/react": "0.8.0",
     "rollup": "~2.78.0",
-    "vise-ssr": "0.7.2"
+    "vise-ssr": "0.8.0"
   }
 }

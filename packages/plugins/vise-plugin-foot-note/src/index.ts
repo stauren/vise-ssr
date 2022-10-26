@@ -22,10 +22,10 @@ const footNotePlugin = (): VisePlugin => {
     const costTime = `cost ${new Date().getTime() - (startTime as number)} ms`;
     // 成功渲染页面
     if (renderResult.type === RenderResultCategory.render) {
-      const { cacheInfo, ssrResult: { html }, context: { extra } }  = renderResult;
-      const { noCache } = extra;
+      const { cacheInfo, ssrResult: { html }, context: { meta } }  = renderResult;
+      const { cache } = meta;
       const key = cacheInfo?.key;
-      const cacheFoot = (key && !noCache) ? `newCache,${cacheInfo?.key}` : `abandonCache,noCache:${noCache}`;
+      const cacheFoot = (key && cache) ? `newCache,${cacheInfo?.key}` : 'abandon cache';
       footStr = [cacheFoot, costTime].join(',');
       return {
         ...renderResult,

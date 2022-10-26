@@ -46,7 +46,10 @@ module.exports = {
     ],
   },
   overrides: [{
-    files: ['packages/**/*.vue'],
+    files: [
+      'packages/**/*.vue',
+      'packages/app-vue3-intro/**/*.ts',
+    ],
     rules: {
       'react-hooks/rules-of-hooks': 'off',
     },

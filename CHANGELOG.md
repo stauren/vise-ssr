@@ -1,3 +1,13 @@
+# [0.8.0](https://github.com/stauren/vise-ssr/tree/v0.8.0) (2022-10-25)
+### Features
+- **Vise react SSRContext**: All pages in vise-react apps will receive an ssrContext attribute, for accessing and updating values in RenderContext.meta and RenderContext.extra. For example title of the page could be changed via RenderContext.meta.title
+- **meta and extra in RenderContext**: Now RenderContext has RenderContext.meta which contains all metadata used by Vise, and RenderContext.extra which contains all user custom data used in server-hooks; They used to be both on RenderContext.extra
+- **SsrBundleSuccess simplified**: Then render result type of SsrBundleSuccess used to have 'app', 'html', 'template', 'preloadLinks' properties, now only 'html'. Other rendered pieces are moved to RenderContext.meta.
+- **hook-logger**: Now the hook-logger has shorter default output by reducing logged HTTP headers.
+- fetch hooks in vue component removed.
+- Related document updated.
+### Bug Fixes
+- fix a cache bug in express-server.
 # [0.7.2](https://github.com/stauren/vise-ssr/tree/v0.7.2) (2022-10-13)
 ### Features
 - using vitest to replace jest

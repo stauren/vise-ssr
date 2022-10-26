@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { appPages } from './env.ts';
+import { useSSRContext } from './ssr-context.ts';
 
 type ReactLazyRoutes = {
   path: string,
@@ -47,6 +48,7 @@ export function matchUrl(url: string) {
 }
 
 export default function RouterView() {
+  const ssrContext = useSSRContext();
   return (
     <>
       <Routes>
@@ -56,7 +58,7 @@ export default function RouterView() {
               key={route.path}
               path={route.path}
               element={
-                <route.page />
+                <route.page ssrContext={ssrContext} />
               }
             />
         )

@@ -5,6 +5,7 @@
     "baseUrl": "./",
     "sourceMap": true,
     "declaration": true,
+    "jsx": "react-jsx",
     "paths": {
       "enquirer": ["./types/enquirer.d.ts"]
     }

@@ -1,4 +1,5 @@
----
+-
+-
 layout: page
 title: "开始开发"
 permalink: /zh-CN/start-develop.html
@@ -54,67 +55,37 @@ permalink: /zh-CN/start-develop.html
 
   $ cd app-my-project
   $ npm install
-  $ vise dev          
+  $ npm run dev          
   ```
 
 ## 开发调试
->__注意: 由于 yarn 对 workspaces 互相调用的更好支持，Vise 推荐使用 yarn 管理 npm 依赖__
 - 初始化项目
   ```shell
     $ yarn install 
     // npm 亦可
     $ npm install 
   ```
-- 如使用 monorepo, 在 packages/app-my-project 中执行 
-- 如未用 monorepo, 在 app-my-project 目录执行 
+- 在 app-my-project 目录执行 
   ```shell
-  $ vise dev
+  $ npm run dev
   ```
   即可开始使用 [Vite][vite] 进行开发调试。
 
 ## 项目构建
 ### Vue 业务项目构建
-- 如使用 monorepo, 在 packages/app-my-project 中执行 
-- 如未用 monorepo, 在 app-my-project 目录执行 
+- 在 app-my-project 目录执行 
   ```shell
   $ vise build
   ```
   即可对 app 项目进行构建打包，打包后将得到可以部署在 CDN 的 client bundle 及需要部署在 server 端的 server bundle。
-### 服务端构建
-不同的 server 打包逻辑不同，如果是从源码构建，则需要将业务项目构建的 bundle 放入 server 源码打包（有 require 依赖），当然也可以 server 先用一个空文件构建，然后直接用业务 bundle 覆盖 部署。
 
-#### 构建示范用 express-server  
-- 部署业务项目产物到服务器目录  
-
-- express-server 构建  
-  在 packages/express-server 目录执行：
-  ```shell
-  $ npm run build
-  ```
-  即可完成 express-server 构建，并获得 dist/index.js 产物。
-
-## 项目部署
-项目部署取决于具体使用的服务器、容器平台及使用的流水线。
-### 基于流水线构建
 ## 启动服务
 ### 启动 express-server 服务
-- 在 Vise 源码目录进入 packages/express-server 目录后执行：
+- 构建完成后，在 app-my-project 目录执行 
   ```shell
   $ npm run serve
   ```
   即可启动服务，访问 [http://localhost:3000](http://localhost:3000) 即可查看页面。
-
-## 快捷方式
-- clone Vise 源码后，在 Vise 源码根目录，执行如下代码构建整个项目并开始提供服务：
-  ```shell
-  $ npm run start
-  $ ./scripts/fully-rebuild-intro.sh
-  ```
-
-## 建立 monorepo
-Vise 建议使用 [monorepos](https://en.wikipedia.org/wiki/Monorepo) 管理项目，如果是从 0 开始开发，需要从 0 开始创建 monorepo 根目录。
-
-// TODO: 补充 monorepo 新建文档
 
 ## App 目录结构
 ```shell

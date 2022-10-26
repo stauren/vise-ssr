@@ -91,14 +91,15 @@ export default class SSRRenderService {
           return;
         }
 
-        const { extra, ...ssrResult } = resMsg.data;
+        const { extra, html, meta } = resMsg.data;
         resolve({
           type: 'render',
           renderBy: RENDER_NAME,
           context: mergeConfig(renderContext, {
+            meta,
             extra,
           }),
-          ssrResult,
+          html,
         });
       });
     }) as Promise<RenderResult>;

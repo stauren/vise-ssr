@@ -1,4 +1,4 @@
-import type { HashMap, JSONObject, JSONValue } from '../../';
+import type { JSONObject, JSONValue } from '../../';
 
 /**
  * 判断是否纯对象
@@ -10,27 +10,6 @@ import type { HashMap, JSONObject, JSONValue } from '../../';
 export function isPureObject(obj: any): boolean {
   return Object.prototype.toString.call(obj) === '[object Object]';
 };
-
-/**
- * 删除无效的 key
- *
- * @export
- * @param {HashMap} obj
- * @return {*}  {HashMap}
- */
-export function deleteInvalidKey(obj: HashMap): HashMap {
-  if (!isPureObject(obj)) return obj;
-
-  const newObj: HashMap = {};
-  const keys = Object.keys(obj);
-  keys.forEach((key) => {
-    const val = obj[key];
-    if (val === undefined || val === null) return;
-    newObj[key] = val;
-  });
-
-  return newObj;
-}
 
 export const cloneDeep = (function () {
   let seen: Array<[JSONObject, JSONObject]> = [];

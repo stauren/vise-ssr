@@ -84,7 +84,7 @@ export default async function newReactApp() {
 
   ${chalk.cyan(`$ cd app-${appName}`)}
   ${chalk.cyan('$ npm install')}
-  ${chalk.cyan('$ vise dev')}
+  ${chalk.cyan('$ npm run dev')}
   `);
   return allDone;
 }

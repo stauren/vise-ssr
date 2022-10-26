@@ -47,7 +47,7 @@ function halfSSRPlugin({
 }: PluginOpts): VisePlugin {
   // @ts-ignore
   async function render(renderContext: RenderContext): Promise<RenderResult>  {
-    const { projectName, initData } = renderContext.extra;
+    const { projectName, initState } = renderContext.extra;
     if (appConfig[(projectName as string)].renderType === 'halfSSR') {
       return {
         type: 'render',
@@ -56,11 +56,13 @@ function halfSSRPlugin({
         ssrResult: {
           html: renderHalfSSRhtml(
             templates[(projectName as string)],
-            initData,
+            initState,
           ),
           // @ts-ignore
           ssrContext: {
-            noCache: true,
+            meta: {
+              cache: false,
+            },
           },
         },
       };

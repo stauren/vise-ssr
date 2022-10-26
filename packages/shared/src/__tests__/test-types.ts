@@ -35,7 +35,7 @@ type HTTPResponse = {
 // 供渲染期间传递参数使用
 type RenderContextExtra = JSONObject & Partial<{
   title: string,
-  noCache: boolean,
+  cache: boolean,
   initState: JSONObject,
   routerBase: string,
 }>;

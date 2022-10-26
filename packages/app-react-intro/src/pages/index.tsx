@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import type { RenderContext } from 'vise-ssr';
 import '@/styles/pages/index.scss';
 import { useAppDispatch, useAppSelector } from '@/hooks/store';
 import {
@@ -10,7 +11,14 @@ import {
 import { fetchLuckyNumber } from '@/services';
 import BenchmarkNav from '@/components/benchmark-nav';
 
-function PageIndex() {
+type PageIndexAttr = {
+  ssrContext: {
+    context: Pick<RenderContext, 'meta' | 'extra'>,
+    updateContext: (context: Pick<RenderContext, 'meta' | 'extra'>) => void,
+  }
+};
+
+function PageIndex({ ssrContext: { context, updateContext } }: PageIndexAttr) {
   const dispatch = useAppDispatch();
 
   const [localCount, setCount] = useState(0);
@@ -31,6 +39,13 @@ function PageIndex() {
 
   const countInStore = useAppSelector(selectCount);
   const title = 'Vise: SSR with Vite + TypeScript + Server Hooks';
+  updateContext({
+    ...context,
+    meta: {
+      ...context.meta,
+      title,
+    },
+  });
 
   return (
     <div className="theme-default-content">
