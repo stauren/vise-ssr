@@ -283,7 +283,7 @@ const serverHooks: ViseHooks = {
       return mergeConfig<typeof renderResult>(renderResult, {
         error: {
           detail: {
-            reason: 'info sent with error result, can be ready by beforeResponse hook',
+            reason: 'info sent with error result, can be read by beforeResponse hook',
           },
         },
       });

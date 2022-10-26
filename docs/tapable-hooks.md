@@ -5,43 +5,30 @@ permalink: /tapable-hooks.html
 lang: en
 ---
 translation in progress
-## 概述
-在进行 SSR 页面渲染的时候，从服务器收到客户度发来的 HTTP Request 请求，到服务端完成构建并发出 HTTP Response 响应的整个阶段中，调用 Vue 等框架的服务端渲染包如 `vue/server-renderer` 将关键的 Vue app 渲染为 HTML 字符串是关键的一步（Vise 框架不止限于支持 Vue 框架，Vise 是可以跨框架完成 SSR 渲染的，以下举例仍然使用 Vue），Vise 框架也是围绕这个 app 渲染步骤来进行的构建。
+## Tapable hooks in server
+It's an important step of the HTTP servers using server renderers of web user interface libraries such as `vue/server-renderer` and `react-dom/server` to render web applications to strings or streams during SSR (server side rendering). Vise is built around the SSR process.
 
-同样重要的是，业务在服务端需要除去 Vue 渲染的其它逻辑，如
-1. 从第三方接口加载 Vue 渲染需要的初始化数据
-1. 完成特定的数据上报
-1. 加载数据和渲染异常梳理
-1. 服务端缓存的使用逻辑
+It's also important that web applications may need other logics on the server during SSR such as:
+1. Fetch data from APIs used in page rendering.
+1. Caching and reusing of SSR HTML.
+1. Error handling like fail to fetch data or 404 visit.
+1. Generation of HTML fragments outside the `<App>` tag.
+1. Statistics and reporting of data.
 
-这些逻辑可以放到 Vue render bundle 中，但这会导致服务端执行代码和客户端执行代码难以分开，尤其是在他们对第三方包有不同依赖的时候，可能导致客户端加载大量不必要的服务端运行代码。另外一个选择是把业务的服务端逻辑硬编码到服务端代码中（这也是 Vise 早期的方式），但这会导致扩展性的问题。
+Some of these logics could be put in hooks of web user interface libraries such as `created`, but the downside is that server logic and client logic are mixed. Sometimes they have totally different 3rd party dependencies, which may cause the generated client bundle to contain unnecessary sever packages and impact user experience.
 
-为了解决以上问题， Vise 基于 [tapable] 定义了基于 hooks 的服务端生命周期：
-1. 通过 hooks 定义标准的、与业务无关的服务端生命周期，剥离特定业务和 server 端核心实现；
-1. 多个业务 app 可以并存于同一服务器而不冲突，各个业务 app 独立定义自身的服务端逻辑；
-1. hooks 使用灵活、可扩展，各个服务端的流程通过 hooks 标准化，服务器开发者和业务 app 开发者、插件开发者可以把各自的逻辑通过 hooks 整合到一起；
+Another way is putting those logics in HTTP servers, which is the early choice of Vise. But it's proved to cause scalability issues, since as the apps grows bigger and more apps deployed on the sever, the codes written in the HTTP servers could easily lose control.
 
-## Server Hooks 流程图
-![Vise tapable hooks 整体流程](./images/tapable-hooks.png)
+Vise defined the server life cycle, which is based on [tapable] and exposes multiple hooks from the point a server receiving an HTTP request from the user to the server sending the HTTP response of the request:
+1. Server logics of certain app belongs to the app but not the HTTP server anymore. 
+1. Server-only packages do not exist in the generated client bundles.
+1. Multiple apps could be deployed in the same server and scale up.
+1. Hooks are standard, flexible and extendable. Certain server side process could be abstracted as an Vise hooks plugin composed of several coordinated hooks and be reused easily.
 
-## 第三方依赖
-hooks 基于 tapable 实现，具体可参考：
-- <https://github.com/webpack/tapable>
-- <https://segmentfault.com/a/1190000039380095>
+## Vise Server Hooks Lifecycle
+![Vise server hooks lifecycle](./images/tapable-hooks.png)
 
-## 服务端 SSR 过程定义
-Vise 将服务端 SSR 过程定义为以下过程：
-```
-receiveHTTPRequest      // 接收到客户端发来的 HTTP 请求
-resolveHttpRequest      // 解析客户端发来的 HTTP 请求
-searchHTMLCache         // 搜索可用的 HTML 缓存
-renderPrepare           // 预加载页面渲染所需数据等
-renderHTML              // SSR 渲染 HTML
-sendHTTPResponse        // 发送 HTTP 响应
-```
-
-## 服务端 Hooks 定义
-基于以上抽象过程，Vise 定义以下 hooks 以便，开发者插入自定义逻辑：
+Vise defined 9 tapable hooks:
 - hooks.receiveRequest
 - hooks.requestResolved
 - hooks.beforeUseCache
@@ -52,103 +39,119 @@ sendHTTPResponse        // 发送 HTTP 响应
 - hooks.afterRender
 - hooks.beforeResponse
 
-## Hooks 详解
-### hooks.receiveRequest
-接收到 HTTP 请求后，可以在此拦截请求，跳转或者直接返回等，任意回调函数(tapped function)返回结果即终止其它回调函数执行
+## Hooks Detail
+### receiveRequest
+HTTP requests could be intercepted in this hook after server received it from clients. Bypass the default SSR is possible by return a custom `RenderResult`. 
 
-| 类别 | Description |
+Any tapped function returns `RenderResult` will invalidate the return value of other tapped functions.
+
+If default rendering is bypassed, the next hook is `hooks.afterRender`.
+
+| Key | Content |
 | ----------- | ----------- |
-| 名称 | receiveRequest |
-| Hook 类型 | AsyncParallelBailHook |
-| 参数类型 | HTTPRequest |
-| 返回值类型 | Omit<RenderResult, 'type' \| 'renderBy'> \| void |
+| Name | receiveRequest |
+| Hook Type | AsyncParallelBailHook |
+| Parameters | HTTPRequest |
+| Return Value | Omit<RenderResult, 'type' \| 'renderBy'> \| void |
 
 ### hooks.requestResolved
-HTTP 请求解析完成，多个钩子函数顺序执行传递解析结果，可在此修改解析结果（注意：如果修改了 url，会导致 hydration 时候出现 mismatch：js 端看到的是修改前的 urlA，服务端看到的是修改后的 urlB，所以如果这里修改 url，需要配合前端的逻辑同步修改）
+Tapped functions receive a `ResolvedRequest` and return a `ResolvedRequest`. Marks could be added to context of certain requests for later process. Be careful of [hydration mismatch] if you change data in the HTTPRequest.
 
-| 类别 | Description |
+Multiple tapped functions execute one by one in order.
+
+| Key | Content |
 | ----------- | ----------- |
-| 名称 | requestResolved |
-| Hook 类型 | AsyncSeriesWaterfallHook |
-| 参数类型 | ResolvedRequest |
-| 返回值类型 | ResolvedRequest  |
+| Name | requestResolved |
+| Hook Type | AsyncSeriesWaterfallHook |
+| Parameters | ResolvedRequest |
+| Return Value | ResolvedRequest  |
 
 ### hooks.beforeUseCache
-在开始使用 HTML 缓存之前执行，如果确定缓存是否过期需要请求接口，可以在这里请求（如放映厅请求无极数据已确定缓存是否过期），多个钩子并行执行，串行依赖自行在单个钩子中解决。返回钩子返回结果即终止其它钩子执行。返回 CacheInfo 包含 cache key、cache 有效期信息；会使用其中信息试图命中缓存，如果未命中，重新生成的 HTMl 会依赖此缓存信息进行缓存
+Tapped function calculate `CacheInfo` from `RenderContext`, which will be used to find previous cached SSR data or save newly generated SSR data.
 
-| 类别 | Description |
+Any tapped function return `CacheInfo` will invalidate the return value of other tapped functions.
+
+| Key | Content |
 | ----------- | ----------- |
-| 名称 | beforeUseCache |
-| Hook 类型 | AsyncParallelBailHook |
-| 参数类型 | RenderContext |
-| 返回值类型 | CacheInfo \| void |
+| Name | beforeUseCache |
+| Hook Type | AsyncParallelBailHook |
+| Parameters | RenderContext |
+| Return Value | CacheInfo \| void |
 
 ### hooks.findCache
-根据 CacheInfo 参数中的信息，返回命中的缓存 HTML 字符串。这个钩子主要是给 server 实现者注入 Redis 查询逻辑等使用，并行执行，第一个返回的结果即为命中的缓存。除非特殊情况 app 业务实现方应该忽略此 hook，否则可能使服务端缓存失效
+Find previously cached SSR data with `CacheInfo`.
 
-| 类别 | Description |
+Any tapped function return string will invalidate the return value of other tapped functions.
+
+| Key | Content |
 | ----------- | ----------- |
-| 名称 | findCache |
-| Hook 类型 | AsyncParallelBailHook |
-| 参数类型 | CacheInfo |
-| 返回值类型 | string \| void |
+| Name | findCache |
+| Hook Type | AsyncParallelBailHook |
+| Parameters | CacheInfo |
+| Return Value | string \| void |
 
 ### hooks.hitCache
-在 HTML 缓存命中后并行执行所有钩子，然后响应 HTTP 请求，无法在此更改响应，可做统计等
+Tapped functions will be notified with a successful cache hit event.
 
-| 类别 | Description |
+| Key | Content |
 | ----------- | ----------- |
-| 名称 | hitCache |
-| Hook 类型 | AsyncParallelHook |
-| 参数类型 | HitCache |
-| 返回值类型 | void |
+| Name | hitCache |
+| Hook Type | AsyncParallelHook |
+| Parameters | HitCache |
+| Return Value | void |
 
 ### hooks.beforeRender
-在准备使用 Vue render bundle 等服务端渲染包生成 HTML 之前调用，可用来请求依赖数据等，多个钩子顺序执行传递请求参数
+Tapped functions will be called in order before rendering HTML with server renderer provided by web UI libraries. Typically this could be used to fetch data for SSR. Data should be transferred in `RenderContext.extra`.
 
-| 类别 | Description |
+| Key | Content |
 | ----------- | ----------- |
-| 名称 | beforeRender |
-| Hook 类型 | AsyncSeriesWaterfallHook |
-| 参数类型 | RenderContext |
-| 返回值类型 | RenderContext |
+| Name | beforeRender |
+| Hook Type | AsyncSeriesWaterfallHook |
+| Parameters | RenderContext |
+| Return Value | RenderContext |
 
 ### hooks.render
-渲染服务端 App 时调用，对于 Vue 应用，此步骤对应加载 vue-render-bundle 渲染页面。这个钩子主要是给  server  实现方使用，并行执行，第一个返回的结果即为渲染结果。渲染结果 RenderResult 支持多种类型，包括渲染失败等情况。除非特殊情况 app 业务实现方应该忽略此 hook。
+HTTP server should tap this hook, import app's render bundle and render the HTML with data in `RenderContext`. Applications generally don't use this hook unless custom rendering is expected.
 
-| 类别 | Description |
+| Key | Content |
 | ----------- | ----------- |
-| 名称 | render |
-| Hook 类型 | AsyncParallelBailHook |
-| 参数类型 | RenderContext |
-| 返回值类型 | RenderResult |
+| Name | render |
+| Hook Type | AsyncParallelBailHook |
+| Parameters | RenderContext |
+| Return Value | RenderResult |
 
 ### hooks.afterRender
-在 App 渲染完成后执行，根据渲染成功或失败，RenderResult 可能为成功或失败，如需重载渲染结果，钩子可以返回更改后的 RenderResult。渲染结果中包含 SsrBundleResult，服务端会使用 SsrBundleResult 中的值重新拼装页面模板。这里可以简单替换掉页面 template 而不引起 hydration mismatch (模板是 Vue app 以外的部分)。注意钩子瀑布流顺序执行。
+Tapped functions will be called in order after render finishes, processing the result of a successful rendering or handle the error of a failed rendering.
+Failed SSR could be downgraded to CSR here.
+Be careful of [hydration mismatch].
 
-| 类别 | Description |
+| Key | Content |
 | ----------- | ----------- |
-| 名称 | afterRender |
-| Hook 类型 | AsyncSeriesWaterfallHook |
-| 参数类型 | RenderResult |
-| 返回值类型 | RenderResult |
+| Name | afterRender |
+| Hook Type | AsyncSeriesWaterfallHook |
+| Parameters | RenderResult |
+| Retuan Value | RenderResult |
 
 ### hooks.beforeResponse
-在所有 HTTP 响应发送前执行，任意回调函数(tapped function)返回结果即终止其它回调函数执行。优先返回 HTTPResponse 将替代原有 HTTPResponse 返回。参数 RenderResult 包含 RenderContext 中各钩子添加的 meta data 和渲染异常 Error 等信息，可通过它们构建最终响应 HTTPResponse。
+Tapped functions will be called after `afterRender`. This is the last hook before HTTP Response is sent and it's mainly used for composing the HTTP Response, which could be generated with all data in the `RenderResult` containing the `RenderContext`.
 
-| 类别 | Description |
+Any tapped function returns an HTTPResponse will invalidate the return value of other tapped functions.
+
+| Key | Content |
 | ----------- | ----------- |
-| 名称 | beforeResponse |
-| Hook 类型 | AsyncParallelBailHook |
-| 参数类型 | RenderResult |
-| 返回值类型 | HTTPResponse \| void |
+| Name | beforeResponse |
+| Hook Type | AsyncParallelBailHook |
+| Parameters | RenderResult |
+| Return Value | HTTPResponse \| void |
 
-## 使用示例
-### App 开发者
-App 开发者首先使用 [Vise 命令行工具](./commandline-tool.html)新建自己的业务项目（即 App），得到如 [App目录结构](./start-develop.html#app-目录结构) 中描述的默认项目文件夹。
-在项目的 `app-my-project/src/server-hooks.ts` 文件中，开发者可以在从服务器接收到用户 HTTP 请求到发出 HTTP 响应的 9 个 hooks 生命周期中添加自己的业务逻辑。
-#### server-hooks.ts 配置文件
-一份典型的 `server-hooks.ts` 文件内容如下：
+## Hooks Usage
+### App developer
+App developers can use [Vise command line tool](./commandline-tool.html) to create scaffold of an app, then there will be a app directory as described in [App Directory Structure](./start-develop.html#app-directory-structure).
+
+Then app's logics could be added to the `app-my-project/src/server-hooks.ts` file. Typically you'll want preload data in the `beforeRender` hook.
+
+#### server-hooks.ts config
+A Typical `server-hooks.ts` is as following:
 ```typescript
 import {
   ViseHooks,
@@ -158,28 +161,30 @@ import {
 import { SIDEBAR_ITEMS } from './data/consts';
 import request from './utils/request';
 
-// 所有的回调都可以是 function 或者 function 数组
-// 注意从 request.url 中取得的访问路径，是 app 内的路径，不包括 appName 的部分
-// 如开发期间路径为 http://127.0.0.1:3000/page-a/
-// 线上路径是 https://example.com/path/to/app-name/page-a/
-// 在 hooks 中取到的都是 /page-a/
+/**
+ * All hook callbacks could be function or array of functions
+ * Notice: request.url will only include relative path without appName and domain. For example,
+ * dev path: http://127.0.0.1:3000/page-a/
+ * online path: https://example.com/path/to/app-name/page-a/
+ * all match to request.url === '/page-a/'
+ */
 const serverHooks: ViseHooks = {
   appName: 'vue3-intro',
-  // 如果加载 Vise plugin，可以放入此数组
-  plugins: [],
+  plugins: [], // Vise hooks plugin
 
-  // 接收到 HTTP 请求后，可以在此拦截请求，可以简单生成 RenderType 为 receiveRequest 的 RenderResult
-  // 在 afterRender 钩子中进一步处理具体渲染结果，相关信息放入 renderResult.context.extra
-  // 生成渲染结果的渲染方应该提供符合规范的 renderBy 名字
-  // 任意回调函数(tapped function)返回结果即终止其它回调函数执行
+  /**
+   * HTTP requests could be intercepted in this hook after server received it from clients
+   * Bypass the default SSR is possible by return a custom `RenderResult`
+   * Marks and data should be put in renderResult.context.extra
+   */
   receiveRequest: [async (httpRequest) => {
     let result;
     if (httpRequest.url === '/hook-test') {
       result = {
         context: {
           request: httpRequest,
-          extra: { // 将生成最终 response 的信息放入 extra 传递
-            jumpTo: 'https://www.qq.com/',
+          extra: { // add marks to context.extra
+            jumpTo: 'https://www.vise.com/',
           },
         },
       };
@@ -187,9 +192,11 @@ const serverHooks: ViseHooks = {
     return result;
   }],
 
-  // HTTP 请求解析完成，多个钩子函数顺序执行传递解析结果，可在此修改解析结果
-  // 注意如果修改了 url，会导致 hydration 时候出现 mismatch：js 端看到的是修改前的 urlA
-  // 服务端看到的是修改后的 urlB，所以如果这里修改 url，需要配合前端的逻辑同步修改
+  /**
+   * Tapped functions receive a `ResolvedRequest` and return a `ResolvedRequest`.
+   * Marks could be added to context of certain requests for later process.
+   * Be careful of [hydration mismatch] if you change data in the HTTPRequest.
+   */
   requestResolved: async (resolvedRequest) => {
     const { original, resolved } = resolvedRequest;
     const { url } = original.request;
@@ -198,19 +205,17 @@ const serverHooks: ViseHooks = {
     if (url === '/hook-jump') {
       extraData.injectByHook = 'RequestResolved inject';
     }
-    return {
-      original,
+    return mergeConfig(resolvedRequest, {
       resolved: {
-        ...resolved,
-        extra: { ...resolved.extra, ...extraData },
-      },
-    };
+        extra: extraData,
+      }
+    });
   },
 
-  // 在开始使用 HTML 缓存之前执行，如果确定缓存是否过期需要请求接口，可以在这里请求
-  // 多个钩子并行执行，串行依赖自行在单个钩子中解决。返回钩子返回结果即终止其它钩子执行。
-  // 返回值 CacheInfo 包含 cache key、cache 有效期信息；
-  // 服务端会使用其中信息试图命中缓存，如果未命中，重新生成的 HTMl 会依赖此缓存信息进行缓存
+  /**
+   * Tapped function calculate `CacheInfo` from `RenderContext`
+   * Which will be used to find previous cached SSR data or save newly generated SSR data.
+   */
   beforeUseCache: async (renderRequest) => {
     const { url, headers } = renderRequest.request;
     const userAgent = headers['user-agent'] || '';
@@ -231,37 +236,38 @@ const serverHooks: ViseHooks = {
     return result;
   },
 
-  // 在 HTML 缓存命中后并行执行所有钩子，然后响应 HTTP 请求，无法在此更改响应，可做统计等
+  // Tapped functions will be notified with a successful cache hit event.
   hitCache: async (hitCache) => {
     console.log(`Use cache with key: ${hitCache.key}`);
   },
 
-  // 在准备使用 Vue render bundle 等服务端渲染包生成 HTML 之前调用
-  // 可用来请求依赖数据等，多个钩子顺序执行，使用 extra 传递数据
+  /**
+   * Tapped functions will be called in order before rendering HTML with server renderer provided by web UI libraries
+   * Typically this could be used to fetch data for SSR. Data should be transferred in `RenderContext.extra`
+   */
   beforeRender: async (renderContext) => {
-    // 为首页请求额外接口数据
+    // request data for index page
     if (renderContext.request.url === '/') {
       const apiResult = await request({
         url: 'https://www.randomnumberapi.com/api/v1.0/random?min=1000&max=9999&count=1',
       });
-      return {
-        ...renderContext,
+      return mergeConfig(renderContext, {
         extra: {
-          ...(renderContext.extra || {}),
-          initData: apiResult,
-        },
-      };
+          initData: apiResult
+        }
+      });
     }
     return renderContext;
   },
 
-  // 在 HTML 渲染完成后执行，根据渲染成功或失败，可能接受 RenderError 或 RenderDone 参数
-  // 如需重载渲染结果，钩子需要返回 RenderResult 重载，瀑布流顺序执行
-  // 注意，如果在这个钩子里面重载渲染结果，在 hydration 的时候可能会发生 mismatch
+  /**
+   * Tapped functions will be called in order after render finishes
+   * Processing the result of a successful rendering or handle the error of a failed rendering.
+   * Failed SSR could be downgraded to CSR here.
+   * Be careful of [hydration mismatch].
+   */
   afterRender: async (renderResult) => {
     if (renderResult.type === RenderResultCategory.render) {
-      // 可以重载渲染结果，根据 ssrResult 重新拼装模板
-      // 这里是一个很好的重载 ssrResult.template 的时机，外层模板跟 vue app 无关，不会引起 hydration mismatch
       if (renderResult.context.request.url === '/hook-jump') {
         const newSsrResult = mergeConfig<typeof renderResult.ssrResult>(
           renderResult.ssrResult,
@@ -280,12 +286,10 @@ const serverHooks: ViseHooks = {
         };
       }
     } else if (renderResult.type === RenderResultCategory.error) {
-      // 如果发生渲染异常，这里没法做跳转，只能将异常重载为一个正常的渲染结果
-      // 或者把一个异常映射为另外的异常，为异常添加具体的 meta data，具体的跳转，需要在 beforeResponse 钩子里面做
       return mergeConfig<typeof renderResult>(renderResult, {
         error: {
           detail: {
-            reason: 'info sent with error result, can be ready by beforeResponse hook',
+            reason: 'info sent with error result, can be read by beforeResponse hook',
           },
         },
       });
@@ -293,12 +297,16 @@ const serverHooks: ViseHooks = {
     return renderResult;
   },
 
-  // 在所有 HTTP 响应发送前执行，任意回调函数(tapped function)返回结果即终止其它回调函数执行
-  // 优先返回的 HTTPResponse 将替代原有 HTTPResponse 返回
+  /**
+   * Tapped functions will be called after `afterRender`
+   * This is the last hook before HTTP Response is sent
+   * and it's mainly used for composing the HTTP Response
+   * Which could be generated with all data in the
+   * `RenderResult` containing the `RenderContext`
+   */
   beforeResponse: async (renderResult) => {
-    // 为成功渲染页面，统一添加特定 headers 等
     if (renderResult.type === RenderResultCategory.render) {
-      return { // 可以在此重载渲染成功的 HTTP 响应，其实这里的逻辑跟原生是一样的
+      return {
         code: 200,
         headers: {
           'content-type': 'text/html;charset=utf-8',
@@ -307,7 +315,7 @@ const serverHooks: ViseHooks = {
       };
     }
 
-    // 被 receiveRequest hook 拦截的请求，可以被再次拦截
+    // request intercepted by receiveRequest hook
     if (renderResult.type === RenderResultCategory.receiveRequest) {
       if (renderResult.context.request.url === '/hook-test') {
         return {
@@ -320,93 +328,94 @@ const serverHooks: ViseHooks = {
     }
 
     if (renderResult.type === RenderResultCategory.error) {
-      // 发生服务端异常，可以在此从 renderResult.context 和 renderResult.error
-      // 读取到之前钩子传递下来的 meta data，可以在此展示最终处理异常，上报、跳转 CSR fallback 页面等
-      // result = {
-      //   code: 302,
-      //   headers: {
-      //     location: 'http://example.com/path/to/csr',
-      //   },
-      // };
+      // fallback to CSR when error
+      result = {
+        code: 302,
+        headers: {
+          location: 'http://example.com/path/to/csr',
+        },
+      };
     }
   },
 };
 
 export default serverHooks;
 ```
-由以上示例文件可以看到：
-- 所有的钩子都支持多次 tap（即支持传入多个回调函数），可以把一些可以解耦的同一生命周期但属于不同模块的逻辑放入不同回调函数，以便管理
-- hooks 配置文件需要满足 Vise 提供的 `ViseHooks` 类型约束，使用 VS Code 等开发工具，可以清楚的看到每个 hooks 回调函数的入参和返回值类型，有助于开发者在不查询文档的情况下编写 hooks 回调
-- hooks 为多个生命周期定义了 HTTPRequest, HTTPResponse, RenderContext, ResolvedRequest, RenderResult 等多个数据类型，主要用来定义各个 hooks 的参数和返回值类型，同时便于在各个 hooks 之间传递关于同一次 HTTP 请求的上下文（context）信息，这些类型都可以从 Vise import 得到，详细请参见：[关键数据类型](./key-data-types.html)
-- hooks 的一个常见操作是在 context 或 result 中修改部分内容，为了方便修改一个较大的数据结构中的部分数据，Vise 提供了 `mergeConfig` 方法
+From the example we could see:
+- All hooks could be tapped multiple times. Different logics in the same hook lifecycle could be decoupled in different callbacks
+- The default export value is constraint by the `ViseHooks` type, all parameter and return value types could have IDE notice.
+- Vise defined multiple data types in the lifecycle such as `HTTPRequest`, `HTTPResponse`, `RenderContext`, `ResolvedRequest`, `RenderResult` to support data transmission during multiple hooks, all these types could be imported from vise-ssr package. More detail at: [Key Data Types](./key-data-types.html)
+- A typical operation in a tapped function is to modify a small part of a complex data structure such as `RenderContext`. Vise provided `mergeConfig` util function with deep partial type support to help.
 
-### Server 开发者
-#### 核心 Hook Classes
-Vise 定义了基于多个 hooks 的服务端生命周期，并提供了多个 Hook 相关类，Server 开发者需要了解以下关键类：
-- HookManager: 定义核心 hooks 数据结构、hooks 类型及出入参
-- HookCaller: 负责触发（调用、唤起）各个生命周期 hooks，并在 hooks 回调生效时（即，hooks 的回调返回的参数改变了请求相关上下文数据）调用 logger 记录具体 hooks 对上下文的改变
-- HookLogger: 默认的 hooks logger，针对各个钩子不同情况对上下文的改变提供了比较简洁和规范的日志，可重载
-- HookLifeCycle: 接受用户的 ViseHooks 配置，使用用户提供的回调 tap HookManager 提供的 hooks，定义了服务端渲染生命周期，启动后会依序使用 HookCaller 唤起各个 hooks，完成整个生命周期流程
-- HookPlugin : 将 Plugin 配置拆解为普通的 hooks 回调配置，以便支持以 `VisePlugin` 格式传入的插件
+### HTTP Server Developer
+#### Core Hook Classes
+Vise defined multiple hook related Classes which HTTP Server developer need to understand and use:
+- HookLifeCycle: accept `ViseHooks` config which contains all the tapped functions as parameter, defined whole SSR life cycle. The HTTP Server should create an instance with merged ViseHooks config and hand over the HTTP request to it.
+- HookManager: define core hook data structure, hook type, tapped function I/O data type
+- HookCaller: responsible to call certain hook and log active tapped function activities
+- HookLogger: Default logger which provide brief information in the HookLifeCycle, could be overridden
+- HookPlugin: support Vise Plugin which combines several tapped functions of different hooks to accomplish a related goal
 
-#### HookConfig 合并逻辑
-可以看到，在以上设计思路下，核心服务端渲染流程已经被 Vise 定义，所以服务端跟 App 业务方一样，需要将自己的专有逻辑通过 HookConfig 传入 HookLifeCycle。因为 App 用户同样会传入一份 HookConfig，所以需要根据一定的策略对 HookConfig 进行合并：
-- hooks 有 AsyncParallelBailHook, AsyncParallelHook, AsyncSeriesWaterfallHook 3种类型
-- 对 Parallel 类型的 Hook，无需担心执行顺序，只需要考虑如果是 Bail 类型，那么优先返回的 Hook 会取消其它 Hook，如果服务端需要确保用户传入的 HookConfig 不冲突，可能需要用到高阶函数包装等手段
-- 对 Waterfall 类型 Hook，执行顺序是至关紧要的，服务端需要根据具体要求对回调函数数组进行合适的排序，如服务端需要在渲染完成后做统一处理，则务必把自身回调作为 `afterRender` hook 的最后一个回调
-- 由于整体的插件化体系，建议 server 端将自身的生命周期中逻辑封装为一个 plugin，合并入业务 app 传入的 hooks 配置。实际上可以理解为 Server Plugin + App Plugin + App 引用的其它 Plugin，整体构成了 HookLifeCycle 的运行参数
+#### Merge Config as HookConfig
+Applications, HTTP Servers, Plugins all have some logic to be executed in the HookLifeCycle, these logics defined in the form of `ViseConfig` need to be merged as `HookConfig`.
 
-### 代码示例
+- hooks has 3 types: AsyncParallelBailHook, AsyncParallelHook, AsyncSeriesWaterfallHook
+- For the Bail type hook, first tapped function returns value will invalidate others', server developer may need to create higher order functions to avoid conflict between apps and the server
+- For Waterfall type hook, execution order is critical. HTTP server may want their own tapped functions to be executed as the last one, so remember to add the enforce config correctly
+- In fact, in HookLifeCycle, not only HTTP server's logic is wrapped as a plugin, the app's logic is also wrapped as a plugin. HookLifeCycle will then parse and standardize all plugins as `HookConfig` with the right order.
+
+### Code Example
 ```typescript
 // my-server.ts
 // ...
-const serverHookConfig: Partial<HookCallback> = {                // 定义服务专有 hooks 逻辑
+const serverHookConfig: Partial<HookCallback> = {
+  // server specific hooks logic
   render(renderContext) {
-    // ...
+    // import app's render bundle and render it to string
     return renderResult;
   },
   // ...
 };
-const appHookConfig = await this.loadAppViseHooks();    // 加载用户 server-hooks.ts
-const hookLifeCycle = new HookLifeCycle(                // 新建 hookLifeCycle
-  addServerHooksAsPlugin( // 将 server 配置作为一个 plugin 合并入整体配置
+const appHookConfig = await this.loadAppViseHooks();    // load app's server-hooks.ts
+const hookLifeCycle = new HookLifeCycle(
+  addServerHooksAsPlugin( // wrap server's hooks config as a plugin
     appHookConfig,
     serverHookConfig,
   ),
-  new HookLogger(log), // 提供 logger，可根据自身 log 需求自定义 logger
+  new HookLogger(log), // logger could be replaced here
 );
 express().use('*', async (req, res) => {
-  const response = await hookLifeCycle.start({ // 接收到用户 HTTP 请求后，启动 HookLifeCycle
+  // start HookLifeCycle with HTTP request
+  const response = await hookLifeCycle.start({
     url: req.originalUrl,
     headers: req.headers,
     body: req.body,
   });
   sendResponse(res, response);
 });
-// ...
 ```
 
-### Plugin 开发者
-hooks 开放了多个关键节点的回调，插件 Plugin 开发者可以针对其中某几个 hooks，开发出可重用的特定功能插件。
-#### 约定和惯例
-特定的编码约定有助于保持代码的整洁和可维护，Vise 对插件开发有以下约定：
-- 插件的 npm 包名应该满足：`vise-plugin-${myPluginName}`，其中插件名 myPluginName 应该只由以字母开头的只包含小写字母、数字、连接线(-)
-- Plugin 包的输出值类型为 [VisePlugin](./key-data-types.html#viseplugin)
-#### Plugin 示例
-##### HTML 缓存 plugin
-该 plugin 实现 `hooks.beforeUseCache`， `hooks.findCache` 和 `hooks.afterRender` 3 个 hooks，并可允许用户传入自身生成缓存相关配置。
-- 在 `hooks.beforeUseCache` 中，根据配置或默认逻辑，以当前 HTTP 请求作为参数，计算出缓存相关唯一 key 等 CacheInfo 信息，可通过它们构建最终响应
-- 在 `hooks.afterRender` 中，使用 CacheInfo 信息，将渲染结果 RenderResult 存入相关缓存，可以是 Redis、内存缓存、文件缓存等
-- 在 `hooks.findCache` 中，使用 CacheInfo 查询在 `hooks.afterRender` 中保存的缓存内容并返回
-##### React SSR plugin
-该 plugin 实现 `hooks.render` hook，以 RenderContext 为参数，加载 App 开发者提供的 React Server RenderContext Bundle，并调用生成 React App 对应的 HTML 内容，组装 SsrBundleResult 返回。同理，可以实现任意前端框架如 Angular, Svelte 等的服务端渲染插件。
-##### 服务端数据加载 plugin
-该 plugin 实现 `hooks.beforeRender` hook，为需要渲染的页面加载用户配置的特定数据并放入 context.extra.initData。该 plugin 可以封装数据异步加载的错误处理逻辑，封装支持多种数据处理协议逻辑，用户只需要在配置中提供特定的 API url 或命令字，既可在页面渲染前拿到依赖的接口数据。
-##### 错误处理 plugin
-该 plugin 实现 `hooks.beforeResponse` hook，处理 RenderResult.type 为 error 时候的场景，可以做错误上报、降级跳转，或是展示统一的规范错误提示、追查页面等逻辑
-##### 自定义页面生成 plugin
-该 plugin 实现 `hooks.receiveRequest` 和 `hooks.beforeResponse` hooks，拦截请求并自行生成响应
-- 在 `hooks.receiveRequest` 中，拦截特定请求，并返回带 context.extra 扩展信息和 renderBy 渲染者信息的 RenderResult
-- 在 `hooks.beforeResponse` 中，匹配上述拦截请求，调用 plugin 自身的逻辑，生成 HTTPResponse 返回，从而完全跳过 Vise 的页面渲染流程
+### Hooks Plugin Developer
+Plugin Developer can use several hooks to complete a certain goal, warp it as a plugin with it's own config for reuse.
+#### Conventions
+A Vise Hooks Plugin should:
+- has a packaged name of：`vise-hooks-plugin-${myPluginName}`, myPluginName should only contain small case letter, number and hyphen(-)
+- has a default export with [VisePlugin](./key-data-types.html#viseplugin) type or a function accept a config and return a VisePlugin
+#### Hooks Plugin Example
+##### HTML Cache plugin
+This plugin taps `hooks.beforeUseCache`， `hooks.findCache` 和 `hooks.afterRender` hooks, allow user to provide it's cache type, cache account etc.
+- `hooks.beforeUseCache` calculate CacheInfo with HTTPRequest
+- `hooks.afterRender` Use CacheInfo to save RenderResult into cache of choice
+- `hooks.findCache` find cached RenderResult with CacheInfo
+##### Custom Render plugin
+Taps `hooks.render`, accept RenderContext, use the information to render the page with whatever you like, could be any UI library or some custom functions.
+Or if you want to bypass all existing hooks, you could:
+- Taps `hooks.receiveRequest`, intercept certain request, generate your own RenderResult
+- Taps `hooks.beforeResponse`, generate your own response based previous RenderResult
+##### Data fetch plugin
+Taps `hooks.beforeRender`, fetch data and put in `RenderContext.extra.initData`. Support multiple RPC protocols other than HTTP, support fetch error handle, auto retry etc.
+##### Error Handle plugin
+Taps `hooks.beforeResponse`, handle RenderResult.type === 'error' scenario, could have error report, CSR downgrade, standardized 404 page etc.
 
 [tapable]: <https://github.com/webpack/tapable>
+[hydration mismatch]: <https://vuejs.org/guide/scaling-up/ssr.html#hydration-mismatch>
