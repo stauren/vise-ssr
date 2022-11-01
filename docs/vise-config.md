@@ -58,8 +58,8 @@ export type ParsedViseConfig = {
   // 自定义模板路径， 支持相对/绝对路径
   customTemplate: string,
 
-  // 服务端 hooks 预加载的存储在 RenderContext.extra.initState 上的数据
-  // 默认会由框架调用 store.commit(INIT_DATA, SSRContext.initState) 存入 store
+  // 服务端 hooks 预加载的存储在 RenderContext.meta.initState 上的数据
+  // 默认会由框架调用 store.commit(INIT_DATA, SSRContext.meta.initState) 存入 store
   // 如果业务 app 需要在 SSR 过程中自行管理并向 store 中 commit 数据
   // 可以将此选项置为 false。最终 store 中的数据会传输到浏览器端 hydration 使用
   strictInitState: boolean,

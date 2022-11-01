@@ -64,7 +64,7 @@ export async function render(renderContext: RenderContext): Promise<SsrBundleRes
   }
 
   const store = createStore({
-    ...(isObject(extra.initState) ? extra.initState : {}),
+    ...(isObject(meta.initState) ? meta.initState : {}),
   });
   const beforeRenderInitState = cloneDeep({
     ...store.getState(),
