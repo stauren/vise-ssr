@@ -3,63 +3,59 @@ type DeepPartial<T> = T extends object ? {
 } : T;
 
 type MergeResult = {
-  merged: true,
-  // 合并结果可以包含任何类型的值，这里要更严谨可以用泛型
-  value: any,
-} | { merged: false };
-
-const isObject = (value: unknown): value is object => value !== null
-  && Object.prototype.toString.call(value) === '[object Object]';
-
-const mergeWith = (value: any): MergeResult => ({
-  merged: true,
-  value,
-});
-
-const pass = (): MergeResult => ({ merged: false });
-
-const simpleMerge = (existing: unknown, newValue: unknown): MergeResult => {
-  if (newValue === undefined) return mergeWith(existing);
-  if (existing === null || existing === undefined) return mergeWith(newValue);
-  return pass();
+  merged: boolean,
+  value: unknown,
 };
 
-// array merge 只关注是否参数是 2 个 array，具体类型不关心
+const isObject = (value: unknown): value is object => Object.prototype.toString.call(value) === '[object Object]';
+
+const arraify = <T>(target: T | T[]): T[] => (Array.isArray(target) ? target : [target]);
+
+/**
+ * mergeWith and pass are used by all merge methods
+ * to make sure they produce the same merge result
+ */
+const mergeWith = (value: unknown): MergeResult => ({ value, merged: true });
+const passWith = (value: unknown): MergeResult => ({ value, merged: false });
+
+// if value of neither side is empty, use the other
+const simpleMerge = (existing: unknown, newValue: unknown): MergeResult => {
+  if (newValue === undefined) return mergeWith(existing);
+  if (existing === undefined) return mergeWith(newValue);
+  return passWith(existing);
+};
+
+/**
+ * merge 2 array by concat them together
+ * maybe need to support both array & non-array field
+ * may need dedupe in the future
+ */
 const arrayMerge = (existing: unknown, newValue: unknown): MergeResult => (
-  (!Array.isArray(newValue) || !Array.isArray(existing))
-    ? pass()
-    : mergeWith([...existing, ...newValue])
+  (Array.isArray(newValue) || Array.isArray(existing))
+    ? mergeWith([...arraify(existing), ...arraify(newValue)])
+    : passWith(existing)
 );
 
-// 如果 2个值都是 object，则递归调用 mergeConfig
+/**
+ * if both values are object type, call mergeOneConfig recursively
+ */
 const objectMerge = (existing: unknown, newValue: unknown): MergeResult => (
-  (!isObject(existing) || !isObject(newValue))
-    ? pass()
-    : mergeWith(mergeConfig(existing, newValue))
+  isObject(existing) && isObject(newValue)
+    ? mergeWith(mergeOneConfig(existing, newValue))
+    : passWith(existing)
 );
 
-// 如果 2 个值类型相同，直接覆盖
-const sameTypeMerge = (
-  existing: unknown,
-  newValue: unknown,
-): MergeResult => (
-  typeof existing === typeof newValue ? mergeWith(newValue) : pass()
+/**
+ * if 2 values have the same type (but not array and object)
+ * use the new value to overwrite the existing one
+ */
+const sameTypeMerge = (existing: unknown, newValue: unknown): MergeResult => (
+  typeof existing === typeof newValue
+    ? mergeWith(newValue)
+    : passWith(existing)
 );
-
-const useMergedValueOrExisting = (
-  mergeResult: MergeResult,
-  existing: unknown,
-) => (mergeResult.merged ? mergeResult.value : existing);
 
 const MERGE_METHODS = [simpleMerge, arrayMerge, objectMerge, sameTypeMerge];
-
-const tryAllMergeMethods = (
-  existing: unknown,
-  newValue: unknown,
-): MergeResult => MERGE_METHODS.reduce<MergeResult>((mergeResult, fn) => {
-  if (mergeResult.merged) return mergeResult;
-  return fn(existing, newValue);
-}, { merged: false });
 
 const mergeOneConfig = <T extends object>(
   defaults: T,
@@ -68,12 +64,23 @@ const mergeOneConfig = <T extends object>(
     .reduce((target, key) => ({
       ...target,
       [key as keyof T]:
-        useMergedValueOrExisting(
-          tryAllMergeMethods(target[key as keyof T], override[key]),
-          target[key as keyof T],
-        ),
+          // try all merge methods to merge a property
+          MERGE_METHODS
+            .reduce<MergeResult>(
+            (mergeResult, fn) => (mergeResult.merged ? mergeResult : fn(
+              target[key as keyof T],
+              override[key],
+            )),
+            passWith(target[key as keyof T]),
+          ).value,
     }), defaults);
 
+/**
+ * merge a config object with config fragments which are
+ * usually partial modifications introduced by a user or
+ * a plugin who only care about their own aspect
+ * multiple overrides object accepted
+ */
 const mergeConfig = <T extends object>(
   defaults: T,
   ...overrides: Array<DeepPartial<T>>

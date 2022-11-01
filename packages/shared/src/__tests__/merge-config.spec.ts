@@ -1,3 +1,4 @@
+import type { Plugin } from 'vite';
 import { describe, expect, test } from 'vitest';
 import type { RenderContext, ViseConfig } from './test-types';
 import mergeConfig from '../merge-config';
@@ -19,8 +20,19 @@ describe('mergeConfig', () => {
     expect(mergeConfig(baseConfig, newConfig)).toEqual(mergedConfig);
   });
 
-  test('handles configs merge array', () => {
+  test('merge configs merge array', () => {
+    const plugin1: Plugin = {
+      name: 'my-plugin-1',
+      enforce: 'pre',
+      config: conf => conf,
+    };
+    const plugin2: Plugin = {
+      name: 'my-plugin-2',
+      enforce: 'pre',
+      config: conf => conf,
+    };
     const baseConfig: Partial<ViseConfig> = {
+      plugin: plugin1,
       ssr: {
         external: ['react'],
       },
@@ -30,14 +42,15 @@ describe('mergeConfig', () => {
       ssr: {
         external: ['react-redux'],
       },
+      plugin: [plugin2],
     };
 
     const mergedConfig: Partial<ViseConfig> = {
       ssr: {
         external: ['react', 'react-redux'],
       },
+      plugin: [plugin1, plugin2],
     };
-
     expect(mergeConfig(baseConfig, newConfig)).toEqual(mergedConfig);
   });
 
