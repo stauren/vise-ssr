@@ -244,8 +244,7 @@ const serverHooks: ViseHooks = {
       });
       return {
         ...renderContext,
-        extra: {
-          ...(renderContext.extra || {}),
+        meta: {
           initState: apiResult,
         },
       };
@@ -399,7 +398,7 @@ hooks 开放了多个关键节点的回调，插件 Plugin 开发者可以针对
 ##### React SSR plugin
 该 plugin 实现 `hooks.render` hook，以 RenderContext 为参数，加载 App 开发者提供的 React Server RenderContext Bundle，并调用生成 React App 对应的 HTML 内容，组装 SsrBundleResult 返回。同理，可以实现任意前端框架如 Angular, Svelte 等的服务端渲染插件。
 ##### 服务端数据加载 plugin
-该 plugin 实现 `hooks.beforeRender` hook，为需要渲染的页面加载用户配置的特定数据并放入 context.extra.initState。该 plugin 可以封装数据异步加载的错误处理逻辑，封装支持多种数据处理协议逻辑，用户只需要在配置中提供特定的 API url 或命令字，既可在页面渲染前拿到依赖的接口数据。
+该 plugin 实现 `hooks.beforeRender` hook，为需要渲染的页面加载用户配置的特定数据并放入 context.meta.initState。该 plugin 可以封装数据异步加载的错误处理逻辑，封装支持多种数据处理协议逻辑，用户只需要在配置中提供特定的 API url 或命令字，既可在页面渲染前拿到依赖的接口数据。
 ##### 错误处理 plugin
 该 plugin 实现 `hooks.beforeResponse` hook，处理 RenderResult.type 为 error 时候的场景，可以做错误上报、降级跳转，或是展示统一的规范错误提示、追查页面等逻辑
 ##### 自定义页面生成 plugin

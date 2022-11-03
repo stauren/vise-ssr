@@ -252,9 +252,9 @@ const serverHooks: ViseHooks = {
         url: 'https://www.randomnumberapi.com/api/v1.0/random?min=1000&max=9999&count=1',
       });
       return mergeConfig(renderContext, {
-        extra: {
-          initData: apiResult
-        }
+        meta: {
+          initState: apiResult
+        },
       });
     }
     return renderContext;
@@ -413,7 +413,7 @@ Or if you want to bypass all existing hooks, you could:
 - Taps `hooks.receiveRequest`, intercept certain request, generate your own RenderResult
 - Taps `hooks.beforeResponse`, generate your own response based previous RenderResult
 ##### Data fetch plugin
-Taps `hooks.beforeRender`, fetch data and put in `RenderContext.extra.initData`. Support multiple RPC protocols other than HTTP, support fetch error handle, auto retry etc.
+Taps `hooks.beforeRender`, fetch data and put in `RenderContext.meta.initState`. Support multiple RPC protocols other than HTTP, support fetch error handle, auto retry etc.
 ##### Error Handle plugin
 Taps `hooks.beforeResponse`, handle RenderResult.type === 'error' scenario, could have error report, CSR downgrade, standardized 404 page etc.
 

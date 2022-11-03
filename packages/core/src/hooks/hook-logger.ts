@@ -40,12 +40,12 @@ export default class HookLogger {
     },
     requestResolved(interception, fullLog) {
       const { resolved } = interception as HookReturnType['requestResolved'];
-      const { extra } = resolved;
+      const { meta } = resolved;
       return JSON.stringify(fullLog ? resolved : {
         ...simplifyHeaders(resolved),
-        extra: {
-          ...extra,
-          initState: extra.initState ? shorterText(JSON.stringify(extra.initState)) : null,
+        meta: {
+          ...meta,
+          initState: meta.initState ? shorterText(JSON.stringify(meta.initState)) : null,
         },
       });
     },

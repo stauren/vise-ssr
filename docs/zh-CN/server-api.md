@@ -44,12 +44,12 @@ type ViseRenderBundle = {
 
 ## 从 Vue 控制全局 HTML 内容
 ### 设置页面标题
-在 Vue 模块中，在 `setup` 生命周期调用 `useSSRContext`，可以获取 SSR 期间上下文 context，设置 `title` 属性后，可在 SSR 时生成页面标题：
+在 Vue 模块中，在 `setup` 生命周期调用 `useSSRContext`，可以获取 SSR 期间上下文 context，设置 `meta.title` 属性后，可在 SSR 时生成页面标题：
 ```typescript
 defineComponent({
   setup() {
     const context = useSSRContext();
-    context.title = 'My Page Title';
+    context.meta.title = 'My Page Title';
   },
   ...
 });
@@ -58,28 +58,25 @@ defineComponent({
 ### 从 Vue 模块自定义控制全局 HTML 内容
 entryServer 的渲染结果 `SsrBundleResult` 完整定义如下：
 ```typescript
-export enum SsrBundleResultKey {
-  app = 'app',
-  html = 'html',
-  template = 'template',
-  preloadLinks = 'preloadLinks',
-  initState = 'initState',
-}
-export type SsrBundleResult =
-  Record<SsrBundleResultKey, string> & Record<'ssrContext', Record<string, string>>;
+type SsrContext = {
+  meta: RenderContextMeta,
+  extra: JSONObject,
+};
+
+type SsrBundleSuccess = Record<'html', string> & SsrContext;
+type SsrBundleResult = SsrBundleSuccess | RenderError;
 ```
 
-可以看见除了完整的页面 `html` 内容以外，渲染结果中还有一些生成完整页面用到的模板、部分内容元素。在某些情况下，如果 Vue 页面需要自定义控制全局 HTML 的某些内容的生成，可以通过 `useSSRContext` 将需要生成的内容从 Vue 传递到服务器渲染上下文（目前页面标题即通过 context.title 传递生成），服务端通过 `ssrContext` 获取，处理 html 后返回给用户。
+可以看见除了完整的页面 `html` 内容以外，渲染结果中还有生成完整页面用 context 数据对象。在某些情况下，如果 Vue 页面需要自定义控制全局 HTML 的某些内容的生成，可以通过 `useSSRContext` 将需要生成的内容从 Vue 传递到 context 的 meta 或者 extra 字段（如页面标题即通过 context.meta.title 传递），服务端在生成 html 时读取相关 context 中的字段。用户也可以在 render 完成后，修改相关 context 值后通过 `fillSsrTemplate` 或 `refillRenderResult` 重新生成 HTML.
 
 ### 获取来自服务端 hooks 的数据
-在多个服务端 hooks 中，可以修改 `RenderContext` 类型的 HTTP 请求渲染上下文参数，其中扩展字段 extra 中的值，会在 render 时传递给 Vue 的 SSRContext：
+在多个服务端 hooks 中，可以修改 `RenderContext` 类型的 HTTP 请求渲染上下文参数，其中框架数据对象 meta 和自定义扩展字段 extra，会在 render 时传递给 Vue 的 SSRContext：
 ```typescript
 export async function render(renderContext: RenderContext): Promise<SsrBundleResult> {
   // ...
   const ssrContext: SSRContext = {
-    cookies,
-    userAgent,
-    ...renderContext.extra,
+    meta: renderContext.meta,
+    extra: renderContext.extra,
   };
 ```
 由以上代码实现可见，业务 app 可以在 server hooks 中实现预取数据等等各种依赖 Vue 以外的接口的逻辑，将获取的结果放入 `RenderContext.extra`，即可在 Vue 组件中 setup 阶段通过 `useSSRContext` 获取。注意 extra 的类型为 `JSONValue`，不可传递复杂数据类型和数据引用。

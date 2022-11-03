@@ -81,7 +81,7 @@ const serverHooks: ViseHooks = {
       },
     };
     return mergeConfig(renderContext, {
-      extra: {
+      meta: {
         initState,
       },
     });
