@@ -1,4 +1,4 @@
-import type { SSROptions } from 'vite';
+import type { SSROptions, Plugin } from 'vite';
 
 // 基础类型声明
 type Primitive =
@@ -49,6 +49,7 @@ type RenderContext = {
 };
 
 type ViseConfig = {
+  plugin: Plugin | Plugin[],
   // 开发时 vite 使用的 http 服务端口
   devPort: number,
   // 构建时生成在 <html> 标签上的 className
