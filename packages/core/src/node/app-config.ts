@@ -1,5 +1,4 @@
 import type { ParsedViseConfig, HtmlFixedPositionFragment } from '@vise-ssr/shared';
-import { EHtmlFixedPositions } from '@vise-ssr/shared';
 import { getAppRoot } from './utils/path';
 import dynamicImportTs from './utils/dynamic-import-ts';
 import type { HttpHeaders } from '../';
@@ -7,7 +6,6 @@ import type { HttpHeaders } from '../';
 export type SsrCacheKeyGenerator = (url: string, headers: HttpHeaders) => string;
 
 export {
-  EHtmlFixedPositions,
   HtmlFixedPositionFragment,
 };
 
@@ -15,26 +13,21 @@ export type ViseConfig = Partial<ParsedViseConfig>;
 
 // 默认的 vise 项目配置
 export const DEFAULT_VISE_CONFIG: ParsedViseConfig = {
+  scaffold: 'vue3-app',
+  base: '/',
+  strictInitState: true,
+  defaultTitle: 'Vise Powered App',
+  faviconLink: 'https://cdn.rawgit.com/stauren/vise-ssr/main/packages/app-vue3-intro/public/logo.svg',
+  useFlexible: false,
+  customTemplate: '',
+  viteConfig: {},
   devPort: 3000,
   htmlClass: '',
   htmlFixedPositionFragments: [],
-  defaultTitle: 'Vise Powered App',
-  faviconLink: 'https://cdn.rawgit.com/stauren/vise-ssr/main/packages/app-vue3-intro/public/logo.svg',
-  hmrPort: 3008,
-  useFlexible: false,
-  directiveTransforms: {},
-  ssr: {},
-  base: '/',
   routerSyncPages: [],
-  resolve: {},
-  build: {},
-  plugins: [],
-  // generateCacheKey: () => '',
-  customTemplate: '',
-  strictInitState: true,
-  scaffold: 'vue3-app',
   htmlMinify: true,
   routerBase: '/',
+  directiveTransforms: {},
 };
 
 // TODO 增加失效时间
