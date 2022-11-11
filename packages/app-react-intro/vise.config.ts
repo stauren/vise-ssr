@@ -18,7 +18,7 @@ const config: ViseConfig = {
   strictInitState: false,
 
   // default page title to be used if the page do not set it with SSRContext
-  defaultTitle: '<!--ssr-default-title-->',
+  defaultTitle: 'Vise Powered App',
 
   // custom favicon url
   faviconLink: '',

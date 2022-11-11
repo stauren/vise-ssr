@@ -151,7 +151,11 @@ const serverHooks: ViseHooks = {
       const { url } = renderResult.context.request;
 
       let newMeta = mergeConfig(renderResult.context.meta, {
-        initState: { renderEndTime: Date.now() },
+        initState: {
+          viseIntro: {
+            renderEndTime: Date.now(),
+          },
+        },
       });
       if (url === '/hook-jump') {
         newMeta = mergeConfig(newMeta, {
