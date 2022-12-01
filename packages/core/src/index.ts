@@ -5,7 +5,6 @@ import type {
   JSONArray,
   JSONObject,
   ParsedViseConfig,
-  EHtmlFixedPositions,
   HttpHeaders,
 } from '@vise-ssr/shared';
 
@@ -84,7 +83,6 @@ export type {
   JSONValue,
   JSONArray,
   JSONObject,
-  EHtmlFixedPositions,
 
   HTTPRequest,
   HTTPResponse,

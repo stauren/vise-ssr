@@ -4,7 +4,7 @@ import type { NormalizedOutputOptions, OutputBundle, OutputAsset } from 'rollup'
 import { minify } from 'html-minifier-terser';
 import type { Options } from 'html-minifier-terser';
 import { toKebab } from '@vise-ssr/shared';
-import { EHtmlFixedPositions, HtmlFixedPositionFragment } from '../app-config';
+import { HtmlFixedPositionFragment } from '../app-config';
 
 type HtmlPostConfig = {
   isProduction: boolean;
@@ -40,11 +40,11 @@ function insertFragment(html: string, { position, content }: HtmlFixedPositionFr
 
   const realFragmentContent = (typeof content === 'function' ? content() : content) || '';
   // 否则进行插入，并附带插入完成标识
-  if (position === EHtmlFixedPositions.headEnd) {
+  if (position === 'headEnd') {
     // 加入 insertedComment 的原因是为了避免有多次被插入的可能性
     return html.replace(/<\/head>/, `${realFragmentContent}${insertedComment}</head>`);
   }
-  return html;
+  return html.replace(/<head>/, `<head>${realFragmentContent}${insertedComment}`);
 }
 
 function getFixedPositionFragmentInsertedHtml(html: string, fragments: HtmlFixedPositionFragment[]) {

@@ -33,12 +33,8 @@ async function getUserScaffoldPlugin(
 async function mergeWithBaseAndCustomConfig(appRoot: string, modeConfig: UserConfigVite): Promise<UserConfigVite> {
   const userConfig = await getAppViseConfig();
   const {
-    hmrPort,
-    ssr,
     base = '/',
-    resolve = {},
-    build = {},
-    plugins = [],
+    viteConfig = {},
   } = userConfig;
 
   const isProduction = modeConfig.mode === 'production';
@@ -73,24 +69,11 @@ async function mergeWithBaseAndCustomConfig(appRoot: string, modeConfig: UserCon
 
   const scaffoldPlugin = await getUserScaffoldPlugin(appRoot, isProduction, userConfig);
 
-  return mergeConfig(modeDefaultConfig, {
+  const result = mergeConfig(modeDefaultConfig, {
     base,
-    server: {
-      hmr: {
-        ...(hmrPort ? { port: hmrPort } : {}),
-      },
-    },
-    ...(ssr ? { ssr } : {}),
-    ...(resolve ? { resolve } : {}),
-    ...(build ? { build } : {}),
-    plugins: [
-      ...plugins,
-      ...scaffoldPlugin,
-    ],
-
-    // 存储一份原始配置，方便其它 plugin 使用
-    // originalViseConfig: userConfig,
-  }) as UserConfigVite;
+    plugins: scaffoldPlugin,
+  });
+  return mergeConfig(result, viteConfig) as UserConfigVite;
 }
 
 /**

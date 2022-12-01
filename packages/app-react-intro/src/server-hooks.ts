@@ -56,7 +56,7 @@ const serverHooks: ViseHooks = {
    * Be careful of [hydration mismatch] if you change data in the HTTPRequest.
    */
   requestResolved: [async (resolvedRequest) => {
-    const { original, resolved } = resolvedRequest;
+    const { original } = resolvedRequest;
     const { url } = original.request;
     const extraData: Record<string, string> = {};
 
@@ -151,7 +151,11 @@ const serverHooks: ViseHooks = {
       const { url } = renderResult.context.request;
 
       let newMeta = mergeConfig(renderResult.context.meta, {
-        initState: { renderEndTime: Date.now() },
+        initState: {
+          viseIntro: {
+            renderEndTime: Date.now(),
+          },
+        },
       });
       if (url === '/hook-jump') {
         newMeta = mergeConfig(newMeta, {
