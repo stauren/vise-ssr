@@ -1,7 +1,6 @@
 import type {
   ViseHooks,
   SsrFetchResultOf,
-  RenderResultCategory,
 } from 'vise-ssr';
 import {
   mergeConfig,

@@ -5,6 +5,7 @@ import type { SSRServerConfig }  from '@/ssr-server';
 import SSRServer from '@/ssr-server';
 import { VALID_APP_NAME } from '@/utils/load-bundles';
 import { getBaseOfAppInAllBundles, getAppViseBundleDir } from '@/utils/path';
+import logger from '@/utils/logger';
 
 export type InitOption = {
   enableCache?: boolean,
@@ -35,7 +36,7 @@ async function getViseAppName(base: string): Promise<string | false> {
       return serverHooks.default.appName;
     }
   } catch (error) {
-    console.log(error);
+    logger(String(error));
   }
   return false;
 }
@@ -66,20 +67,20 @@ async function getAppList(base: string) {
 async function prepareViseAppForServe(base: string) {
   const viseAppName = await getViseAppName(base);
   if (viseAppName === false) {
-    console.log('input viseAppDir is not a Vise app or build is not done.');
+    logger('input viseAppDir is not a Vise app or build is not done.');
     return;
   }
   if (!viseAppName.match(VALID_APP_NAME)) {
-    console.log(`Unsafe App Name: ${viseAppName}`);
+    logger(`Unsafe App Name: ${viseAppName}`);
     return;
   }
   const appViseBundleDir = getAppViseBundleDir(base);
   if (!await ensureDir(appViseBundleDir, true)) {
-    console.log(`fail to create dir: ${appViseBundleDir}`);
+    logger(`fail to create dir: ${appViseBundleDir}`);
     return;
   };
   if (!await copyAppBundle(base, viseAppName)) {
-    console.log('fail to copy bundles');
+    logger('fail to copy bundles');
     return;
   }
   return appViseBundleDir;

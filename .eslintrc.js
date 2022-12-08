@@ -15,8 +15,8 @@ module.exports = {
     'plugin:react-hooks/recommended',
     'plugin:react/recommended',
     'plugin:vue/vue3-recommended',
-    'eslint-config-tencent',
-    'eslint-config-tencent/ts',
+    'airbnb',
+    'airbnb/hooks',
   ],
   plugins: [
     'react-hooks',

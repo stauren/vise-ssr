@@ -165,7 +165,7 @@ export default class SSRServer {
           log(`no server hooks found for "${appName}".`);
         }
       } catch (e) {
-        console.error(`[Vise] loadServerHooks fail for "${appName}".`, e);
+        console.error(`[vise] loadServerHooks fail for "${appName}".`, e);
         throw e;
       }
     }));

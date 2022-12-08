@@ -38,7 +38,6 @@ export function viseScaffold({ modules }: ScaffoldConfig) {
     enforce: 'pre',
 
     resolveId(source: string, importer: string) {
-      // console.log('resolve', source, importer, modules);
       let sourceID = source;
       if (source.startsWith(APP_VISE_PATH)) { // when import from browser in dev use absolute path
         sourceID = `.${source}`;

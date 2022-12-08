@@ -76,7 +76,9 @@ class ViseDevServer {
       return refillRenderResult(result);
     },
     async beforeResponse(this: ViseDevServer, renderResult) {
-      this.log(`page render: ${renderResult.renderBy}`);
+      if (renderResult.type === 'error') {
+        this.error('render fail', renderResult.error);
+      }
     },
   };
   private routerBaseConfigs: Record<string, HookRouterBase> = {};
@@ -147,7 +149,7 @@ class ViseDevServer {
         this.log('no server hooks found');
       }
     } catch (e) {
-      console.error('[Vise] loadServerHooks fail', e);
+      this.error('loadServerHooks fail', e);
       throw e;
     }
   }
@@ -208,7 +210,7 @@ class ViseDevServer {
           if (isError(e)) {
             viteServer.ssrFixStacktrace(e);
           }
-          console.log(msg);
+          this.error('unknown error', isError(e) ? e : msg);
           this.sendResponse(res, {
             code: 500,
             headers: {},
@@ -233,8 +235,13 @@ class ViseDevServer {
     return viteServer;
   }
 
+  private error(tag: string, error: unknown) {
+    this.log(tag);
+    console.error(error);
+  }
+
   private log(txt: string) {
-    console.log(`[Vise] ${txt}`);
+    console.log(`[vise] ${txt}`);
   }
 
   private async sendResponse(res: Response, data: HTTPResponse) {

@@ -13,7 +13,7 @@ import type {
 } from '../../hooks/';
 
 function getInitStateScript(initState: JSONObject) {
-  return `<script>try { window.Vise.initState = ${serialize(initState)}; } catch (err) { console.error('[Vise] fail to read initState.'); }</script>`;
+  return `<script>try { window.Vise.initState = ${serialize(initState)}; } catch (err) { console.error('[vise] fail to read initState.'); }</script>`;
 }
 
 export {
