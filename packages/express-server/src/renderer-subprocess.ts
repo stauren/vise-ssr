@@ -30,7 +30,6 @@ class VueBundleRender {
         const ssrResult = await bundle.render(renderContext);
         this.sendMessage(msg, { ...ssrResult });
       } catch (e) {
-        // console.log(e);
         const errText = e instanceof Error ? e.message : String(e);
         log(`[error] render fail: ${errText}`);
         this.sendMessage(msg, errText);

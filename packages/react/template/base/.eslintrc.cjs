@@ -14,10 +14,10 @@ module.exports = {
     extraFileExtensions: ['.cjs', '.mjs', '.tsx'],
   },
   extends: [
+    'airbnb',
+    'airbnb/hooks',
     'plugin:react-hooks/recommended',
     'plugin:react/recommended',
-    'eslint-config-tencent',
-    'eslint-config-tencent/ts',
   ],
   plugins: [
     'react-hooks',

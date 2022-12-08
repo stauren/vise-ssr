@@ -86,7 +86,13 @@ class HookCaller {
 
   public async render(renderContext: RenderContext) {
     const name = 'render';
-    const renderResult = await this.hooks[name].promise(renderContext);
+    let renderResult;
+    try {
+      renderResult = await this.hooks[name].promise(renderContext);
+    } catch (err) {
+      this.log(name, err as JSONValue);
+      throw err;
+    }
     this.log(name, renderResult);
     return renderResult;
   }

@@ -13,8 +13,7 @@ module.exports = {
     extraFileExtensions: ['.vue', '.cjs'],
   },
   extends: [
-    'eslint-config-tencent',
-    'eslint-config-tencent/ts',
+    'airbnb',
     'plugin:vue/vue3-recommended',
   ],
   plugins: [

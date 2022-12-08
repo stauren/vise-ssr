@@ -12,16 +12,19 @@
   "devDependencies": {
     "vise-ssr": "0.8.0",
     "@vise-ssr/express-server": "0.8.0",
-    "eslint-config-tencent": "^1.0.4",
-    "@typescript-eslint/eslint-plugin": "^4.31.0",
-    "@typescript-eslint/parser": "^4.31.0",
+    "@typescript-eslint/eslint-plugin": "^5.46.0",
+    "@typescript-eslint/parser": "^5.46.0",
     "@vue/test-utils": "^2.0.0",
+    "@vitejs/plugin-vue": "^3.1.0",
     "typescript": "~4.6.3",
     "vitest": "^0.24.1",
-    "eslint": "^7.32.0",
+    "eslint": "^8.29.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-plugin-vue": "^7.17.0",
     "eslint-plugin-folders": "^1.0.3",
+    "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-unicorn": "^37.0.1",
-    "eslint-plugin-vue": "^7.17.0"
+    "eslint-plugin-import": "^2.25.3"
   },
   "peerDependenciesMeta": {
     "rollup": {
