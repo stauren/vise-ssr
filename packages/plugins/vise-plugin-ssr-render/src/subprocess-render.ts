@@ -15,18 +15,27 @@ const DIR_NAME = path.dirname(fileURLToPath(import.meta.url));
 
 class SubProcessRender {
   uid = 0; // 唯一标识
+
   waiting = false; // 同一时间一个子进程只能处理一个 render，处理完后该状态变为 false
+
   subprocessRenderCount = 0; // 用于记录当前 子进程 渲染次数
+
   renderTimeoutCountInARow = 0; // 用于记录当前子进程 连续渲染超时的次数
+
   renderProcess: ChildProcess | undefined; // fork 的子进程
+
   waitingSendQueue: MessageQueueItem[] = []; // 等待发送的队列
+
   waitingResponseQueue: MessageQueueItem[] = []; // 等待 消息回收 处理的队列
+
   subProcessConfig = {
     maxSubprocessRenderCount: 600, // 子进程每渲染到该数值即回收
     maxWaitingTime: 1500, // timeout 时长
     maxFailCountInARow: 10, // 子进程连续超时的最大上限
   };
+
   logger: Logger | undefined;
+
   entryServerPaths: Record<string, string>;
 
   constructor(logger: Logger | undefined, entryServerPaths: Record<string, string>) {
@@ -43,7 +52,7 @@ class SubProcessRender {
      * @memberOf SubProcessRender
      */
   public render(renderContext: RenderContext): Promise<ResponseMessage> {
-    this.uid = this.uid + 1;
+    this.uid += 1;
 
     const { uid } = this;
     const msg: RenderMessage = {
@@ -150,12 +159,12 @@ class SubProcessRender {
      * @memberOf RenderService
      */
   private onMessage(msg: ResponseMessage) {
-    this.subprocessRenderCount = this.subprocessRenderCount + 1;
+    this.subprocessRenderCount += 1;
     this.renderTimeoutCountInARow = 0;
     this.waiting = false;
 
     const index = this.waitingResponseQueue
-      .findIndex(item => item[0].uid === msg.uid);
+      .findIndex((item) => item[0].uid === msg.uid);
 
     if (index > -1) {
       const queuedItem = this.waitingResponseQueue.splice(index, 1)[0];
@@ -233,7 +242,7 @@ class SubProcessRender {
      */
   private deleteSpecificQueenItem(queen: MessageQueueItem[], msg: RenderMessage | ResponseMessage) {
     const index = queen
-      .findIndex(item => item[0].uid === msg.uid);
+      .findIndex((item) => item[0].uid === msg.uid);
     if (index > -1) {
       queen.splice(index, 1);
       return true;

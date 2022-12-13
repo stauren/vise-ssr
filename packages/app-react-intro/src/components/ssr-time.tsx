@@ -18,10 +18,14 @@ export default function SsrTime() {
   return (
     <>
       <p className="inter">
-        SSR Render: { ssrDuration }ms
+        SSR Render:
+        { ssrDuration }
+        ms
       </p>
       <p className="inter">
-        Start render till mounted: { toMountedDuration }ms
+        Start render till mounted:
+        { toMountedDuration }
+        ms
         (may be affected if client & server have different time setting)
       </p>
     </>

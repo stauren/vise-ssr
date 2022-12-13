@@ -26,5 +26,5 @@ export async function loadRenderBundle(baseOfAllBundles: string, appName: string
     'entry-server.js',
   );
   // 加载 app 服务端渲染 bundle 文件
-  return await import(bundle);
+  return import(bundle);
 }

@@ -8,7 +8,7 @@
     "postinstall": "git update-index --assume-unchanged ./packages/core/bin/vise.js ./packages/express-server/bin/vise-express.js",
     "clean": "npm-run-all -p 'clean --workspaces'",
     "build:core": "npm run build -w=packages/core",
-    "eslint": "eslint --ext .ts,.js ./",
+    "eslint": "eslint --ext .ts,.js,.cjs,.vue,.tsx ./",
     "eslint:fix": "eslint --fix --ext .ts,.js ./",
     "syncversion": "./scripts/sync-vise-version.mjs",
     "jekyll:install": "(cd ./docs && bundle install --path ./.bundle)",
@@ -32,7 +32,6 @@
     "@typescript-eslint/eslint-plugin": "^5.46.0",
     "@typescript-eslint/parser": "^5.46.0",
     "cross-env": "^7.0.3",
-    "dotenv": "^16.0.1",
     "husky": "^4.3.8",
     "lint-staged": "^10.4.0",
     "npm-run-all": "^4.1.5",
@@ -47,6 +46,7 @@
     "@vitejs/plugin-vue": "^3.1.0",
     "eslint": "^8.29.0",
     "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-typescript": "^17.0.0",
     "eslint-plugin-folders": "^1.0.3",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-unicorn": "^37.0.1",
@@ -54,10 +54,10 @@
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
-    "eslint-plugin-vue": "^7.17.0",
+    "eslint-plugin-vue": "^9.8.0",
     "vue": "^3.2.25",
     "jsdom": "^18.1.0",
-    "vitest": "^0.24.1"
+    "vitest": "^0.25.7"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,vue}": [

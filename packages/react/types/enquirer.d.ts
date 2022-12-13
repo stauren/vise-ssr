@@ -1,3 +1,4 @@
+/* eslint-disable */
 import type { EventEmitter } from 'events';
 
 interface BasePromptOptions {
@@ -150,3 +151,4 @@ declare namespace Enquirer {
 }
 
 export = Enquirer;
+/* eslint-enable */

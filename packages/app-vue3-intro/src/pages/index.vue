@@ -27,7 +27,9 @@
   </div>
 </template>
 <script lang="ts">
-import { reactive, computed, defineComponent, onMounted, ref } from 'vue';
+import {
+  reactive, computed, defineComponent, onMounted, ref,
+} from 'vue';
 import useMarkdown from '@/composable/use-markdown';
 import useCount from '@/composable/use-count';
 import useTitle from '@/composable/use-title';
@@ -51,15 +53,15 @@ export default defineComponent({
     const store = useStore();
     const { count, increaseCount } = useCount();
 
-    const luckyNumber = computed(() => (loadingLuckyNumber.value ? '--' : store.state.luckyNumber));
     const loadingLuckyNumber = ref(false);
+    const luckyNumber = computed(() => (loadingLuckyNumber.value ? '--' : store.state.luckyNumber));
     const fetchLuckyNum = () => {
       loadingLuckyNumber.value = true;
-      setTimeout((() => async () => {
+      setTimeout(async () => {
         const newLuckyNumber = await fetchLuckyNumber();
         store.commit(MutationTypes.UPDATE_LUCKY_NUM, { newLuckyNumber });
         loadingLuckyNumber.value = false;
-      })(), 100);
+      }, 100);
     };
     onMounted(() => {
       if (luckyNumber.value === -1) {

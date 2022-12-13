@@ -8,7 +8,7 @@ import type {
   HttpHeaders,
 } from '@vise-ssr/shared';
 
-import type { RenderContext, RenderError } from './hooks/';
+import type { RenderContext, RenderError } from './hooks';
 
 // describe an HTTP request in RenderContext
 type HTTPRequest = {
@@ -32,16 +32,16 @@ type HTTPResponse = {
  * render bundle can send back title, cache, updated initState
  */
 type RenderContextMeta = Partial<{
-  title: string,          // page title
-  cache: boolean,         // should SSR result be cached
-  initState: JSONObject,  // initState used for store
+  title: string, // page title
+  cache: boolean, // should SSR result be cached
+  initState: JSONObject, // initState used for store
 
   // url in HTTP request passed around hooks do not have
   // routerBase prefix
   routerBase: string,
-  app: string,            // UI library app rendered as string
-  template: string,       // HTML template
-  preloadLinks: string,   // preload link as string for the rendered page
+  app: string, // UI library app rendered as string
+  template: string, // HTML template
+  preloadLinks: string, // preload link as string for the rendered page
 }>;
 
 // server entry 打包生成的 server-render-bundle
@@ -150,4 +150,4 @@ export {
   HookLifeCycle,
   HookManager,
   HookLogger,
-} from './hooks/';
+} from './hooks';

@@ -3,7 +3,7 @@ import type {
   HTTPRequest,
   HTTPResponse,
   SsrContext,
-} from '../';
+} from '..';
 import type { VisePlugin } from './hook-plugin';
 
 export const ALL_HOOKS = [
@@ -136,8 +136,9 @@ export type StdHookCallbackConfig = {
   [K in HookNames]?: Array<HookCallback[K]>;
 };
 
-// vise.config.ts 文件中的 routerBase 可为 RegExp[] | string, vise 内部动态写入hooks 文件时, 会调用 stringifyJSONWithRegExp
-// 最终 写入 hook 文件的 routerBaseConfig 类型为 string | string[]
+// type of routerBase in vise.config.ts is RegExp[] | string
+// when vise write the config in hooks, will call stringifyJSONWithRegExp
+// so routerBaseConfig's type is string | string[]
 export type HookRouterBase = string | string[];
 
 export type ViseHooks = HookCallbackConfig & {
@@ -152,9 +153,8 @@ export type ViseHooks = HookCallbackConfig & {
 };
 
 export default class HookManager {
-  // 这里用了特殊的 getter 实现，ts 检查不支持
-  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   private hooks: HookStorage = {} as HookStorage;
+
   public tap(config: StdHookCallbackConfig) {
     (Object.keys(config) as Array<keyof typeof config>)
       .forEach((hookName) => {

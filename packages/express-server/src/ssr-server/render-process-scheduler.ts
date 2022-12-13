@@ -1,8 +1,8 @@
 import { fork } from 'child_process';
 import type { ChildProcess, Serializable } from 'child_process';
 import type { RenderError } from 'vise-ssr';
-import log from '@/utils/logger';
-import { ERROR_CODE } from '@/ssr-server/constants';
+import { log } from 'src/utils/logger';
+import ERROR_CODE from 'src/ssr-server/constants';
 
 export type ResponseMessageOrError<T> = T | {
   message: T,
@@ -29,10 +29,15 @@ export default class RenderProcessScheduler {
   }
 
   private renderProcess: ChildProcess | undefined;
+
   private processFilePath: string;
+
   private renderCount = 0;
+
   private uid = 0;
+
   private queue: [number, NodeJS.Timeout][] = [];
+
   private notify: CallbackWithMsg<Serializable>;
 
   constructor(processFilePath: string, notify: CallbackWithMsg<Serializable>) {
@@ -79,8 +84,8 @@ export default class RenderProcessScheduler {
     if (!this.renderProcess) {
       return;
     }
-    this.renderCount = this.renderCount + 1;
-    this.uid = this.uid + 1;
+    this.renderCount += 1;
+    this.uid += 1;
 
     const outgoingMsg = RenderProcessScheduler.encodeMessage(message, this.uid);
     this.addToQueueWithTimeout(outgoingMsg);
@@ -123,7 +128,7 @@ export default class RenderProcessScheduler {
   }
 
   private removeFromQueue(uid: number): boolean {
-    const index = this.queue.findIndex(item => item[0] === uid);
+    const index = this.queue.findIndex((item) => item[0] === uid);
     if (index > -1) {
       // after splice the message in no longer in the queue
       const [, timeoutId] = this.queue.splice(index, 1)[0];

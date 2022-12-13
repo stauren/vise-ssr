@@ -8,7 +8,7 @@ import {
   mergeConfig,
   refillRenderResult,
 } from 'vise-ssr';
-import { formatLuckyNumber } from './formatters/lucky-number';
+import formatLuckyNumber from './formatters/lucky-number';
 import request from './utils/request';
 import type { RootState } from './store';
 
@@ -74,7 +74,8 @@ const serverHooks: ViseHooks = {
       const { original: { request: { headers } } } = resolvedRequest;
       return mergeConfig(resolvedRequest, {
         resolved: {
-          // pass user agent and cookie as context extra data, which could be accessed as ssr context
+          // pass user agent and cookie as context extra data
+          // which could be accessed as ssr context
           extra: {
             userAgent: headers['user-agent'] || '',
             cookies: cookie.parse(headers.cookie as string ?? ''),
@@ -107,12 +108,16 @@ const serverHooks: ViseHooks = {
 
   // Tapped functions will be notified with a successful cache hit event.
   hitCache: async (hitCache) => {
+    // for example
+    // eslint-disable-next-line no-console
     console.log(`Use cache with key: ${hitCache.key}`);
   },
 
   /**
-   * Tapped functions will be called in order before rendering HTML with server renderer provided by web UI libraries
-   * Typically this could be used to fetch data for SSR. Data should be transferred in `RenderContext.extra`
+   * Tapped functions will be called in order before rendering HTML
+   * with server renderer provided by web UI libraries
+   * Typically this could be used to fetch data for SSR.
+   * Data should be transferred in `RenderContext.extra`
    */
   beforeRender: async (renderContext) => {
     const { url } = renderContext.request;
@@ -221,6 +226,7 @@ const serverHooks: ViseHooks = {
        * };
        */
     }
+    return undefined;
   },
 };
 

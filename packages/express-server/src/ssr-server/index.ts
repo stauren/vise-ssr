@@ -17,10 +17,10 @@ import {
   matchAppForUrl,
 } from 'vise-ssr';
 
-import MemCache from '@/utils/mem-cache';
-import log from '@/utils/logger';
-import { VALID_APP_NAME, loadHookConfig } from '@/utils/load-bundles';
-import { getAppClientBundlePath } from '@/utils/path';
+import MemCache from 'src/utils/mem-cache';
+import { log, error } from 'src/utils/logger';
+import { VALID_APP_NAME, loadHookConfig } from 'src/utils/load-bundles';
+import { getAppClientBundlePath } from 'src/utils/path';
 import RenderService from './render-service';
 
 export interface SSRServerConfig {
@@ -29,6 +29,17 @@ export interface SSRServerConfig {
   useCache?: boolean,
   repeatRender?: number,
   port?: number,
+}
+
+function getSafeApps(apps: SSRServerConfig['apps']) {
+  return apps.reduce((prev, cur) => {
+    if (!cur.match(VALID_APP_NAME)) {
+      log(`${cur} is not a safe app name.`);
+      return prev;
+    }
+    prev.push(cur);
+    return prev;
+  }, [] as string[]);
 }
 
 export default class SSRServer {
@@ -46,26 +57,44 @@ export default class SSRServer {
     return `${app}-${cacheKey}`;
   }
 
+  private static sendResponse(res: Response, data: HTTPResponse) {
+    res.set(data.headers)
+      .status(data.code)
+      .end(data.body ?? '');
+  }
+
   private express = express();
+
   private cacheService = new MemCache();
+
   private useCache: boolean;
+
   private apps: string[];
+
   private base: string;
+
   private port: number;
+
   private repeatRender: number;
+
   private renderService: RenderService;
+
   private hooksRunners: Record<string, HookLifeCycle> = {};
+
   private routerBaseConfigs: Record<string, HookRouterBase> = {};
+
   private baseConfigs: Record<string, string> = {};
+
   private hooks: Partial<HookCallback> = {
     async receiveRequest(request: HTTPRequest): Promise<RenderResult | undefined> {
       log(`request: ${request.url}`);
-      return;
+      return undefined;
     },
     async findCache(this: SSRServer, cacheInfo: CacheInfo) {
       if (this.useCache) {
         return this.findCacheByInfo(cacheInfo);
       }
+      return undefined;
     },
     async hitCache(cacheInfo: CacheInfo) {
       log(`response with cache of: ${cacheInfo.key}`);
@@ -80,7 +109,9 @@ export default class SSRServer {
 
       // 性能压测时候的重复渲染逻辑
       if (this.repeatRender > 0) {
-        for (let i = 0; i < this.repeatRender; i++) {
+        for (let i = 0; i < this.repeatRender; i += 1) {
+          // await render one bye one on purpose
+          // eslint-disable-next-line no-await-in-loop
           await this.renderService.render(appName, renderContext);
           log(`repeat render count: ${i}.`);
         }
@@ -110,7 +141,7 @@ export default class SSRServer {
 
   constructor(config: SSRServerConfig) {
     this.base = config.base;
-    this.apps = this.getSafeApps(config.apps);
+    this.apps = getSafeApps(config.apps);
     this.port = config.port ?? SSRServer.getPort();
     this.repeatRender = config.repeatRender ?? 0;
     this.renderService = new RenderService(this.base, this.apps);
@@ -137,19 +168,8 @@ export default class SSRServer {
     return loadHookConfig(this.base, appName);
   }
 
-  private getSafeApps(apps: SSRServerConfig['apps']) {
-    return apps.reduce((prev, cur) => {
-      if (!cur.match(VALID_APP_NAME)) {
-        log(`${cur} is not a safe app name.`);
-        return prev;
-      }
-      prev.push(cur);
-      return prev;
-    }, [] as string[]);
-  }
-
   private async initHooks() {
-    return await Promise.all(this.apps.map(async (appName: string) => {
+    return Promise.all(this.apps.map(async (appName: string) => {
       try {
         const hookConfig = await this.loadHookConfig(appName);
         if (hookConfig && hookConfig.appName === appName) {
@@ -165,7 +185,7 @@ export default class SSRServer {
           log(`no server hooks found for "${appName}".`);
         }
       } catch (e) {
-        console.error(`[vise] loadServerHooks fail for "${appName}".`, e);
+        error(`loadServerHooks fail for "${appName}".`, e);
         throw e;
       }
     }));
@@ -174,7 +194,7 @@ export default class SSRServer {
   private registerBase(appName: string, base: HookRouterBase, isRouterBase: boolean) {
     const config = isRouterBase ? this.routerBaseConfigs : this.baseConfigs;
     const appWithSameBase = Object.keys(config)
-      .find(app => config[app] === base);
+      .find((app) => config[app] === base);
     if (appWithSameBase) {
       throw `${appName} and ${appWithSameBase} has same ${isRouterBase ? 'routerBase' : 'base'}: ${base}`;
     }
@@ -200,13 +220,13 @@ export default class SSRServer {
     this.express.use('*', (req, res) => {
       const { projectName, routerBase } = matchAppForUrl(this.routerBaseConfigs, req.originalUrl);
       if (!projectName || !this.hooksRunners[projectName]) {
-        this.sendResponse(res, {
+        SSRServer.sendResponse(res, {
           code: 404,
           headers: {},
           body: 'Not found',
         });
         return;
-      };
+      }
 
       const handleWithHookLifeCycle = async () => {
         try {
@@ -219,12 +239,12 @@ export default class SSRServer {
           }, {
             app: projectName,
           });
-          this.sendResponse(res, response);
+          SSRServer.sendResponse(res, response);
         } catch (e) {
           const isError = (x: any): x is Error => typeof x.stack === 'string';
           const msg = isError(e) ? e.stack : e;
           log(`request to ${req.originalUrl} failed: ${msg}`);
-          this.sendResponse(res, {
+          SSRServer.sendResponse(res, {
             code: 500,
             headers: {},
             body: String(msg),
@@ -234,12 +254,6 @@ export default class SSRServer {
 
       handleWithHookLifeCycle();
     });
-  }
-
-  private async sendResponse(res: Response, data: HTTPResponse) {
-    res.set(data.headers)
-      .status(data.code)
-      .end(data.body ?? '');
   }
 
   private setupStatic() {

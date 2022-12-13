@@ -9,7 +9,7 @@ import {
   copyJsonWithChange,
   copyFileWithChange,
 } from '@vise-ssr/shared';
-import { DIR_NAME } from './dirname';
+import DIR_NAME from './dirname';
 
 export interface IVue3AppAns {
   templateType: string;
@@ -50,78 +50,6 @@ async function getViseVersion() {
   return JSON.parse(PKG).version;
 }
 
-export default async function newVue3App() {
-  const confirmCreation: IConfirm = await enquirer.prompt([
-    {
-      type: 'confirm',
-      name: 'confirm',
-      initial: true,
-      message: `Create app in ${process.cwd()}`,
-    },
-  ]);
-
-  if (!confirmCreation.confirm) {
-    return;
-  }
-
-  const answers = await vue3AppAns();
-  const { appName, config } = answers;
-
-  const viseVersion = await getViseVersion();
-  const newAppPath = path.resolve(process.cwd(), `./app-${appName}`);
-
-  if (await fileExist(newAppPath)) {
-    logger.error(`app-${appName} exists, please choose another name`);
-    return;
-  }
-
-  $.verbose = false;
-  await $`mkdir ${newAppPath}`;
-
-  const allDone = await createTemplateFiles(newAppPath, viseVersion, appName, config);
-  logger.success(`🎉  app-${appName} Created.\n`);
-  logger.info(`👉  Use following commands to start develop:
-
-  ${chalk.cyan(`$ cd app-${appName}`)}
-  ${chalk.cyan('$ npm install')}
-  ${chalk.cyan('$ vise dev')}
-  `);
-  return allDone;
-}
-
-const vue3AppAns = async () => {
-  // shell 获取默认用户名
-  $.verbose = false;
-  const defaultUser = (await $`echo $USER`).stdout.replace(/[\r\n]/g, '');
-
-  const answers: IVue3AppAns = await enquirer.prompt([
-    {
-      type: 'input',
-      name: 'appName',
-      message: 'Please input app name',
-      validate(value: string) {
-        const pattern = /^[a-z]+([0-9a-z-]*[0-9a-z]+)?$/;
-        if (!pattern.test(value)) {
-          return 'App name must start with lower case letter and only contain lower case letter, number and - symbol';
-        }
-        return true;
-      },
-    },
-    {
-      type: 'form',
-      name: 'config',
-      message: 'Please input app information (Use arrow to move up and down)',
-      choices: [
-        { name: 'author', message: 'Author', initial: defaultUser },
-        { name: 'desc', message: 'Description', initial: 'a Vise SSR project' },
-        { name: 'devPort', message: 'DevPort', initial: '3000' },
-        { name: 'defaultTitle', message: 'Default Title', initial: 'Vise App' },
-      ],
-    },
-  ]);
-  return answers;
-};
-
 const createTemplateFiles = (
   newAppPath: string,
   viseVersion: string,
@@ -130,7 +58,9 @@ const createTemplateFiles = (
 ) => {
   const appTemplatePath = getTemplateBasePath();
   // 复制文件至新项目
-  const { author, desc, devPort, defaultTitle } = config;
+  const {
+    author, desc, devPort, defaultTitle,
+  } = config;
   const mySpinner = ora().start();
   mySpinner.color = 'green';
   // 这里并不关心最后这个数组的值，所以用 any 直接概括了
@@ -193,3 +123,74 @@ const createTemplateFiles = (
     });
   });
 };
+
+const vue3AppAns = async () => {
+  // shell 获取默认用户名
+  $.verbose = false;
+  const defaultUser = (await $`echo $USER`).stdout.replace(/[\r\n]/g, '');
+
+  const answers: IVue3AppAns = await enquirer.prompt([
+    {
+      type: 'input',
+      name: 'appName',
+      message: 'Please input app name',
+      validate(value: string) {
+        const pattern = /^[a-z]+([0-9a-z-]*[0-9a-z]+)?$/;
+        if (!pattern.test(value)) {
+          return 'App name must start with lower case letter and only contain lower case letter, number and - symbol';
+        }
+        return true;
+      },
+    },
+    {
+      type: 'form',
+      name: 'config',
+      message: 'Please input app information (Use arrow to move up and down)',
+      choices: [
+        { name: 'author', message: 'Author', initial: defaultUser },
+        { name: 'desc', message: 'Description', initial: 'a Vise SSR project' },
+        { name: 'devPort', message: 'DevPort', initial: '3000' },
+        { name: 'defaultTitle', message: 'Default Title', initial: 'Vise App' },
+      ],
+    },
+  ]);
+  return answers;
+};
+
+export default async function newVue3App() {
+  const confirmCreation: IConfirm = await enquirer.prompt([
+    {
+      type: 'confirm',
+      name: 'confirm',
+      initial: true,
+      message: `Create app in ${process.cwd()}`,
+    },
+  ]);
+
+  if (!confirmCreation.confirm) {
+    return;
+  }
+
+  const answers = await vue3AppAns();
+  const { appName, config } = answers;
+
+  const viseVersion = await getViseVersion();
+  const newAppPath = path.resolve(process.cwd(), `./app-${appName}`);
+
+  if (await fileExist(newAppPath)) {
+    logger.error(`app-${appName} exists, please choose another name`);
+    return;
+  }
+
+  $.verbose = false;
+  await $`mkdir ${newAppPath}`;
+
+  await createTemplateFiles(newAppPath, viseVersion, appName, config);
+  logger.success(`🎉  app-${appName} Created.\n`);
+  logger.info(`👉  Use following commands to start develop:
+
+  ${chalk.cyan(`$ cd app-${appName}`)}
+  ${chalk.cyan('$ npm install')}
+  ${chalk.cyan('$ vise dev')}
+  `);
+}

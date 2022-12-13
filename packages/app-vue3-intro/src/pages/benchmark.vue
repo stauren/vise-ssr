@@ -29,7 +29,8 @@ import RecursiveDivs from '@/components/recursive-divs.vue';
 import RecursiveDivsFn from '@/components/recursive-divs-fn.vue';
 import BenchmarkNav from '@/components/benchmark-nav.vue';
 import SsrTime from '@/components/ssr-time.vue';
-import { countDrawingDivs } from '@/utils/count-drawing-divs';
+import countDrawingDivs from '@/utils/count-drawing-divs';
+
 const depth = 5;
 const breadth = 11;
 

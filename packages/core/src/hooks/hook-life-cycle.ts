@@ -3,7 +3,7 @@ import type {
   HTTPResponse,
   RenderContextMeta,
   SsrContext,
-} from '../';
+} from '..';
 import type {
   RenderContext,
   RenderError,
@@ -36,6 +36,7 @@ type CallCacheResult = {
 
 class HookLifeCycle {
   private hookCaller: HookCaller;
+
   constructor(
     viseHooks: ViseHooks,
     logger?: HookLogger,
@@ -133,14 +134,17 @@ class HookLifeCycle {
     return {};
   }
 
-  private async callRenderHooks(context: RenderContext, cacheInfo?: CacheInfo): Promise<RenderResult> {
+  private async callRenderHooks(
+    context: RenderContext,
+    cacheInfo?: CacheInfo,
+  ): Promise<RenderResult> {
     let renderResult: RenderResult;
     const { error } = context;
-    const getErr = (error: RenderError): RenderResult => ({
+    const getErr = (err: RenderError): RenderResult => ({
       type: 'error',
       renderBy: DEFAULT_RENDER,
       context,
-      error,
+      error: err,
     });
     // 当 RenderContext.error 存在异常时，此时没必要走 render
     // 可以直接吐出 renderError，最后兜底进行降级处理

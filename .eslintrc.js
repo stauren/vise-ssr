@@ -1,4 +1,9 @@
 // @ts-check
+const a11yOff = Object.keys(require('eslint-plugin-jsx-a11y').rules)
+  .reduce((acc, rule) => ({
+    ...acc,
+    [`jsx-a11y/${rule}`]: 'off',
+  }), {});
 
 module.exports = {
   root: true,
@@ -12,23 +17,12 @@ module.exports = {
     extraFileExtensions: ['.vue', '.cjs', '.mjs'],
   },
   extends: [
-    'plugin:react-hooks/recommended',
-    'plugin:react/recommended',
-    'plugin:vue/vue3-recommended',
     'airbnb',
-    'airbnb/hooks',
+    'airbnb-typescript',
   ],
   plugins: [
-    'react-hooks',
-    'react',
-    'vue',
     'unicorn',
     'folders',
-  ],
-  ignorePatterns: [
-    // git commit hooks 不读取 .gitignore，这里再配一份…
-    'packages/react/template',
-    'packages/vue3/template',
   ],
   rules: {
     // it won't be fixed when using --fix flag
@@ -44,16 +38,30 @@ module.exports = {
         max: 1,
       },
     ],
-  },
-  overrides: [{
-    files: [
-      'packages/**/*.vue',
-      'packages/app-vue3-intro/**/*.ts',
+    'no-throw-literal': 0,
+    '@typescript-eslint/no-throw-literal': 0,
+    'import/no-unresolved': 0,
+    'import/extensions': [
+      'error',
+      'never',
+      {
+        pattern: {
+          json: 'always',
+          vue: 'always',
+          tsx: 'always',
+          md: 'always',
+          scss: 'always',
+          'd.ts': 'never',
+        },
+      },
     ],
-    rules: {
-      'react-hooks/rules-of-hooks': 'off',
-    },
-  }],
+    'react/react-in-jsx-scope': 0,
+    'no-param-reassign': ['error', { props: true, ignorePropertyModificationsFor: ['state'] }],
+    ...a11yOff,
+  },
+  ignorePatterns: [
+    'packages/plugins',
+  ],
   settings: {
     react: {
       version: '18.2.0',

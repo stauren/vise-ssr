@@ -1,4 +1,6 @@
-import { RenderContext, RenderResultCategory, mergeConfig, SsrBundleSuccess } from 'vise-ssr';
+import {
+  RenderContext, RenderResultCategory, mergeConfig, SsrBundleSuccess,
+} from 'vise-ssr';
 import SubProcessRender from './subprocess-render';
 import { SSR_RENDER } from './constants';
 import type { SSRrenderPlugin, EntryServerModule } from '../types/ssr-render';
@@ -9,7 +11,7 @@ const ssrRenderPlugin = async (options: SSRrenderPlugin) => {
     logger,
     entryServerPaths,
   } = options;
-  let subProcessRender: SubProcessRender| undefined;
+  let subProcessRender: SubProcessRender | undefined;
   const entryServerModules: Record<string, EntryServerModule> = {};
   if (renderBySubprocess) {
     // 采用子进程进行渲染的机制
@@ -78,7 +80,7 @@ const ssrRenderPlugin = async (options: SSRrenderPlugin) => {
       ? await handleSubRender(renderContext)
       : await handleWorkRender(renderContext);
     return renderRes;
-  };
+  }
   return {
     viseRenderPlugin: {
       name: 'vise-plugin-ssr-render',

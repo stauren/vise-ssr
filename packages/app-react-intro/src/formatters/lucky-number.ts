@@ -1,5 +1,7 @@
-import { LuckNumFetchResult } from '../../types';
+import type { SsrFetchResultOf } from 'vise-ssr';
 
-export function formatLuckyNumber(result: LuckNumFetchResult) {
+type LuckNumFetchResult = SsrFetchResultOf<{ value: number | string }>;
+
+export default function formatLuckyNumber(result: LuckNumFetchResult) {
   return parseInt(String(result.data.value), 10);
-};
+}

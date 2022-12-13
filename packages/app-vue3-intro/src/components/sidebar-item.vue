@@ -14,6 +14,7 @@
       {{ $props.title }}
     </router-link>
   </li>
+  <!-- toc is generated from markdown as html -->
   <!-- eslint-disable-next-line vue/no-v-html -->
   <div v-html="$props.toc" />
 </template>

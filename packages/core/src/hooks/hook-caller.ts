@@ -1,6 +1,7 @@
 import type {
   HTTPRequest,
-} from '../index';
+  JSONValue,
+} from '..';
 import type {
   HookNames,
   RenderContext,
@@ -14,10 +15,10 @@ import HookManager from './hook-manager';
 import HookLogger from './hook-logger';
 
 import isEqual from '../node/utils/is-equal';
-import type { JSONValue } from '../';
 
 class HookCaller {
   private hooks: HookManager;
+
   private logger: HookLogger | undefined;
 
   constructor(

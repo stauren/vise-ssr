@@ -21,7 +21,7 @@ const getResolvedWithVirtualConfig = (id: string, mod: ScaffoldModule) => {
 const isTsFile = (filePath: string) => path.extname(filePath) === '.ts';
 const hasNoFileExtension = (filePath: string) => path.extname(filePath) === '';
 
-export function viseScaffold({ modules }: ScaffoldConfig) {
+export default function viseScaffold({ modules }: ScaffoldConfig) {
   const resolvedIds = new Map();
   let indexModule: ScaffoldModule | undefined;
 
@@ -59,8 +59,14 @@ export function viseScaffold({ modules }: ScaffoldConfig) {
           resolved = `${resolved}.ts`;
         }
 
-        if (resolvedIds.has(resolved)) return getResolvedWithVirtualConfig(resolved, resolvedIds.get(resolved));
+        if (resolvedIds.has(resolved)) {
+          return getResolvedWithVirtualConfig(
+            resolved,
+            resolvedIds.get(resolved),
+          );
+        }
       }
+      return undefined;
     },
 
     // 如果命中配置中的模块，使用配置中的字符串或者方法返回文件内容
@@ -70,8 +76,9 @@ export function viseScaffold({ modules }: ScaffoldConfig) {
 
       if (mod) {
         const content = typeof mod === 'string' ? mod : mod.content;
-        return typeof content === 'string' ? content : await content();
+        return typeof content === 'string' ? content : content();
       }
+      return undefined;
     },
 
     transformIndexHtml: {
@@ -79,7 +86,7 @@ export function viseScaffold({ modules }: ScaffoldConfig) {
       transform: async function transformIndexHtml(html: string) {
         if (html !== '') return html;
         const content = typeof indexModule === 'string' ? indexModule : indexModule!.content;
-        return typeof content === 'string' ? content : await content();
+        return typeof content === 'string' ? content : content();
       },
     },
   };

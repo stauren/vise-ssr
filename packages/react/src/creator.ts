@@ -9,7 +9,7 @@ import {
   copyJsonWithChange,
   copyFileWithChange,
 } from '@vise-ssr/shared';
-import { DIR_NAME } from './dirname';
+import DIR_NAME from './dirname';
 
 export interface ReactAppAns {
   templateType: string;
@@ -48,45 +48,6 @@ function getTemplateBasePath() {
 async function getViseVersion() {
   const PKG = await fsPromise.readFile(path.resolve(DIR_NAME, '../package.json'), 'utf8');
   return JSON.parse(PKG).version;
-}
-
-export default async function newReactApp() {
-  const confirmCreation: IConfirm = await enquirer.prompt([
-    {
-      type: 'confirm',
-      name: 'confirm',
-      initial: true,
-      message: `Create app in ${process.cwd()}`,
-    },
-  ]);
-
-  if (!confirmCreation.confirm) {
-    return;
-  }
-
-  const answers = await vue3AppAns();
-  const { appName, config } = answers;
-
-  const viseVersion = await getViseVersion();
-  const newAppPath = path.resolve(process.cwd(), `./app-${appName}`);
-
-  if (await fileExist(newAppPath)) {
-    logger.error(`app-${appName} exists, please choose another name`);
-    return;
-  }
-
-  $.verbose = false;
-  await $`mkdir ${newAppPath}`;
-
-  const allDone = await createTemplateFiles(newAppPath, viseVersion, appName, config);
-  logger.success(`🎉  app-${appName} created.\n`);
-  logger.info(`👉 Use following commands to start develop:
-
-  ${chalk.cyan(`$ cd app-${appName}`)}
-  ${chalk.cyan('$ npm install')}
-  ${chalk.cyan('$ npm run dev')}
-  `);
-  return allDone;
 }
 
 const vue3AppAns = async () => {
@@ -131,7 +92,9 @@ const createTemplateFiles = (
 ) => {
   const appTemplatePath = getTemplateBasePath();
   // 复制文件至新项目
-  const { author, desc, devPort, defaultTitle } = config;
+  const {
+    author, desc, devPort, defaultTitle,
+  } = config;
   const mySpinner = ora().start();
   mySpinner.color = 'green';
   // 这里并不关心最后这个数组的值，所以用 any 直接概括了
@@ -193,3 +156,41 @@ const createTemplateFiles = (
     });
   });
 };
+
+export default async function newReactApp() {
+  const confirmCreation: IConfirm = await enquirer.prompt([
+    {
+      type: 'confirm',
+      name: 'confirm',
+      initial: true,
+      message: `Create app in ${process.cwd()}`,
+    },
+  ]);
+
+  if (!confirmCreation.confirm) {
+    return;
+  }
+
+  const answers = await vue3AppAns();
+  const { appName, config } = answers;
+
+  const viseVersion = await getViseVersion();
+  const newAppPath = path.resolve(process.cwd(), `./app-${appName}`);
+
+  if (await fileExist(newAppPath)) {
+    logger.error(`app-${appName} exists, please choose another name`);
+    return;
+  }
+
+  $.verbose = false;
+  await $`mkdir ${newAppPath}`;
+
+  await createTemplateFiles(newAppPath, viseVersion, appName, config);
+  logger.success(`🎉  app-${appName} created.\n`);
+  logger.info(`👉 Use following commands to start develop:
+
+  ${chalk.cyan(`$ cd app-${appName}`)}
+  ${chalk.cyan('$ npm install')}
+  ${chalk.cyan('$ npm run dev')}
+  `);
+}

@@ -24,12 +24,12 @@ describe('mergeConfig', () => {
     const plugin1: Plugin = {
       name: 'my-plugin-1',
       enforce: 'pre',
-      config: conf => conf,
+      config: (conf) => conf,
     };
     const plugin2: Plugin = {
       name: 'my-plugin-2',
       enforce: 'pre',
-      config: conf => conf,
+      config: (conf) => conf,
     };
     const baseConfig: Partial<ViseConfig> = {
       plugin: plugin1,

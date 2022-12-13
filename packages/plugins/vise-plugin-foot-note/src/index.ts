@@ -22,7 +22,7 @@ const footNotePlugin = (): VisePlugin => {
     const costTime = `cost ${new Date().getTime() - (startTime as number)} ms`;
     // 成功渲染页面
     if (renderResult.type === RenderResultCategory.render) {
-      const { cacheInfo, ssrResult: { html }, context: { meta } }  = renderResult;
+      const { cacheInfo, ssrResult: { html }, context: { meta } } = renderResult;
       const { cache } = meta;
       const key = cacheInfo?.key;
       const cacheFoot = (key && cache) ? `newCache,${cacheInfo?.key}` : 'abandon cache';
@@ -37,7 +37,7 @@ const footNotePlugin = (): VisePlugin => {
     }
     // 命中htmlCache
     if (renderResult.type === RenderResultCategory.hitCache) {
-      const { cacheInfo }  = renderResult;
+      const { cacheInfo } = renderResult;
       footStr = ['hitCache', (cacheInfo as CacheInfo).key, costTime].join(',');
       return {
         ...renderResult,
@@ -45,7 +45,7 @@ const footNotePlugin = (): VisePlugin => {
       };
     }
     return renderResult;
-  };
+  }
   return {
     name: 'vise-plugin-foot-note',
     hooks: {

@@ -1,6 +1,6 @@
 import path from 'path';
 import { getAppVisePath } from 'vise-ssr';
-import { DIR_NAME } from './env';
+import DIR_NAME from './env';
 
 export function getAppViseBundleDir(appRoot: string) {
   return path.join(getAppVisePath({ root: appRoot }), 'bundles');

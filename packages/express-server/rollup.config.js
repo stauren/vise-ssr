@@ -24,6 +24,7 @@ export default [{
     'child_process',
     /node_modules/,
     'vise-ssr',
+    '@vise-ssr/shared',
   ],
   output: [{
     file: pkg.module,
@@ -50,7 +51,9 @@ export default [{
     'fs',
     'path',
     'events',
+    'chalk',
     'vise-ssr',
+    '@vise-ssr/shared',
   ],
   output: {
     dir: './dist/',
@@ -74,6 +77,7 @@ export default [{
     'path',
     'events',
     'vise-ssr',
+    '@vise-ssr/shared',
     /node_modules/,
   ],
   output: {

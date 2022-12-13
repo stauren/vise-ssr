@@ -1,4 +1,4 @@
-import type { JSONObject, JSONValue } from '../../';
+import type { JSONObject, JSONValue } from '../..';
 
 /**
  * 判断是否纯对象
@@ -9,9 +9,9 @@ import type { JSONObject, JSONValue } from '../../';
  */
 export function isPureObject(obj: any): boolean {
   return Object.prototype.toString.call(obj) === '[object Object]';
-};
+}
 
-export const cloneDeep = (function () {
+export const cloneDeep = (function cdClosure() {
   let seen: Array<[JSONObject, JSONObject]> = [];
   function cloneDeepInner(source: JSONValue): JSONValue {
     if (source === null || typeof source !== 'object') {
@@ -25,7 +25,7 @@ export const cloneDeep = (function () {
 
     // 到这里只能是 JSONObject 了
     // fix infinite loop caused by circular reference
-    const alreadyCloned = seen.find(v => v[0] === source)?.[1];
+    const alreadyCloned = seen.find((v) => v[0] === source)?.[1];
     if (alreadyCloned) {
       return alreadyCloned;
     }
@@ -41,7 +41,7 @@ export const cloneDeep = (function () {
     }, cloned);
   }
 
-  return function (source: JSONValue): JSONValue {
+  return (source: JSONValue): JSONValue => {
     seen = [];
     return cloneDeepInner(source);
   };

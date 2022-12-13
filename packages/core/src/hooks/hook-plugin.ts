@@ -38,7 +38,7 @@ function getHighOrderFunction(pluginName: string, hookName: HookNames, callback:
   switch (hookName) {
     case 'receiveRequest':
     case 'render':
-      return async function (...args: any) {
+      return async (...args: any) => {
         // 2个 hooks 的返回值是一致的
         const renderResult = (await callback(...args)) as RenderResult;
         if (renderResult) {
@@ -48,7 +48,7 @@ function getHighOrderFunction(pluginName: string, hookName: HookNames, callback:
         return renderResult;
       };
     case 'afterRender':
-      return async function (renderResult: RenderResult) {
+      return async (renderResult: RenderResult) => {
         const finalRenderResult = await callback({ ...renderResult });
         if (!isEqual(renderResult, finalRenderResult)) {
           // 强制固定 renderBy，以便追查渲染来源
@@ -58,7 +58,7 @@ function getHighOrderFunction(pluginName: string, hookName: HookNames, callback:
       };
     case 'requestResolved':
       // 确保用户不会修改 ResolvedRequest.original 内容
-      return async function (resolvedRequest: ResolvedRequest) {
+      return async (resolvedRequest: ResolvedRequest) => {
         const cbWithType = callback as HookCallback['requestResolved'];
         const original = cloneDeep(resolvedRequest.original) as RenderContext;
         const { resolved } = await cbWithType(resolvedRequest);
@@ -69,31 +69,30 @@ function getHighOrderFunction(pluginName: string, hookName: HookNames, callback:
       };
     case 'findCache':
       // 这里只是简单的传递参数，不关心具体类型
-      return async function (cacheInfo: CacheInfo): Promise<FindCacheResult | void> {
+      return async (cacheInfo: CacheInfo): Promise<FindCacheResult | void> => {
         const content = await callback(cacheInfo) as string | void;
-        if (content) {
-          return {
-            content,
-            renderBy: pluginName,
-          };
-        }
+        return typeof content === 'string' ? {
+          content,
+          renderBy: pluginName,
+        } : content;
       };
+    default:
+      return callback;
   }
-  return callback;
 }
 
 function mergeCallbacksOfOneHook(
   pluginName: string,
   hookName: HookNames,
   oldCallbacks: Array<DetailHookCallback> | undefined,
-  configsOfOneHook: ArrayOrSingle<DetailHookCallback| Function>,
+  configsOfOneHook: ArrayOrSingle<DetailHookCallback | Function>,
 ) {
   // 标准化 hooks 为数组模式
   const configs = Array.isArray(configsOfOneHook) ? configsOfOneHook : [configsOfOneHook];
 
   return configs
     // 标准化 config
-    .map(conf => (
+    .map((conf) => (
       'callback' in conf ? conf : {
         callback: conf,
       }))
@@ -120,9 +119,12 @@ function wrapAppAsPlugin(viseHooks: ViseHooks): Array<VisePlugin> {
   ];
 }
 
-const filterAndStandardize = (callbacks: Array<DetailHookCallback>, filterType: string | undefined) => callbacks
-  .filter(item => item.enforce === filterType)
-  .map(item => item.callback);
+const filterAndStandardize = (
+  callbacks: Array<DetailHookCallback>,
+  filterType: string | undefined,
+) => callbacks
+  .filter((item) => item.enforce === filterType)
+  .map((item) => item.callback);
 
 function getOrderedStdHookConfig(mergedConfig: DetailCallbackConfig) {
   return (Object.keys(mergedConfig) as Array<HookNames>)
@@ -140,30 +142,31 @@ function getOrderedStdHookConfig(mergedConfig: DetailCallbackConfig) {
 function mergePluginConfigs(plugins: VisePlugin[]) {
   return plugins.reduce((hookConfig: HookCallbackConfig, plugin: VisePlugin) => {
     const { name: pluginName, hooks } = plugin;
-    return (Object.keys(hooks) as Array<HookNames>).reduce((hookConfigAfterPartialMerge, hookName) => {
-      const rawConf = hooks[hookName];
-      if (!rawConf) {
-        return hookConfigAfterPartialMerge;
-      }
+    return (Object.keys(hooks) as Array<HookNames>)
+      .reduce((hookConfigAfterPartialMerge, hookName) => {
+        const rawConf = hooks[hookName];
+        if (!rawConf) {
+          return hookConfigAfterPartialMerge;
+        }
 
-      const newCallbacks = mergeCallbacksOfOneHook(
-        pluginName,
-        hookName,
-        // @ts-ignore hookConfigAfterPartialMerge 是从头新建的
-        // 可以确保 hookConfigAfterPartialMerge[hookName] 是数组 | undefined
-        hookConfigAfterPartialMerge[hookName],
-        rawConf,
-      );
+        const newCallbacks = mergeCallbacksOfOneHook(
+          pluginName,
+          hookName,
+          // @ts-ignore hookConfigAfterPartialMerge 是从头新建的
+          // 可以确保 hookConfigAfterPartialMerge[hookName] 是数组 | undefined
+          hookConfigAfterPartialMerge[hookName],
+          rawConf,
+        );
 
-      // 部分 hooks 因为返回值封装 hof 后改变，改用 inner hook
-      const outputHookName = Object.prototype.hasOwnProperty.call(HOOK_TO_INNER, hookName)
-        ? HOOK_TO_INNER[hookName as keyof typeof HOOK_TO_INNER]
-        : hookName;
-      return {
-        ...hookConfigAfterPartialMerge,
-        [outputHookName]: newCallbacks,
-      };
-    }, hookConfig);
+        // 部分 hooks 因为返回值封装 hof 后改变，改用 inner hook
+        const outputHookName = Object.prototype.hasOwnProperty.call(HOOK_TO_INNER, hookName)
+          ? HOOK_TO_INNER[hookName as keyof typeof HOOK_TO_INNER]
+          : hookName;
+        return {
+          ...hookConfigAfterPartialMerge,
+          [outputHookName]: newCallbacks,
+        };
+      }, hookConfig);
   }, {}) as DetailCallbackConfig;
 }
 

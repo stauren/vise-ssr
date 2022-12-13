@@ -1,24 +1,33 @@
 import chalk from 'chalk';
+import type { ChalkInstance } from 'chalk';
 
 class Logger {
-  public static info(message: string) {
-    Logger.log(chalk.white(Logger.formatViseLog(message)));
+  public static info(...messages: unknown[]) {
+    Logger.log(chalk.white, ...messages);
   }
-  public static error(message: string) {
-    Logger.log(chalk.red(Logger.formatViseLog(message)));
+
+  public static error(...messages: unknown[]) {
+    Logger.err(...messages.map(chalk.red));
   }
-  public static warn(message: string) {
-    Logger.log(chalk.yellow(Logger.formatViseLog(message)));
+
+  public static warn(...messages: unknown[]) {
+    Logger.log(chalk.yellow, ...messages);
   }
-  public static success(message: string) {
-    Logger.log(chalk.green(Logger.formatViseLog(message)));
+
+  public static success(...messages: unknown[]) {
+    Logger.log(chalk.green, ...messages);
   }
-  private static formatViseLog(message: string) {
-    return `[vise]: ${message}`;
+
+  static log(chalkColor: ChalkInstance, ...messages: unknown[]) {
+    // eslint-disable-next-line no-console
+    console.log('[vise]', ...messages.map((o) => chalkColor(o)));
   }
-  private static log(message: string) {
-    console.log(message);
+
+  private static err(...messages: unknown[]) {
+    // eslint-disable-next-line no-console
+    console.error('[vise]', ...messages);
   }
+
   constructor() {
     throw new Error('No need to instantiate Logger');
   }

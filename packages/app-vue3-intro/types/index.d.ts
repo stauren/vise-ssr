@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import 'vite/client';
 import { Store } from 'vuex';
 import { SsrFetchResultOf } from 'vise-ssr';

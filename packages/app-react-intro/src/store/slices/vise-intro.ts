@@ -18,7 +18,7 @@ export function getInitState(): ViseIntroState {
     count: 0,
     luckyNumber: -1,
   };
-};
+}
 
 export const viseIntroSlice = createSlice({
   name: 'viseIntro',

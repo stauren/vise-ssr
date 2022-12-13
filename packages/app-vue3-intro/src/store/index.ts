@@ -12,7 +12,7 @@ import actions from './actions';
 import MutationTypes from './mutation-types';
 
 type MyStore = Store<State>;
-const key: InjectionKey<MyStore> = Symbol();
+const key: InjectionKey<MyStore> = Symbol('store');
 
 function useStore() {
   return baseUseStore(key);

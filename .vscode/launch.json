@@ -25,5 +25,16 @@
         ],
         "type": "node-terminal"
       },
+      {
+        "name": "Start Vitest",
+        "preLaunchTask": "",
+        "request": "launch",
+        "cwd": "${workspaceFolder}/",
+        "command": "npm run test",
+        "skipFiles": [
+          "<node_internals>/**"
+        ],
+        "type": "node-terminal"
+      },
     ]
 }

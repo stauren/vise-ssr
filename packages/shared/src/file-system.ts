@@ -14,7 +14,7 @@ export async function fileExist(path: string) {
   } catch {
     return false;
   }
-};
+}
 
 type ChangeDetail = {
   author: string,
@@ -43,7 +43,11 @@ export async function copyJsonWithChange(src: string, target: string, changes: C
   return fs.writeFile(target, JSON.stringify(newData, null, 2));
 }
 
-export async function copyFileWithChange(src: string, destination: string, changed: Record<string, string>) {
+export async function copyFileWithChange(
+  src: string,
+  destination: string,
+  changed: Record<string, string>,
+) {
   let source: string;
   try {
     source = await fs.readFile(src, 'utf-8');
@@ -52,7 +56,11 @@ export async function copyFileWithChange(src: string, destination: string, chang
     throw e;
   }
   const result = Object.keys(changed).reduce(
-    (content: string, replaceKey) => replacePlaceholderWithValue(content, replaceKey, changed[replaceKey]),
+    (content: string, replaceKey) => replacePlaceholderWithValue(
+      content,
+      replaceKey,
+      changed[replaceKey],
+    ),
     source,
   );
   return fs.writeFile(destination, result, 'utf-8');
