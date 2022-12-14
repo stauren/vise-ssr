@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-require-imports
 const path = require('path');
 
 module.exports = {
@@ -14,6 +13,7 @@ module.exports = {
   },
   extends: [
     'airbnb',
+    'airbnb-typescript',
     'plugin:vue/vue3-recommended',
   ],
   plugins: [

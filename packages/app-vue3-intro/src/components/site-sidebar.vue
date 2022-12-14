@@ -10,7 +10,7 @@
           :id="item.id"
           :key="item.to"
           :to="item.to"
-          :type="item.type"
+          :type="item.type === 'link' ? 'link' : ''"
           :title="item.title"
           :toc="item.toc.value"
         />
@@ -26,7 +26,7 @@ import SIDEBAR_ITEMS from '@/data/sidebar-items.json';
 
 const store = useStore();
 const toCamel = (id: string) => id.replace(/-([a-z])/g, (whole, match) => match.toUpperCase());
-const sidebarItems = SIDEBAR_ITEMS.map(item => ({
+const sidebarItems = SIDEBAR_ITEMS.map((item) => ({
   id: item.id,
   to: item.to || `/${item.id}.html`,
   title: item.title,

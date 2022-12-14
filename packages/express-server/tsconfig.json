@@ -3,7 +3,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "src/*": ["./src/*"]
     },
     "sourceMap": false
   },
@@ -13,6 +13,7 @@
   ],
   "exclude": [
     "dist",
+    "bundles",
     "node_modules"
   ]
 }

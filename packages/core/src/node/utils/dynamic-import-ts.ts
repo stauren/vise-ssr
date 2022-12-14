@@ -2,25 +2,7 @@ import fs, { promises as fsPromise } from 'fs';
 import path from 'path';
 import { build } from 'esbuild';
 import esbuildPluginAlias from 'esbuild-plugin-alias';
-
-export default async function dynamicImportTs<T>(filePath: string): Promise<T|undefined> {
-  let result: T | undefined = undefined;
-  try {
-    await fsPromise.access(filePath, fs.constants.F_OK);
-
-    // bundle the config file w/ ts transforms first, write it to disk,
-    // load it with native Node ESM, then delete the file.
-    const bundled = await bundleTsFile(filePath);
-    const tempConfigPath = `${filePath}.js`;
-    await fsPromise.writeFile(tempConfigPath, bundled.code);
-    result = (await dynamicImport(`${tempConfigPath}?t=${Date.now()}`)).default;
-    await fsPromise.unlink(tempConfigPath);
-  } catch (error) {
-    console.error('[dynamicImportTs error]', error);
-  }
-
-  return result;
-}
+import { error } from './log';
 
 async function bundleTsFile(fileName: string): Promise<{ code: string; }> {
   const result = await build({
@@ -39,21 +21,23 @@ async function bundleTsFile(fileName: string): Promise<{ code: string; }> {
       }),
       {
         name: 'externalize-deps',
-        setup(build) {
-          build.onResolve({ filter: /.*/ }, (args) => {
+        setup(pluginBuild) {
+          pluginBuild.onResolve({ filter: /.*/ }, (args) => {
             const id = args.path;
+            let res;
             if (id[0] !== '.' && !id.startsWith('@/') && !path.isAbsolute(id)) {
-              return {
+              res = {
                 external: true,
               };
             }
+            return res;
           });
         },
       },
       {
         name: 'replace-import-meta',
-        setup(build) {
-          build.onLoad({ filter: /\.[jt]s$/ }, async (args) => {
+        setup(pluginBuild) {
+          pluginBuild.onLoad({ filter: /\.[jt]s$/ }, async (args) => {
             const contents = await fs.promises.readFile(args.path, 'utf8');
             return {
               loader: args.path.endsWith('.ts') ? 'ts' : 'js',
@@ -88,7 +72,8 @@ async function bundleTsFile(fileName: string): Promise<{ code: string; }> {
   };
 }
 
-const usingDynamicImport = typeof jest === 'undefined';
+// const usingDynamicImport = typeof jest === 'undefined';
+const usingDynamicImport = true;
 
 /**
  * Dynamically import files. It will make sure it's not being compiled away by TS/Rollup.
@@ -100,6 +85,26 @@ const usingDynamicImport = typeof jest === 'undefined';
  * @param file File path to import.
  */
 const dynamicImport = usingDynamicImport
-  // eslint-disable-next-line no-new-func
+  // use eval on purpose
+  // eslint-disable-next-line @typescript-eslint/no-implied-eval
   ? new Function('file', 'return import(file)')
   : require;
+
+export default async function dynamicImportTs<T>(filePath: string): Promise<T | undefined> {
+  let result: T | undefined;
+  try {
+    await fsPromise.access(filePath, fs.constants.F_OK);
+
+    // bundle the config file w/ ts transforms first, write it to disk,
+    // load it with native Node ESM, then delete the file.
+    const bundled = await bundleTsFile(filePath);
+    const tempConfigPath = `${filePath}.js`;
+    await fsPromise.writeFile(tempConfigPath, bundled.code);
+    result = (await dynamicImport(`${tempConfigPath}?t=${Date.now()}`)).default;
+    await fsPromise.unlink(tempConfigPath);
+  } catch (err) {
+    error('[dynamicImportTs error]', err);
+  }
+
+  return result;
+}

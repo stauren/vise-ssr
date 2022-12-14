@@ -1,5 +1,5 @@
 type DeepPartial<T> = T extends object ? {
-  [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]>: T[P];
+  [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P];
 } : T;
 
 type MergeResult = {
@@ -41,6 +41,8 @@ const arrayMerge = (existing: unknown, newValue: unknown): MergeResult => (
  */
 const objectMerge = (existing: unknown, newValue: unknown): MergeResult => (
   isObject(existing) && isObject(newValue)
+    // function mutually call each other scenario
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     ? mergeWith(mergeOneConfig(existing, newValue))
     : passWith(existing)
 );

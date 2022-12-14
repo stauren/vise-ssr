@@ -1,7 +1,8 @@
 import type { ParsedViseConfig, HtmlFixedPositionFragment } from '@vise-ssr/shared';
 import { getAppRoot } from './utils/path';
 import dynamicImportTs from './utils/dynamic-import-ts';
-import type { HttpHeaders } from '../';
+import type { HttpHeaders } from '..';
+import { error } from './utils/log';
 
 export type SsrCacheKeyGenerator = (url: string, headers: HttpHeaders) => string;
 
@@ -45,10 +46,10 @@ export default async function getAppViseConfig(): Promise<ParsedViseConfig> {
   const viseConfigPath = `${getAppRoot()}/vise.config.ts`;
   const userConfig = await dynamicImportTs<Partial<ViseConfig>>(viseConfigPath);
   if (userConfig !== undefined) {
-    result = Object.assign({}, DEFAULT_VISE_CONFIG, userConfig);
+    result = { ...DEFAULT_VISE_CONFIG, ...userConfig };
   } else {
-    console.error('[getAppViseConfig error]');
-    return Object.assign({}, DEFAULT_VISE_CONFIG);
+    error('[getAppViseConfig error]');
+    return { ...DEFAULT_VISE_CONFIG };
   }
 
   if (!result.base!.match(/^(\/|https?:\/\/)/)) {

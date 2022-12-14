@@ -15,7 +15,7 @@ import {
   logger,
   fileExist,
 } from '@vise-ssr/shared';
-import { DIR_NAME } from './dirname';
+import DIR_NAME from './dirname';
 
 export const SCAFFOLD_NAME = 'react-app';
 
@@ -60,7 +60,11 @@ const HTML_PLACEHOLDERS = {
  * 加载自定义html模板
  * @param config 配置项
  */
-async function loadCustomTemplateContent(appRoot: string, isProduction: boolean, config: ParsedViseConfig) {
+async function loadCustomTemplateContent(
+  appRoot: string,
+  isProduction: boolean,
+  config: ParsedViseConfig,
+) {
   let { customTemplate } = config;
   if (customTemplate) {
     // 把相对路径处理成绝对路径
@@ -94,7 +98,7 @@ async function loadCustomTemplateContent(appRoot: string, isProduction: boolean,
     (pre, next) => pre.replace(`ssr-${next}=""`, getPlaceholderOf(next)),
     serializeDocument,
   );
-};
+}
 async function getIndexHTML(appRoot: string, isProduction: boolean, config: ParsedViseConfig) {
   let template = await loadCustomTemplateContent(appRoot, isProduction, config);
 
@@ -119,7 +123,11 @@ async function getIndexHTML(appRoot: string, isProduction: boolean, config: Pars
   // 根据用户配置，自定义 favicon 图标
   const encodedFaviconLink = config.faviconLink ? encodeURI(config.faviconLink) : '';
   const faviconLinkContent = `href="${encodedFaviconLink}"`;
-  template = replacePlaceholderWithValue(template, HTML_PLACEHOLDERS.faviconLink, faviconLinkContent);
+  template = replacePlaceholderWithValue(
+    template,
+    HTML_PLACEHOLDERS.faviconLink,
+    faviconLinkContent,
+  );
 
   // TODO else
 
@@ -213,32 +221,32 @@ export function getScaffoldModules(
   return {
     [path.resolve(appRoot, SCAFFOLD_FILES.index)]: {
       async content() {
-        return await getIndexHTML(appRoot, isProduction, userConfig);
+        return getIndexHTML(appRoot, isProduction, userConfig);
       },
     },
     [path.resolve(appVisePath, SCAFFOLD_FILES.clientEntry)]: {
       async content() {
-        return await getScaffoldContent('clientEntry');
+        return getScaffoldContent('clientEntry');
       },
     },
     [path.resolve(appVisePath, SCAFFOLD_FILES.router)]: {
       async content() {
-        return await getScaffoldContent('router');
+        return getScaffoldContent('router');
       },
     },
     [path.resolve(appVisePath, SCAFFOLD_FILES.main)]: {
       async content() {
-        return await getMainTsContents(isProduction, userConfig);
+        return getMainTsContents(isProduction, userConfig);
       },
     },
     [path.resolve(appVisePath, SCAFFOLD_FILES.env)]: {
       async content() {
-        return await getEnvTsContent();
+        return getEnvTsContent();
       },
     },
     [path.resolve(appVisePath, SCAFFOLD_FILES.serverEntry)]: {
       async content() {
-        return await getServerEntryContent(
+        return getServerEntryContent(
           isProduction,
           userConfig.strictInitState,
         );
@@ -246,12 +254,12 @@ export function getScaffoldModules(
     },
     [path.resolve(appRoot, 'src/server-hooks.ts')]: {
       async content() {
-        return await getHooksContents(userConfig);
+        return getHooksContents(userConfig);
       },
     },
     [path.resolve(appVisePath, SCAFFOLD_FILES.ssrContext)]: {
       async content() {
-        return await getScaffoldContent('ssrContext');
+        return getScaffoldContent('ssrContext');
       },
     },
   };

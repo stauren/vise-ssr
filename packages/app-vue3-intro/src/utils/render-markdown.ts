@@ -18,7 +18,9 @@ const md: MarkdownIt = new MarkdownIt({
     if (lang && hljs.getLanguage(lang)) {
       try {
         return `<pre class="hljs"><code>${hljs.highlight(str, { language: lang, ignoreIllegals: true }).value}</code></pre>`;
-      } catch (__) {}
+      } catch (__) {
+        // ignore
+      }
     }
 
     return `<pre class="hljs"><code>${md.utils.escapeHtml(str)}</code></pre>`;
@@ -55,10 +57,12 @@ function extractToc(fullHtml: string) {
 function getHash(str: string) {
   let hash = 0;
   if (str.length === 0) return hash;
-  for (let i = 0; i < str.length; i++) {
+  for (let i = 0; i < str.length; i += 1) {
     const chr = str.charCodeAt(i);
+    /* eslint-disable no-bitwise */
     hash = ((hash << 5) - hash) + chr;
     hash |= 0; // Convert to 32bit integer
+    /* eslint-enable no-bitwise */
   }
   return hash;
 }

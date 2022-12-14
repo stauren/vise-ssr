@@ -8,14 +8,14 @@ import {
   refillRenderResult,
 } from 'vise-ssr';
 import SIDEBAR_ITEMS from './data/sidebar-items.json';
-import { formatLuckyNumber } from './formatters/lucky-number';
+import formatLuckyNumber from './formatters/lucky-number';
 import request from './utils/request';
 import type { LuckNumFetchResult } from '../types';
 import type { State } from './store';
 
 function findMarkdownPage(url: string) {
   return SIDEBAR_ITEMS
-    .find(item => url.indexOf(`/${item.id}.html`) === 0
+    .find((item) => url.indexOf(`/${item.id}.html`) === 0
       || (url === '/' && item.id === 'introduction'));
 }
 
@@ -59,7 +59,7 @@ const serverHooks: ViseHooks = {
    * Be careful of [hydration mismatch] if you change data in the HTTPRequest.
    */
   requestResolved: [async (resolvedRequest) => {
-    const { original, resolved } = resolvedRequest;
+    const { original } = resolvedRequest;
     const { url } = original.request;
     const extraData: Record<string, string> = {};
 
@@ -77,7 +77,8 @@ const serverHooks: ViseHooks = {
       const { original: { request: { headers } } } = resolvedRequest;
       return mergeConfig(resolvedRequest, {
         resolved: {
-          // pass user agent and cookie as context extra data, which could be accessed as ssr context
+          // pass user agent and cookie as context extra data
+          // which could be accessed as ssr context
           extra: {
             userAgent: headers['user-agent'] || '',
             cookies: cookie.parse(headers.cookie as string ?? ''),
@@ -115,21 +116,25 @@ const serverHooks: ViseHooks = {
 
   // Tapped functions will be notified with a successful cache hit event.
   hitCache: async (hitCache) => {
+    // for example
+    // eslint-disable-next-line no-console
     console.log(`Use cache with key: ${hitCache.key}`);
   },
 
   /**
-   * Tapped functions will be called in order before rendering HTML with server renderer provided by web UI libraries
-   * Typically this could be used to fetch data for SSR. Data should be transferred in `RenderContext.extra`
+   * Tapped functions will be called in order before rendering HTML
+   * with server renderer provided by web UI libraries.
+   * Typically this could be used to fetch data for SSR.
+   * Data should be transferred in `RenderContext.extra`
    */
   beforeRender: async (renderContext) => {
     const { url } = renderContext.request;
     let extraInitState = {};
     // request data for index page
     if (url === '/') {
-      const apiResult = await request({
-        url: 'https://www.randomnumberapi.com/api/v1.0/random?min=1000&max=9999&count=1',
-      }) as LuckNumFetchResult;
+      const apiResult = await request(
+        'https://www.randomnumberapi.com/api/v1.0/random?min=1000&max=9999&count=1',
+      ) as LuckNumFetchResult;
       extraInitState = {
         luckyNumber: apiResult.code === 0 ? formatLuckyNumber(apiResult) : -1,
       };
@@ -223,6 +228,7 @@ const serverHooks: ViseHooks = {
        * };
        */
     }
+    return undefined;
   },
 };
 

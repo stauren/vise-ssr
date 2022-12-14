@@ -1,11 +1,11 @@
 import path from 'path';
 import { $ } from 'zx';
 
-import type { SSRServerConfig }  from '@/ssr-server';
-import SSRServer from '@/ssr-server';
-import { VALID_APP_NAME } from '@/utils/load-bundles';
-import { getBaseOfAppInAllBundles, getAppViseBundleDir } from '@/utils/path';
-import logger from '@/utils/logger';
+import type { SSRServerConfig } from 'src/ssr-server';
+import SSRServer from 'src/ssr-server';
+import { VALID_APP_NAME } from 'src/utils/load-bundles';
+import { getBaseOfAppInAllBundles, getAppViseBundleDir } from 'src/utils/path';
+import { log, error } from 'src/utils/logger';
 
 export type InitOption = {
   enableCache?: boolean,
@@ -31,12 +31,12 @@ async function getViseAppName(base: string): Promise<string | false> {
       ...pkgJson.dependencies,
       ...pkgJson.devDependencies,
     };
-    if (Object.keys(allDeps).some(key => key === 'vise-ssr')) {
+    if (Object.keys(allDeps).some((key) => key === 'vise-ssr')) {
       const serverHooks = await import(path.resolve(base, 'dist/server/server-hooks.js'));
       return serverHooks.default.appName;
     }
-  } catch (error) {
-    logger(String(error));
+  } catch (err) {
+    error(err);
   }
   return false;
 }
@@ -59,7 +59,7 @@ async function getAppList(base: string) {
     throw appNames.stderr;
   }
 
-  const apps = appNames.stdout.split('\n').filter(app => !!app);
+  const apps = appNames.stdout.split('\n').filter((app) => !!app);
 
   return apps;
 }
@@ -67,21 +67,21 @@ async function getAppList(base: string) {
 async function prepareViseAppForServe(base: string) {
   const viseAppName = await getViseAppName(base);
   if (viseAppName === false) {
-    logger('input viseAppDir is not a Vise app or build is not done.');
-    return;
+    log('input viseAppDir is not a Vise app or build is not done.');
+    return undefined;
   }
   if (!viseAppName.match(VALID_APP_NAME)) {
-    logger(`Unsafe App Name: ${viseAppName}`);
-    return;
+    log(`Unsafe App Name: ${viseAppName}`);
+    return undefined;
   }
   const appViseBundleDir = getAppViseBundleDir(base);
   if (!await ensureDir(appViseBundleDir, true)) {
-    logger(`fail to create dir: ${appViseBundleDir}`);
-    return;
-  };
+    log(`fail to create dir: ${appViseBundleDir}`);
+    return undefined;
+  }
   if (!await copyAppBundle(base, viseAppName)) {
-    logger('fail to copy bundles');
-    return;
+    log('fail to copy bundles');
+    return undefined;
   }
   return appViseBundleDir;
 }

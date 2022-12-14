@@ -3,26 +3,28 @@ const MAX_COUNT = 100;
 
 export default class MemCache {
   caches: Record<string, [number, string]> = {};
+
   count = 0;
+
   removeOutdated() {
     // clear outdated caches
     Object.keys(this.caches).forEach((key) => {
       const [cacheTime] = this.caches[key];
       if (Date.now() - cacheTime > CACHE_DURATION) {
         delete this.caches[key];
-        this.count = this.count - 1;
+        this.count -= 1;
       }
     });
   }
 
   removeEarliest() {
     // clear earliest caches
-    const { key } = Object.keys(this.caches).reduce((lastValue, key) => {
-      const [cacheTime] = this.caches[key];
+    const { key } = Object.keys(this.caches).reduce((lastValue, cacheKey) => {
+      const [cacheTime] = this.caches[cacheKey];
       if (cacheTime < lastValue.cacheTime) {
         return {
           cacheTime,
-          key,
+          key: cacheKey,
         };
       }
       return lastValue;
@@ -33,7 +35,7 @@ export default class MemCache {
 
     if (this.caches[key]) {
       delete this.caches[key];
-      this.count = this.count - 1;
+      this.count -= 1;
     }
   }
 
@@ -43,7 +45,7 @@ export default class MemCache {
         while (this.count >= MAX_COUNT) {
           this.removeEarliest();
         }
-        this.count = this.count + 1;
+        this.count += 1;
       }
       this.caches[cacheKey] = [
         Date.now(),
@@ -58,6 +60,6 @@ export default class MemCache {
     if (match) {
       return match[1];
     }
-    return;
+    return undefined;
   }
 }

@@ -1,15 +1,20 @@
 import axios from 'axios';
-import { SsrFetchConfig, SsrFetchResult } from 'vise-ssr';
 
-export default async function request(config: SsrFetchConfig): Promise<SsrFetchResult> {
-  let result: SsrFetchResult = {
+export type FetchResult = {
+  code: number,
+  msg: string,
+  data: any,
+};
+
+export default async function request(url: string): Promise<FetchResult> {
+  let result: FetchResult = {
     code: -1,
     msg: 'fetch fail',
     data: '',
   };
   try {
     const num: number[] = (await axios({
-      ...config,
+      url,
       timeout: 1000,
     })).data;
     if (typeof num[0] === 'number') {
@@ -21,6 +26,8 @@ export default async function request(config: SsrFetchConfig): Promise<SsrFetchR
         },
       };
     }
-  } catch {}
+  } catch {
+    // ignore
+  }
   return result;
 }

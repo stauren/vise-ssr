@@ -15,7 +15,7 @@ import {
   getAppVisePath,
   fileExist,
 } from '@vise-ssr/shared';
-import { DIR_NAME } from './dirname';
+import DIR_NAME from './dirname';
 
 // 获取当前运行的 npm 包中模板 runtime 目录 node_modules/@vise-ssr/vue3/template/runtime 等
 function getTemplateRuntimePath() {
@@ -110,7 +110,7 @@ async function loadCustomTemplateContent(isProduction: boolean, config: ParsedVi
     (pre, next) => pre.replace(`ssr-${next}=""`, getPlaceholderOf(next)),
     serializeDocument,
   );
-};
+}
 export async function getIndexHTML(isProduction: boolean, config: ParsedViseConfig) {
   let template = await loadCustomTemplateContent(isProduction, config);
 
@@ -135,7 +135,11 @@ export async function getIndexHTML(isProduction: boolean, config: ParsedViseConf
   // 根据用户配置，自定义 favicon 图标
   const encodedFaviconLink = config.faviconLink ? encodeURI(config.faviconLink) : '';
   const faviconLinkContent = `href="${encodedFaviconLink}"`;
-  template = replacePlaceholderWithValue(template, HTML_PLACEHOLDERS.faviconLink, faviconLinkContent);
+  template = replacePlaceholderWithValue(
+    template,
+    HTML_PLACEHOLDERS.faviconLink,
+    faviconLinkContent,
+  );
 
   // 根据用户配置，自定义 title
   const { defaultTitle } = config;
@@ -223,37 +227,37 @@ export function getScaffoldModules(
   return {
     [path.resolve(appRoot, SCAFFOLD_FILES.index)]: {
       async content() {
-        return await getIndexHTML(isProduction, userConfig);
+        return getIndexHTML(isProduction, userConfig);
       },
     },
     [path.resolve(appRoot, 'src/server-hooks.ts')]: {
       async content() {
-        return await getHooksContents(userConfig);
+        return getHooksContents(userConfig);
       },
     },
     [path.resolve(appVisePath, SCAFFOLD_FILES.clientEntry)]: {
       async content() {
-        return await getScaffoldContent('clientEntry');
+        return getScaffoldContent('clientEntry');
       },
     },
     [path.resolve(appVisePath, SCAFFOLD_FILES.router)]: {
       async content() {
-        return await getScaffoldContent('router');
+        return getScaffoldContent('router');
       },
     },
     [path.resolve(appVisePath, SCAFFOLD_FILES.main)]: {
       async content() {
-        return await getMainTsContents(isProduction, userConfig);
+        return getMainTsContents(isProduction, userConfig);
       },
     },
     [path.resolve(appVisePath, SCAFFOLD_FILES.env)]: {
       async content() {
-        return await getEnvTsContent(userConfig);
+        return getEnvTsContent(userConfig);
       },
     },
     [path.resolve(appVisePath, SCAFFOLD_FILES.serverEntry)]: {
       async content() {
-        return await getServerEntryContent(
+        return getServerEntryContent(
           isProduction,
           userConfig.strictInitState,
         );

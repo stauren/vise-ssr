@@ -2,7 +2,7 @@ import SiteHeader from '@/components/site-header';
 import SiteSidebar from '@/components/site-sidebar';
 import './styles/index.scss';
 
-function App({ RouterView }: { RouterView: () => JSX.Element}) {
+function App({ RouterView }: { RouterView: () => JSX.Element }) {
   return (
     <div className="theme-container">
       <SiteHeader />

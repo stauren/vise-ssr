@@ -2,11 +2,11 @@
 
 import { Command } from 'commander';
 import buildProject from './build';
-import { createNewApp } from './create';
+import createNewApp from './create';
 import serveProject from './serve';
 import createServer from './dev-server';
 import getAppViseConfig from './app-config';
-import { getViseVersion } from './utils/env';
+import getViseVersion from './utils/env';
 
 async function init() {
   const program = new Command();

@@ -5,10 +5,11 @@ import {
   RenderResultCategory,
   RenderError,
 } from 'vise-ssr';
+
 export default function renderErrorPlugin(
   templates: Record<string, string>,
   log: (...args: any) => void,
-  userReport?: (reportOpts: {renderBy: string, error: RenderError}) => void,
+  userReport?: (reportOpts: { renderBy: string, error: RenderError }) => void,
 ): VisePlugin {
   async function beforeResponse(renderResult: RenderResult): Promise<HTTPResponse | void> {
     // 渲染异常时采用CSR兜底
@@ -30,7 +31,7 @@ export default function renderErrorPlugin(
         body: templates[projectName as string],
       };
     }
-  };
+  }
   return {
     name: 'vise-plugin-render-error',
     hooks: {

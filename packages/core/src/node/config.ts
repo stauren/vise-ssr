@@ -1,14 +1,17 @@
 import path from 'path';
 import { promises as fs } from 'fs';
-import { mergeConfig, UserConfig, SSROptions } from 'vite';
+import {
+  mergeConfig, UserConfig, SSROptions, type PluginOption,
+} from 'vite';
 import legacy from '@vitejs/plugin-legacy';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import { visualizer } from 'rollup-plugin-visualizer';
-import type { ParsedViseConfig } from '@vise-ssr/shared';
-import { ScaffoldToPackage } from '@vise-ssr/shared';
-import { viseHtmlPost } from './plugin/vise-html-post';
+import { type ParsedViseConfig } from '@vise-ssr/shared';
+import { getScaffoldPlugins as reactScaffoldPlugin } from '@vise-ssr/react';
+import { getScaffoldPlugins as vueScaffoldPlugin } from '@vise-ssr/vue3';
+import viseHtmlPost from './plugin/vise-html-post';
 import getAppViseConfig from './app-config';
-import { DIR_NAME } from './dirname';
+import DIR_NAME from './dirname';
 import { getAppVisePath } from './utils/path';
 
 // vite 的 ssr 配置项还在 alpha，所以类型里面没有
@@ -21,7 +24,9 @@ async function getUserScaffoldPlugin(
   isProduction: boolean,
   userConfig: ParsedViseConfig,
 ) {
-  const { getScaffoldPlugins } = await import(ScaffoldToPackage[userConfig.scaffold]);
+  const getScaffoldPlugins = userConfig.scaffold === 'vue3-app'
+    ? vueScaffoldPlugin
+    : reactScaffoldPlugin;
   return getScaffoldPlugins(appRoot, isProduction, userConfig);
 }
 
@@ -30,7 +35,10 @@ async function getUserScaffoldPlugin(
  * 顺序是 baseConfig < modeConfig < customConfig
  * @return {*}  {Promise<UserConfigVite>}
  */
-async function mergeWithBaseAndCustomConfig(appRoot: string, modeConfig: UserConfigVite): Promise<UserConfigVite> {
+async function mergeWithBaseAndCustomConfig(
+  appRoot: string,
+  modeConfig: UserConfigVite,
+): Promise<UserConfigVite> {
   const userConfig = await getAppViseConfig();
   const {
     base = '/',
@@ -74,6 +82,14 @@ async function mergeWithBaseAndCustomConfig(appRoot: string, modeConfig: UserCon
     plugins: scaffoldPlugin,
   });
   return mergeConfig(result, viteConfig) as UserConfigVite;
+}
+
+async function getDepsOfCore() {
+  const pkgJson = JSON.parse(await fs.readFile(
+    path.resolve(DIR_NAME, '../package.json'),
+    'utf8',
+  ));
+  return Object.keys(pkgJson.dependencies);
 }
 
 /**
@@ -138,7 +154,7 @@ export async function getViteClientConfig(appRoot: string): Promise<UserConfigVi
         sourcemap: true,
         gzipSize: true,
         brotliSize: true,
-      }),
+      }) as PluginOption,
     ],
   });
 }
@@ -187,7 +203,7 @@ export async function getViteServerConfig(appRoot: string): Promise<UserConfigVi
         sourcemap: true,
         gzipSize: true,
         brotliSize: true,
-      }),
+      }) as PluginOption,
     ],
   });
 
@@ -195,7 +211,7 @@ export async function getViteServerConfig(appRoot: string): Promise<UserConfigVi
   const output = config?.build?.rollupOptions?.output;
   if (output) {
     if (Array.isArray(output)) {
-      config.build!.rollupOptions!.output = output.map(item => ({
+      config.build!.rollupOptions!.output = output.map((item) => ({
         ...item,
         manualChunks: undefined,
       }));
@@ -204,12 +220,4 @@ export async function getViteServerConfig(appRoot: string): Promise<UserConfigVi
     }
   }
   return config;
-}
-
-async function getDepsOfCore() {
-  const pkgJson = JSON.parse(await fs.readFile(
-    path.resolve(DIR_NAME, '../package.json'),
-    'utf8',
-  ));
-  return Object.keys(pkgJson.dependencies);
 }

@@ -39,12 +39,12 @@ export {
 
 export { default as mergeConfig } from './merge-config';
 
-export { stringifyJSONWithReg } from './stringify-json-with-reg';
+export { default as stringifyJSONWithReg } from './stringify-json-with-reg';
 
 export { default as injectors } from './document-injector';
 
 export { default as logger } from './logger';
 
-export { viseScaffold } from './vise-scaffold-plugin';
+export { default as viseScaffold } from './vise-scaffold-plugin';
 
 export { fileExist, copyJsonWithChange, copyFileWithChange } from './file-system';

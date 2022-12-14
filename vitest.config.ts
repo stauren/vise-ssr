@@ -1,8 +1,9 @@
 import { dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
+/* eslint-disable import/no-extraneous-dependencies */
 import Vue from '@vitejs/plugin-vue';
-
 import { defineConfig } from 'vitest/config';
+/* eslint-enable import/no-extraneous-dependencies */
 
 const DIR_NAME = dirname(fileURLToPath(import.meta.url));
 

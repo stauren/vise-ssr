@@ -1,4 +1,4 @@
-import { JSONValue, JSONObject } from '../../';
+import type { JSONValue, JSONObject } from '../..';
 
 type ObjType = null | Array<JSONValue> | JSONObject;
 
@@ -6,6 +6,8 @@ function isEqualArray(itemA: JSONValue[], itemB: unknown) {
   if (!(itemB instanceof Array) || itemA.length !== itemB.length) {
     return false;
   }
+  // mutually recursive functions should be excuse
+  /* eslint-disable @typescript-eslint/no-use-before-define */
   return itemA
     .findIndex((value, index) => !isEqual(itemB[index], value)) === -1;
 }
@@ -40,6 +42,7 @@ function isEqualPlainObject(objA: JSONObject, objB: JSONObject) {
     .findIndex((key: string) => !(key in objB)
       || !isEqual(objA[key], objB[key])) === -1;
 }
+/* eslint-enable @typescript-eslint/no-use-before-define */
 
 export default function isEqual(itemA: JSONValue, itemB: JSONValue): boolean {
   // 7 possible type: object, boolean, number, string, bigint, symbol, and undefined

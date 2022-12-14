@@ -6,9 +6,9 @@ import {
 import type { PluginOpts } from '../types/half-ssr-plugin';
 
 function toKebab(camelString: string) {
-  return camelString.replace(/([A-Z])/g, match => `-${match.toLowerCase()}`);
+  return camelString.replace(/([A-Z])/g, (match) => `-${match.toLowerCase()}`);
 }
-function  renderHalfSSRhtml(template: string, initData: any) {
+function renderHalfSSRhtml(template: string, initData: any) {
   const dataKey = 'csrHomeData';
 
   // 拼接html script数据
@@ -46,7 +46,7 @@ function halfSSRPlugin({
   appConfig,
 }: PluginOpts): VisePlugin {
   // @ts-ignore
-  async function render(renderContext: RenderContext): Promise<RenderResult>  {
+  async function render(renderContext: RenderContext): Promise<RenderResult> {
     const { initState } = renderContext.meta;
     const { projectName } = renderContext.extra;
     if (appConfig[(projectName as string)].renderType === 'halfSSR') {

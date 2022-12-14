@@ -1,4 +1,4 @@
-import useSidebar  from '@/hooks/use-sidebar';
+import useSidebar from '@/hooks/use-sidebar';
 import useTheme, { ThemeName } from '@/hooks/use-theme';
 
 const lightPaths = [
@@ -29,13 +29,15 @@ export default function SiteHeader() {
         title="toggle sidebar"
         role="button"
         tabIndex={0}
-        onClick={ toggleSidebar }
+        onClick={toggleSidebar}
       >
         <div
           className="icon"
           aria-hidden="true"
         >
-          <span /><span /><span />
+          <span />
+          <span />
+          <span />
         </div>
       </div>
       <div
@@ -44,14 +46,18 @@ export default function SiteHeader() {
         aria-expanded="false"
         tabIndex={0}
       />
-      <span><a
-        href="/"
-        className=""
-      ><img
-        className="logo"
-        src="./logo.svg"
-        alt="Vise"
-      /><span className="site-name can-hide">Vise</span></a>
+      <span>
+        <a
+          href="/"
+          className=""
+        >
+          <img
+            className="logo"
+            src="./logo.svg"
+            alt="Vise"
+          />
+          <span className="site-name can-hide">Vise</span>
+        </a>
       </span>
       <div
         className="navbar-links-wrapper"
@@ -72,7 +78,8 @@ export default function SiteHeader() {
                 className="dropdown-title"
                 type="button"
               >
-                <span className="title">Reference</span><span className="arrow down" />
+                <span className="title">Reference</span>
+                <span className="arrow down" />
               </button>
               <ul
                 className="nav-dropdown"
@@ -84,25 +91,33 @@ export default function SiteHeader() {
                       <a
                         href="https://www.npmjs.com/package/vise-ssr"
                         className="nav-link"
-                      > Vise npm </a>
+                      >
+                        Vise npm
+                      </a>
                     </li>
                     <li className="dropdown-subitem">
                       <a
                         href="https://github.com/stauren/vise-ssr/blob/main/CHANGELOG.md"
                         className="nav-link"
-                      > CHANGELOG </a>
+                      >
+                        CHANGELOG
+                      </a>
                     </li>
                     <li className="dropdown-subitem">
                       <a
                         href="https://github.com/stauren/vise-ssr/issues"
                         className="nav-link"
-                      > Issues </a>
+                      >
+                        Issues
+                      </a>
                     </li>
                     <li className="dropdown-subitem">
                       <a
                         href="https://vitejs.dev/"
                         className="nav-link"
-                      > Vite </a>
+                      >
+                        Vite
+                      </a>
                     </li>
                   </ul>
                 </li>
@@ -115,37 +130,49 @@ export default function SiteHeader() {
                       <a
                         href="https://www.npmjs.com/package/@vise-ssr/express-server"
                         className="nav-link"
-                      > @vise-ssr/express-server </a>
+                      >
+                        @vise-ssr/express-server
+                      </a>
                     </li>
                     <li className="dropdown-subitem">
                       <a
                         href="https://www.npmjs.com/package/@vise-ssr/plugin-foot-note"
                         className="nav-link"
-                      > @vise-ssr/plugin-foot-note </a>
+                      >
+                        @vise-ssr/plugin-foot-note
+                      </a>
                     </li>
                     <li className="dropdown-subitem">
                       <a
                         href="https://www.npmjs.com/package/@vise-ssr/plugin-render-error"
                         className="nav-link"
-                      > @vise-ssr/plugin-render-error </a>
+                      >
+                        @vise-ssr/plugin-render-error
+                      </a>
                     </li>
                     <li className="dropdown-subitem">
                       <a
                         href="https://www.npmjs.com/package/@vise-ssr/plugin-ssr-render"
                         className="nav-link"
-                      > @vise-ssr/plugin-ssr-render </a>
+                      >
+                        @vise-ssr/plugin-ssr-render
+                      </a>
                     </li>
                     <li className="dropdown-subitem">
                       <a
                         href="https://www.npmjs.com/package/@vise-ssr/vite-plugin-visecss"
                         className="nav-link"
-                      > @vise-ssr/vite-plugin-visecss </a>
+                      >
+                        @vise-ssr/vite-plugin-visecss
+                      </a>
                     </li>
                     <li className="dropdown-subitem">
                       <a
                         href="https://www.npmjs.com/package/@vise-ssr/vite-plugin-inline-entry-css"
                         className="nav-link"
-                      > @vise-ssr/vite-plugin-inline-entry-css </a>
+                      >
+                        @vise-ssr/vite-plugin-inline-entry-css
+                      </a>
                     </li>
                   </ul>
                 </li>
@@ -159,57 +186,76 @@ export default function SiteHeader() {
               target="_blank"
               rel="noreferrer"
               aria-label="Git Source"
-            > Git Source <span><svg
-              className="icon outbound"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
-              focusable="false"
-              x="0px"
-              y="0px"
-              viewBox="0 0 100 100"
-              width="15"
-              height="15"
-            ><path
-              fill="currentColor"
-              d={ gitPath }
-            /><polygon
-              fill="currentColor"
-              points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"
-            /></svg><span className="sr-only">open in new window</span></span></a>
+            >
+              Git Source
+              <span>
+                <svg
+                  className="icon outbound"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                  focusable="false"
+                  x="0px"
+                  y="0px"
+                  viewBox="0 0 100 100"
+                  width="15"
+                  height="15"
+                >
+                  <path
+                    fill="currentColor"
+                    d={gitPath}
+                  />
+                  <polygon
+                    fill="currentColor"
+                    points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"
+                  />
+                </svg>
+                <span className="sr-only">
+                  open in new window
+                </span>
+              </span>
+            </a>
           </div>
         </nav>
         <button
+          type="button"
           className="toggle-dark-button"
           title="toggle dark mode"
-          onClick={ toggleTheme }
+          onClick={toggleTheme}
         >
           {
             currentTheme === ThemeName.dark
-              ?  <svg
-                   v-show=""
-                   className="icon"
-                   focusable="false"
-                   viewBox="0 0 32 32"
-                 >
-              {
-                lightPaths.map((currentPath: string) => (<path
-                    key={ currentPath }
-                    d={ currentPath }
-                    fill="currentColor"
-                  />))
-              }
-              </svg> : null
+              ? (
+                <svg
+                  className="icon"
+                  focusable="false"
+                  viewBox="0 0 32 32"
+                >
+                  {
+                    lightPaths.map((currentPath: string) => (
+                      <path
+                        key={currentPath}
+                        d={currentPath}
+                        fill="currentColor"
+                      />
+                    ))
+                  }
+                </svg>
+              ) : null
           }
           {
             currentTheme === ThemeName.light
-              ?  <svg
-                   className="icon"
-                   focusable="false"
-                   viewBox="0 0 32 32"
-                 ><path
-                   d={ darkPath }
-                   fill="currentColor"
-                 /></svg> : null
+              ? (
+                <svg
+                  className="icon"
+                  focusable="false"
+                  viewBox="0 0 32 32"
+                >
+                  <path
+                    d={darkPath}
+                    fill="currentColor"
+                  />
+                </svg>
+              ) : null
           }
         </button>
       </div>

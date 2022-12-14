@@ -5,6 +5,7 @@
  */
 import { RequestMessage } from './subprocess-render';
 import type { EntryServerModule, ResponseMessage } from '../types/ssr-render';
+
 class BundleRender {
   static entryBundles: Record<string, EntryServerModule> = {};
 

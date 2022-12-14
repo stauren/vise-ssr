@@ -16,13 +16,19 @@ async function titlePlaceholderInjector(rootElement: Document, { placeholder }: 
   rootElement.head.appendChild(titlePlaceholder);
 }
 
-async function htmlClassPropertyPlaceholderInjector(rootElement: Document, { placeholder }: InjectorConfig) {
+async function htmlClassPropertyPlaceholderInjector(
+  rootElement: Document,
+  { placeholder }: InjectorConfig,
+) {
   rootElement.documentElement.setAttribute(placeholder, '');
 }
 
-async function faviconLinkPropertyPlaceholderInjector(rootElement: Document, { placeholder }: InjectorConfig) {
+async function faviconLinkPropertyPlaceholderInjector(
+  rootElement: Document,
+  { placeholder }: InjectorConfig,
+) {
   const linkDoms = rootElement.querySelectorAll('link');
-  const favIconLink = Array.from(linkDoms).find(link => link.getAttribute('rel') === 'icon');
+  const favIconLink = Array.from(linkDoms).find((link) => link.getAttribute('rel') === 'icon');
   // 存在favIconLink， 直接在里面加属性
   if (favIconLink) {
     favIconLink.setAttribute(placeholder, '');
@@ -34,17 +40,26 @@ async function faviconLinkPropertyPlaceholderInjector(rootElement: Document, { p
   }
 }
 
-async function partialFlexiblePlaceholderInjector(rootElement: Document, { placeholder }: InjectorConfig) {
+async function partialFlexiblePlaceholderInjector(
+  rootElement: Document,
+  { placeholder }: InjectorConfig,
+) {
   const partialFlexiblePlaceholder = rootElement.createComment(placeholder);
   rootElement.head.appendChild(partialFlexiblePlaceholder);
 }
 
-async function preloadLinksPlaceholderInjector(rootElement: Document, { placeholder }: InjectorConfig) {
+async function preloadLinksPlaceholderInjector(
+  rootElement: Document,
+  { placeholder }: InjectorConfig,
+) {
   const preloadLinksPlaceholder = rootElement.createComment(placeholder);
   rootElement.head.appendChild(preloadLinksPlaceholder);
 }
 
-async function initStatePlaceholderInjector(rootElement: Document, { placeholder }: InjectorConfig) {
+async function initStatePlaceholderInjector(
+  rootElement: Document,
+  { placeholder }: InjectorConfig,
+) {
   const initStatePlaceholder = rootElement.createComment(placeholder);
   const appDOM = rootElement.querySelector('#app');
   if (appDOM) {

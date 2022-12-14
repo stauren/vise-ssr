@@ -67,4 +67,4 @@ export default function useTheme(): { currentTheme: PageThemes, toggleTheme: () 
     currentTheme,
     toggleTheme,
   };
-};
+}

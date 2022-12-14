@@ -8,7 +8,7 @@ import path from 'path';
 import glob from 'glob';
 import { rename, copyFile } from 'fs/promises';
 import { getAppRoot, getAppVisePath } from './utils/path';
-import { prepareViseDir } from './init-app';
+import prepareViseDir from './init-app';
 import getAppViseConfig from './app-config';
 import {
   getViteClientConfig,
@@ -35,7 +35,7 @@ export default async function buildProject() {
   const fileExtension = userConfig.scaffold === 'react-app' ? 'tsx' : 'vue';
   const filenames = glob.sync(`*.${fileExtension}`, {
     cwd: appRootPagesPath,
-  }).filter(filename => filename !== `index.${fileExtension}`);
+  }).filter((filename) => filename !== `index.${fileExtension}`);
 
   const createEntriesForCSR = filenames.map((filename) => {
     const basename = path.basename(filename, `.${fileExtension}`);

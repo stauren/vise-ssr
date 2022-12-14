@@ -33,7 +33,7 @@ export default function viseInlineEntryCss(): Plugin {
       if (!resolvedConfig?.build.manifest) return;
 
       // 找到 vite 生成的 manifest.json 文件
-      const manifestBundle = Object.values(outBundle).find(bundle => bundle.type === 'asset'
+      const manifestBundle = Object.values(outBundle).find((bundle) => bundle.type === 'asset'
         && bundle.fileName === MANIFEST_FILENAME);
       if (!manifestBundle) return;
 
@@ -83,7 +83,7 @@ export default function viseInlineEntryCss(): Plugin {
       const linkElems = [...$('link[rel="stylesheet"]')].filter((elem) => {
         const href = $(elem).attr('href');
         if (!href) return false;
-        return oriCssArr.some(css => href.indexOf(css) >= 0);
+        return oriCssArr.some((css) => href.indexOf(css) >= 0);
       });
       const linkElemsLen = linkElems.length;
       if (linkElemsLen <= 0) return;
@@ -93,7 +93,7 @@ export default function viseInlineEntryCss(): Plugin {
       $(styleTag).insertBefore($(lastLinkElem));
 
       // 接着将 index.html 原依赖的 css links 元素全部干掉
-      linkElems.forEach(link => $(link).remove());
+      linkElems.forEach((link) => $(link).remove());
 
       // 最后将新替换的内容重新写回 index.html
       fs.writeFileSync(indexHtmlAbsPath, $.html());

@@ -1,4 +1,6 @@
-import { describe, it, expect, vi } from 'vitest';
+import {
+  describe, it, expect, vi,
+} from 'vitest';
 import path from 'path';
 import {
   getViteDevConfig,
@@ -13,7 +15,7 @@ vi.mock('../app-config', () => ({
 }));
 
 vi.mock('../dirname', () => ({
-  DIR_NAME: path.resolve(__dirname, '../../../bin'),
+  default: path.resolve(__dirname, '../../../bin'),
 }));
 
 vi.mock('zx', () => ({
@@ -34,6 +36,14 @@ function getAppVisePath({
     : path.join(root, 'node_modules', rootDirName);
 }
 
+vi.mock('@vise-ssr/react', () => ({
+  getScaffoldPlugins: () => [],
+}));
+
+vi.mock('@vise-ssr/vue3', () => ({
+  getScaffoldPlugins: () => [],
+}));
+
 vi.mock('@vise-ssr/shared', () => ({
   getAppRoot,
   getAppVisePath,
@@ -41,14 +51,6 @@ vi.mock('@vise-ssr/shared', () => ({
     'vue3-app': '@vise-ssr/vue3',
     'react-app': '@vise-ssr/react',
   },
-}));
-
-vi.mock('@vise-ssr/vue3', () => ({
-  getScaffoldPlugins: () => [],
-}));
-
-vi.mock('@vise-ssr/react', () => ({
-  getScaffoldPlugins: () => [],
 }));
 
 describe('getConfigs', () => {

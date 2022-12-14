@@ -1,5 +1,5 @@
 <template>
-  <!-- 手工拼装 HTML -->
+  <!-- divs are safe -->
   <!-- eslint-disable-next-line vue/no-v-html -->
   <div v-html="divs" />
 </template>
@@ -32,12 +32,12 @@ export default defineComponent({
 
       const children = [];
 
-      for (let i = 1; i <= breadth; i++) {
+      for (let i = 1; i <= breadth; i += 1) {
         children.push(recursiveDivs(depth - 1, breadth - 1, i));
       }
 
       return `<div id="${depth}-${breadth}-${layer}">${children.join('')}</div>`;
-    };
+    }
     this.divs = recursiveDivs(this.depth, this.breadth);
   },
 });

@@ -1,11 +1,12 @@
 import enquirer from 'enquirer';
 import type { SupportedScaffold } from '@vise-ssr/shared';
 import { ScaffoldToPackage } from '@vise-ssr/shared';
+
 interface IAppName {
   templateType: SupportedScaffold,
-};
+}
 
-export async function createNewApp() {
+export default async function createNewApp() {
   const answers: IAppName = await enquirer.prompt([
     {
       type: 'select',
@@ -17,6 +18,6 @@ export async function createNewApp() {
     },
   ]);
 
-  const { creator } =  await import(ScaffoldToPackage[answers.templateType]);
+  const { creator } = await import(ScaffoldToPackage[answers.templateType]);
   return creator();
 }

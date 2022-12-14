@@ -1,4 +1,4 @@
-import type { JSONValue } from '../';
+import type { JSONValue } from '..';
 import type {
   HookNames,
   FindCacheResult,
@@ -6,6 +6,7 @@ import type {
   RenderResult,
   RenderContext,
 } from './hook-manager';
+import { log } from '../node/utils/log';
 
 type HookLogProcessor = (interception: JSONValue, fullLog?: boolean) => string;
 type UnPromise<T> = T extends Promise<infer U> ? U : T;
@@ -124,15 +125,17 @@ export default class HookLogger {
   };
 
   private doLog: (txt: string) => void;
+
   private fullLog: boolean;
 
   constructor(
-    doLog: (txt: string) => void = console.log,
+    doLog: (txt: string) => void = log,
     fullLog = false,
   ) {
     this.doLog = doLog;
     this.fullLog = fullLog;
   }
+
   public log(hookName: HookNames, interception: JSONValue): void {
     if (hookName === 'hitCache') {
       return;

@@ -1,17 +1,21 @@
 import type { ViseRenderBundle } from 'vise-ssr';
 
-import type { RequestMessage, ResponseMessage } from '@/ssr-server/render-service';
-import { loadRenderBundle } from '@/utils/load-bundles';
-import doLog from '@/utils/logger';
-import type { EncodedMessage } from '@/ssr-server/render-process-scheduler';
-import RenderProcessScheduler from '@/ssr-server/render-process-scheduler';
+import type { RequestMessage, ResponseMessage } from 'src/ssr-server/render-service';
+import { loadRenderBundle } from 'src/utils/load-bundles';
+import { log, error } from 'src/utils/logger';
+import type { EncodedMessage } from 'src/ssr-server/render-process-scheduler';
+import RenderProcessScheduler from 'src/ssr-server/render-process-scheduler';
 
-function log(txt: string) {
-  doLog(`[rp] ${txt}`);
+function doLog(txt: string) {
+  log(`[rp] ${txt}`);
+}
+function logError(txt: string, err: unknown) {
+  error(`[rp] ${txt}`, err);
 }
 
 class VueBundleRender {
   private static bundles: Record<string, ViseRenderBundle> = {};
+
   public static listen() {
     process.on('message', (msg: EncodedMessage) => {
       this.receiveMessage(msg);
@@ -22,16 +26,16 @@ class VueBundleRender {
     const innerMsg = msg.body as RequestMessage;
     const { renderContext, app, bundlePath } = innerMsg;
     const { request: { url } } = renderContext;
-    log(`receive msg for: ${url}`);
+    doLog(`receive msg for: ${url}`);
     if (innerMsg.type === 'render') {
-      log(`start render for: ${url}`);
+      doLog(`start render for: ${url}`);
       try {
         const bundle = await this.getBundle(app, bundlePath);
         const ssrResult = await bundle.render(renderContext);
         this.sendMessage(msg, { ...ssrResult });
       } catch (e) {
         const errText = e instanceof Error ? e.message : String(e);
-        log(`[error] render fail: ${errText}`);
+        logError(`render fail: ${errText}`, e);
         this.sendMessage(msg, errText);
       }
     }
@@ -47,7 +51,7 @@ class VueBundleRender {
 
   private static sendMessage(incomingMessage: EncodedMessage, data: ResponseMessage['data']) {
     const innerMsg = incomingMessage.body as RequestMessage;
-    log(`child send msg for: ${innerMsg.type}`);
+    doLog(`child send msg for: ${innerMsg.type}`);
     const resMessage: ResponseMessage = {
       app: innerMsg.app,
       type: innerMsg.type,
@@ -60,4 +64,4 @@ class VueBundleRender {
 }
 
 VueBundleRender.listen();
-log('render process forked.');
+doLog('render process forked.');

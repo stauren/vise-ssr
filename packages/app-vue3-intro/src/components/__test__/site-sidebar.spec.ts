@@ -1,4 +1,6 @@
-import { describe, it, expect, vi } from 'vitest';
+import {
+  describe, it, expect, vi,
+} from 'vitest';
 import { mount } from '@vue/test-utils';
 import SiteSidebar from '../site-sidebar.vue';
 import SIDEBAR_ITEMS from '@/data/sidebar-items.json';

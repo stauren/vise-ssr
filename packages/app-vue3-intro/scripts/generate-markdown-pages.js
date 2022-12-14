@@ -2,16 +2,18 @@
 import { promises as fsPromise } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+// it IS a dev dep
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { $ } from 'zx';
 
-const DIR_NAME = path.dirname(fileURLToPath(import.meta.url));
+export const DIR_NAME = path.dirname(fileURLToPath(import.meta.url));
 
-const SIDEBAR_ITEMS = JSON.parse(await fsPromise.readFile(
+export const SIDEBAR_ITEMS = JSON.parse(await fsPromise.readFile(
   path.resolve(DIR_NAME, '../src/data/sidebar-items.json'),
   'utf8',
 ));
 
-const toCamel = id => id.replace(/-([a-z])/g, (whole, match) => match.toUpperCase());
+const toCamel = (id) => id.replace(/-([a-z])/g, (whole, match) => match.toUpperCase());
 function getPage(name) {
   const camelVersionName = toCamel(name);
   return `<template>
@@ -52,7 +54,7 @@ function parseFrontMatter(content) {
     if (!onePairString) return accu;
     const [key, value] = onePairString
       .split(':')
-      .map(str => str.trim())
+      .map((str) => str.trim())
       .map(removeQuote);
 
     if (!key) return accu;
@@ -87,13 +89,15 @@ async function generateMarkdown() {
         const result = filePath.endsWith('index.md')
           ? contentInfo.body
           : `${header}${contentInfo.body}`;
-        return fsPromise.writeFile(destPath, result, 'utf8');
+        await fsPromise.writeFile(destPath, result, 'utf8');
       });
     await Promise.all(writeJobs);
   } catch (po) {
+    /* eslint-disable no-console */
     console.log(po);
     console.log(`Exit code: ${po.exitCode}`);
     console.log(`Error: ${po.stderr}`);
+    /* eslint-enable no-console */
   }
 }
 
@@ -108,12 +112,4 @@ async function generateAllPages() {
     }
   });
 }
-export function cleanAllPages() {
-  SIDEBAR_ITEMS.forEach(({ id, type }) => {
-    if (id !== 'introduction' && type !== 'link') {
-      fsPromise.unlink(path.resolve(DIR_NAME, `../src/pages/${id}.vue`));
-    }
-  });
-}
-
 generateAllPages();

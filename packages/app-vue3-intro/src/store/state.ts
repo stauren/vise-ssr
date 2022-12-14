@@ -1,5 +1,6 @@
 import { JSONObject } from 'vise-ssr';
 import { IS_SSR } from '@/data/env';
+
 export interface State extends JSONObject {
   startTime: number
   renderEndTime: number

@@ -7,9 +7,9 @@ import { mergeConfig, ScaffoldToPackage } from '@vise-ssr/shared';
 import type {
   HTTPResponse,
   SsrBundleRender,
-} from '../';
+} from '..';
 import { getAppRoot, getAppVisePath } from './utils/path';
-import { prepareViseDir } from './init-app';
+import prepareViseDir from './init-app';
 import { getViteDevConfig } from './config';
 import { refillRenderResult } from './utils/strings';
 import matchAppForUrl from './utils/match-app';
@@ -19,13 +19,14 @@ import type {
   HookRouterBase,
   HookNames,
   SuccessRenderResult,
-} from '../hooks/';
+} from '../hooks';
 import {
   HookLifeCycle,
   HookLogger,
-} from '../hooks/';
+} from '../hooks';
 import dynamicImportTs from './utils/dynamic-import-ts';
 import getAppViseConfig from './app-config';
+import { log, error } from './utils/log';
 
 const isTest = process.env.NODE_ENV === 'test' || !!process.env.VITE_TEST_BUILD;
 const CODE_SERVER_ERROR = 500;
@@ -34,14 +35,28 @@ const DEV_RENDERER = 'vise:dev-server';
 const SERVER_HOOK_CONFIG = 'src/server-hooks.ts';
 
 class ViseDevServer {
+  private static async sendResponse(res: Response, data: HTTPResponse) {
+    res.set(data.headers)
+      .status(data.code)
+      .end(data.body ?? '');
+  }
+
   private appRoot: string;
+
   private appVisePath: string;
+
   private express: Express;
+
   private scaffold: SupportedScaffold;
+
   private mapScaffoldFiles: Record<string, string> = {};
+
   private viteServer: ViteDevServer | undefined;
+
   private port: number;
+
   private hookLifeCycle: HookLifeCycle | undefined;
+
   private hooks: Partial<HookCallback> = {
     async render(this: ViseDevServer, renderContext) {
       const { request } = renderContext;
@@ -77,10 +92,11 @@ class ViseDevServer {
     },
     async beforeResponse(this: ViseDevServer, renderResult) {
       if (renderResult.type === 'error') {
-        this.error('render fail', renderResult.error);
+        error('render fail', renderResult.error);
       }
     },
   };
+
   private routerBaseConfigs: Record<string, HookRouterBase> = {};
 
   constructor(
@@ -97,7 +113,7 @@ class ViseDevServer {
 
   public start() {
     this.express.listen(this.port, () => {
-      this.log(`ssr server started: http://localhost:${this.port}`);
+      log(`ssr server started: http://localhost:${this.port}`);
     });
   }
 
@@ -115,7 +131,7 @@ class ViseDevServer {
   private async loadAppHookConfig() {
     // 加载 app 服务端 hooks 文件
     const hookConfigFile = path.resolve(this.appRoot, SERVER_HOOK_CONFIG);
-    return await dynamicImportTs<ViseHooks>(hookConfigFile);
+    return dynamicImportTs<ViseHooks>(hookConfigFile);
   }
 
   private async initHooks() {
@@ -138,18 +154,18 @@ class ViseDevServer {
          */
         const routerBaseConfig = typeof routerBase === 'string'
           ? routerBase
-          : routerBase.map(o => o.toString());
+          : routerBase.map((o) => o.toString());
         this.routerBaseConfigs[appName] = routerBaseConfig;
         this.hookLifeCycle = new HookLifeCycle(
           this.addServerPlugin(hookConfig),
-          new HookLogger(this.log.bind(this)),
+          new HookLogger(log),
         );
-        this.log(`server hooks for app-${appName} installed`);
+        log(`server hooks for app-${appName} installed`);
       } else {
-        this.log('no server hooks found');
+        log('no server hooks found');
       }
     } catch (e) {
-      this.error('loadServerHooks fail', e);
+      error('loadServerHooks fail', e);
       throw e;
     }
   }
@@ -176,7 +192,7 @@ class ViseDevServer {
 
     this.express.use('*', (req, res) => {
       if (!this.hookLifeCycle) {
-        this.sendResponse(res, {
+        ViseDevServer.sendResponse(res, {
           code: 500,
           headers: {},
           body: 'Fail to init HookLifeCycle',
@@ -185,13 +201,13 @@ class ViseDevServer {
       }
       const { projectName, routerBase } = matchAppForUrl(this.routerBaseConfigs, req.originalUrl);
       if (!projectName) {
-        this.sendResponse(res, {
+        ViseDevServer.sendResponse(res, {
           code: 404,
           headers: {},
           body: 'Not Found',
         });
         return;
-      };
+      }
 
       const handleWithHookLifeCycle = async () => {
         try {
@@ -202,7 +218,7 @@ class ViseDevServer {
           }, {
             routerBase,
           });
-          this.sendResponse(res, response);
+          ViseDevServer.sendResponse(res, response);
         } catch (e) {
           const isError = (x: any): x is Error => typeof x.stack === 'string';
           const msg = isError(e) ? e.stack : e;
@@ -210,8 +226,8 @@ class ViseDevServer {
           if (isError(e)) {
             viteServer.ssrFixStacktrace(e);
           }
-          this.error('unknown error', isError(e) ? e : msg);
-          this.sendResponse(res, {
+          error('unknown error', isError(e) ? e : msg);
+          ViseDevServer.sendResponse(res, {
             code: 500,
             headers: {},
             body: String(msg),
@@ -233,21 +249,6 @@ class ViseDevServer {
     this.viteServer = viteServer;
 
     return viteServer;
-  }
-
-  private error(tag: string, error: unknown) {
-    this.log(tag);
-    console.error(error);
-  }
-
-  private log(txt: string) {
-    console.log(`[vise] ${txt}`);
-  }
-
-  private async sendResponse(res: Response, data: HTTPResponse) {
-    res.set(data.headers)
-      .status(data.code)
-      .end(data.body ?? '');
   }
 
   private resolve(subPath: string): string {

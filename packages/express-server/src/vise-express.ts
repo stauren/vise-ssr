@@ -4,7 +4,7 @@ import path from 'path';
 import { Command } from 'commander';
 import { $ } from 'zx';
 
-import { DIR_NAME } from '@/utils/env';
+import DIR_NAME from 'src/utils/env';
 import startServer from './start-server';
 
 export type StartOption = {

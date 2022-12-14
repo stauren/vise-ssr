@@ -14,7 +14,7 @@ export default function matchAppForUrl(
       if (typeof appRouterBase === 'string' && url.indexOf(appRouterBase) !== -1) {
         routerBase = appRouterBase;
         return true;
-      };
+      }
       if (typeof appRouterBase !== 'string') {
         // 当配置的 routerBase 为 RegExp[], 在动态替换时 调用了 RegExp.prototype.toString(), 因此要首先转换为 RegExp
         return appRouterBase.some((regStr: string) => {

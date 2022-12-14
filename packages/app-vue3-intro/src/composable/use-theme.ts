@@ -1,4 +1,6 @@
-import { ref, watchEffect, onMounted, onUnmounted } from 'vue';
+import {
+  ref, watchEffect, onMounted, onUnmounted,
+} from 'vue';
 import { IS_SSR } from '@/data/env';
 
 enum ThemeName {

@@ -8,9 +8,9 @@ import type {
 import {
   mergeConfig,
 } from 'vise-ssr';
-import log from '@/utils/logger';
-import { getRenderProcessFilePath } from '@/utils/path';
-import { ERROR_CODE } from '@/ssr-server/constants';
+import { log } from 'src/utils/logger';
+import { getRenderProcessFilePath } from 'src/utils/path';
+import ERROR_CODE from 'src/ssr-server/constants';
 import RenderProcessScheduler from './render-process-scheduler';
 import type { ResponseMessageOrError } from './render-process-scheduler';
 
@@ -41,8 +41,11 @@ function isRenderError(result: SsrBundleResult): result is RenderError {
 
 export default class SSRRenderService {
   private uid = 0;
+
   private renderProcessScheduler: RenderProcessScheduler;
+
   private waitingSendQueue: MessageQueueItem[] = [];
+
   private waitingResponseQueue: MessageQueueItem[] = [];
 
   constructor(private bundleBase: string, private apps: string[] = []) {
@@ -60,7 +63,7 @@ export default class SSRRenderService {
     }
 
     log(`starting render for ${request.url}`);
-    this.uid = this.uid + 1;
+    this.uid += 1;
 
     const { uid } = this;
     const msg: RequestMessage = {
@@ -179,10 +182,11 @@ export default class SSRRenderService {
 
   private takeFromWaitingResponseQueue(uid: number): MessageQueueItem | void {
     const index = this.waitingResponseQueue
-      .findIndex(item => item[0].uid === uid);
+      .findIndex((item) => item[0].uid === uid);
     if (index > -1) {
       // after splice the message in no longer in the queue
       return this.waitingResponseQueue.splice(index, 1)[0];
     }
+    return undefined;
   }
 }

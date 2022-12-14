@@ -21,6 +21,8 @@ export default async function request(config: SsrFetchConfig): Promise<SsrFetchR
         },
       };
     }
-  } catch {}
+  } catch {
+    // ignore
+  }
   return result;
 }

@@ -25,12 +25,6 @@ const defaultMinifyOption = {
   removeStyleLinkTypeAttributes: true,
 };
 
-// 入参有效性检查
-function isArgumentsLegal(html: string, fragments: HtmlFixedPositionFragment[]) {
-  if (!html) return '';
-  if (fragments.length === 0) return html;
-}
-
 function insertFragment(html: string, { position, content }: HtmlFixedPositionFragment) {
   // 若之前已经插入过，则直接返回
   const insertedComment = `<!--comment-${toKebab(position)}-inserted-->`;
@@ -47,15 +41,16 @@ function insertFragment(html: string, { position, content }: HtmlFixedPositionFr
   return html.replace(/<head>/, `<head>${realFragmentContent}${insertedComment}`);
 }
 
-function getFixedPositionFragmentInsertedHtml(html: string, fragments: HtmlFixedPositionFragment[]) {
-  const illegalReturn = isArgumentsLegal(html, fragments);
-  if (illegalReturn !== undefined) {
-    return illegalReturn;
-  }
+function getFixedPositionFragmentInsertedHtml(
+  html: string,
+  fragments: HtmlFixedPositionFragment[],
+) {
+  if (!html) return '';
+  if (fragments.length === 0) return html;
 
   // 迭代要插入到固定位置的用户配置
   return fragments.reduce(insertFragment, html);
-};
+}
 
 function isTemplateBundle(bundle: OutputBundle[string]): bundle is OutputAsset {
   return bundle.type === 'asset' && path.basename(bundle.fileName) === 'index.html';
@@ -102,7 +97,7 @@ function getGenerateBundleCallback(
  * @param {HtmlPostConfig} config
  * @return {*}  {Plugin}
  */
-export function viseHtmlPost(config: HtmlPostConfig): Plugin {
+export default function viseHtmlPost(config: HtmlPostConfig): Plugin {
   const {
     minifyOption,
     isProduction = false,

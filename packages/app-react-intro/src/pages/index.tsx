@@ -8,7 +8,7 @@ import {
   increaseCount,
   setLuckyNumber,
 } from '@/store/slices/vise-intro';
-import { fetchLuckyNumber } from '@/services';
+import fetchLuckyNumber from '@/services';
 import BenchmarkNav from '@/components/benchmark-nav';
 
 type PageIndexAttr = {
@@ -60,22 +60,27 @@ function PageIndex({ ssrContext: { context, updateContext } }: PageIndexAttr) {
           />
         </p>
         <div className="lucky-num">
-          Lucky Number from API: { luckyNumberToDisplay }
+          Lucky Number from API:
+          { luckyNumberToDisplay }
         </div>
-        <button onClick={() => setCount(localCount => localCount + 1)}>
-          local count is: { localCount }
-        </button>&nbsp;
-        <button onClick={() => dispatch(increaseCount())}>
-          store count is: { countInStore }
-        </button>&nbsp;
-        <button onClick={() => updateLuckyNumber()}>
+        <button type="button" onClick={() => setCount((locCount) => locCount + 1)}>
+          local count is:
+          { localCount }
+        </button>
+        &nbsp;
+        <button type="button" onClick={() => dispatch(increaseCount())}>
+          store count is:
+          { countInStore }
+        </button>
+        &nbsp;
+        <button type="button" onClick={() => updateLuckyNumber()}>
           fetch again
         </button>
       </div>
       <div style={{ textAlign: 'center', fontSize: '22px', margin: '20px' }}>
         This page is rendered with vise react. More documents coming soon...
       </div>
-      <BenchmarkNav/>
+      <BenchmarkNav />
     </div>
   );
 }
