@@ -4,7 +4,7 @@ import executable from 'rollup-plugin-executable';
 import { preserveShebangs } from 'rollup-plugin-preserve-shebangs';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import { terser } from 'rollup-plugin-terser';
+import terser from '@rollup/plugin-terser';
 import dotenv from 'dotenv';
 import { visualizer } from 'rollup-plugin-visualizer';
 import pkg from './package.json';

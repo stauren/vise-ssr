@@ -6,7 +6,7 @@
 // @ts-check
 import dotenv from 'dotenv';
 import typescript from '@rollup/plugin-typescript';
-import { terser } from 'rollup-plugin-terser';
+import terser from '@rollup/plugin-terser';
 import { visualizer } from 'rollup-plugin-visualizer';
 
 dotenv.config({ path: '../../.env' });

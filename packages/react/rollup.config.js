@@ -1,6 +1,6 @@
 // @ts-check
 import typescript from '@rollup/plugin-typescript';
-import { terser } from 'rollup-plugin-terser';
+import terser from '@rollup/plugin-terser';
 import { visualizer } from 'rollup-plugin-visualizer';
 import dotenv from 'dotenv';
 

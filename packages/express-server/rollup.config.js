@@ -3,7 +3,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import executable from 'rollup-plugin-executable';
 import { preserveShebangs } from 'rollup-plugin-preserve-shebangs';
-import { terser } from 'rollup-plugin-terser';
+import terser from '@rollup/plugin-terser';
 import dotenv from 'dotenv';
 import pkg from './package.json';
 
