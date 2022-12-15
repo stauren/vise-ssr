@@ -1,15 +1,12 @@
 import {
   ViseHooks,
-  SsrFetchResultOf,
 } from 'vise-ssr';
 import {
   mergeConfig,
   RenderResultCategory,
 } from 'vise-ssr';
-import { fetchDataForSsrRender } from '@/utils/request';
+import { fetchLuckyNumber } from './services';
 import { State } from '@/store';
-
-type LuckNumFetchResult = SsrFetchResultOf<{ value: number | string }>;
 
 /**
  * All hook callbacks could be function or array of functions
@@ -62,21 +59,9 @@ const serverHooks: ViseHooks = {
     let extraInitState = {};
     // request data for index page
     if (url === '/') {
-      try {
-        const apiResult = await fetchDataForSsrRender() as LuckNumFetchResult;
-        extraInitState = {
-          luckyNumber: parseInt(String(apiResult.data.value), 10),
-        };
-      } catch (e) {
-        return {
-          ...renderContext,
-          error: {
-            code: 500,
-            detail: e instanceof Error ? { Stack: e.stack } : undefined,
-            message: e instanceof Error ? e.message : String(e),
-          },
-        };
-      }
+      extraInitState = {
+        luckyNumber: await fetchLuckyNumber(),
+      };
     }
     // strictInitState set to false, state could be updated during render
     const initState: State = {

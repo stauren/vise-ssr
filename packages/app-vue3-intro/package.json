@@ -4,7 +4,7 @@
   "type": "module",
   "description": "Introduction to vise as a vise app.",
   "dependencies": {
-    "axios": "^0.21.4",
+    "axios": "^1.2.1",
     "cookie": "^0.4.1",
     "highlight.js": "^11.2.0",
     "markdown-it": "^12.2.3",
@@ -12,7 +12,7 @@
     "markdown-it-toc-done-right": "^4.2.0",
     "postcss-px-to-viewport": "^1.1.1",
     "sass": "^1.50.1",
-    "vise-ssr": "0.8.0",
+    "vise-ssr": "0.8.1",
     "vue": "^3.2.25",
     "vue-router": "^4.0.14",
     "vuex": "^4.0.2"

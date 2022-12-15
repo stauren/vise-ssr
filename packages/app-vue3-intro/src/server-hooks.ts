@@ -8,9 +8,7 @@ import {
   refillRenderResult,
 } from 'vise-ssr';
 import SIDEBAR_ITEMS from './data/sidebar-items.json';
-import formatLuckyNumber from './formatters/lucky-number';
-import request from './utils/request';
-import type { LuckNumFetchResult } from '../types';
+import { fetchLuckyNumber } from './services';
 import type { State } from './store';
 
 function findMarkdownPage(url: string) {
@@ -132,11 +130,8 @@ const serverHooks: ViseHooks = {
     let extraInitState = {};
     // request data for index page
     if (url === '/') {
-      const apiResult = await request(
-        'https://www.randomnumberapi.com/api/v1.0/random?min=1000&max=9999&count=1',
-      ) as LuckNumFetchResult;
       extraInitState = {
-        luckyNumber: apiResult.code === 0 ? formatLuckyNumber(apiResult) : -1,
+        luckyNumber: await fetchLuckyNumber(),
       };
     }
     // strictInitState set to false, state could be updated during render

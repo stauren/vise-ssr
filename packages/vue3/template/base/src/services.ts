@@ -1,15 +1,13 @@
-import {
-  SsrFetchResultOf,
-} from 'vise-ssr';
-import getRandom from '@/utils/request';
-
-type LuckNumFetchResult = SsrFetchResultOf<{ value: number | string }>;
+import requestRndNum from '@/utils/request';
+import { formatLuckyNumber } from './formatters';
 
 export async function fetchLuckyNumber(): Promise<number> {
-  const result = await getRandom() as LuckNumFetchResult ;
+  const result = await requestRndNum();
 
-  if (result?.code === 0) {
-    return parseInt(String(result.data.value), 10);
+  if (typeof result === 'number') {
+    return formatLuckyNumber(result);
   }
-  throw `fetch fail: ${JSON.stringify(result)}`;
+  return -1;
 }
+
+export function otherService() {}

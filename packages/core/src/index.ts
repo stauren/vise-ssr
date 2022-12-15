@@ -66,18 +66,6 @@ type SsrFetchConfig = AxiosRequestConfig & {
   }
 };
 
-type SsrFetchResultOf<T> = {
-  // 返回结果状态码
-  code: number
-  // 返回结果信息，通常当状态为错误时有意义
-  msg: string
-  // 返回结果，要求是 JSONValue 数据格式
-  data: T
-  // 可选原生返回结果，如 axios 可以返回 response
-  raw?: JSONObject
-};
-type SsrFetchResult = SsrFetchResultOf<JSONValue>;
-
 export type {
   PlainObject,
   JSONValue,
@@ -95,8 +83,6 @@ export type {
   SsrBundleResult,
   SsrBundleRender,
   SsrFetchConfig,
-  SsrFetchResultOf,
-  SsrFetchResult,
   ViseRenderBundle,
 };
 

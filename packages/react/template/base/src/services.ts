@@ -1,14 +1,13 @@
-import request from '@/utils/request';
-import type { LuckNumFetchResult } from './formatters';
+import requestRndNum from '@/utils/request';
 import { formatLuckyNumber } from './formatters';
 
 export async function fetchLuckyNumber(): Promise<number> {
-  const result = await request({
-    url: 'https://www.randomnumberapi.com/api/v1.0/random?min=1000&max=9999&count=1',
-  }) as LuckNumFetchResult ;
+  const result = await requestRndNum();
 
-  if (result?.code === 0) {
+  if (typeof result === 'number') {
     return formatLuckyNumber(result);
   }
   return -1;
 }
+
+export function otherService() {}

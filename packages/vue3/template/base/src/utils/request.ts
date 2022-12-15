@@ -1,24 +1,28 @@
-import { SsrFetchResult } from 'vise-ssr';
+import axios from 'axios';
 import { IS_SSR } from '@/data/env';
 
-export default async function getRandom(): Promise<SsrFetchResult> {
-  let result: SsrFetchResult;
-  // IS_SSR 代表服务端执行阶段
-  if (IS_SSR) {
-    result = await fetchDataForSsrRender();
-  } else {
-    result = await getRandomNum();
-  }
-  if (result.code === 0) {
-    return result;
-  }
-  throw `fetch fail: ${JSON.stringify(result)}`;
+function genRandomNum() {
+  return Math.floor(Math.random() * 10000) + 1;
 }
 
-export function fetchDataForSsrRender() {
-  return getRandomNum();
-};
+export default async function requestRndNum(): Promise<number | undefined> {
+  let result;
+  try {
+    const num = (await axios({
+      url: 'https://www.randomnumberapi.com/api/v1.0/random?min=1&max=10000',
+      timeout: IS_SSR ? 1500 : 5000,
+    })).data;
+    if (num && typeof num[0] === 'number') {
+      result = num[0] as number;
+    }
+  } catch {
+    // ignore
+  }
 
-export function getRandomNum() {
-  return Promise.resolve({ code: 0, msg: 'ok', data: { value: Math.floor(Math.random() * 10000) + 1 } });
+  if (!result && IS_SSR) {
+    result = genRandomNum();
+  }
+  return result;
 }
+
+

@@ -28,6 +28,9 @@ export const DEFAULT_VISE_CONFIG: ParsedViseConfig = {
   routerSyncPages: [],
   htmlMinify: true,
   routerBase: '/',
+  generateCsrHtml: false,
+
+  // ViseConfigVue3
   directiveTransforms: {},
 };
 
