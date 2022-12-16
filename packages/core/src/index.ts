@@ -1,4 +1,3 @@
-import type { AxiosRequestConfig } from 'axios';
 import type {
   PlainObject,
   JSONValue,
@@ -58,14 +57,6 @@ type SsrBundleSuccess = Record<'html', string> & SsrContext;
 type SsrBundleResult = SsrBundleSuccess | RenderError;
 type SsrBundleRender = (renderContext: RenderContext) => Promise<SsrBundleResult>;
 
-type SsrFetchConfig = AxiosRequestConfig & {
-  url?: string
-  path?: string
-  cookies?: {
-    [key: string]: string
-  }
-};
-
 export type {
   PlainObject,
   JSONValue,
@@ -82,7 +73,6 @@ export type {
   SsrBundleSuccess,
   SsrBundleResult,
   SsrBundleRender,
-  SsrFetchConfig,
   ViseRenderBundle,
 };
 
