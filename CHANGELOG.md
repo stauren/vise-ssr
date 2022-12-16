@@ -1,3 +1,28 @@
+# [0.8.1](https://github.com/stauren/vise-ssr/tree/v0.8.1) (2022-12-16)
+### Features
+- **Merge vite config in vise config**:
+  1. Merge config fields in vise.config.ts come from vite such as 'hmrPort', 'ssr', 'resolve', 'build', 'plugins' into viteConfig.
+  2. Finish english version of vise config file doc.
+- **Using airbnb eslint config**:
+  1. Update eslint to version 8;
+  2. Change main eslint config to eslint-config-airbnb;
+  3. Split eslintrc config into packages;
+  4. Project created by vise now use airbnb eslint config;
+  5. Fixed all eslint error;
+- **Change data structure in RenderContext**: move extra.initState to meta.initState
+- Added generateCsrHtml in vise config;
+- SsrFetchConfig, SsrFetchResult & SsrFetchResultOf removed;
+- **"Data Fetch & Transportation" translated**: finish English version of "Data Fetch & Transportation"
+- **refactor mergeConfig, better array merge**: now can merge `T|T[]` type value into `T[]`; add and change all comments to English; add more fp flavor;
+- Better render error report in dev-server;
+- Better console.log management;
+- Added axios dependency in template;
+- Remove core's dependency to axios
+- Project create by vise use English now
+### Bug Fixes
+- Fix phantom dependency issue in template to support pnpm;
+- Fix cyclic dependency bug;
+- Fix dependency deprecated issue;
 # [0.8.0](https://github.com/stauren/vise-ssr/tree/v0.8.0) (2022-10-25)
 ### Features
 - **Vise react SSRContext**: All pages in vise-react apps will receive an ssrContext attribute, for accessing and updating values in RenderContext.meta and RenderContext.extra. For example title of the page could be changed via RenderContext.meta.title
