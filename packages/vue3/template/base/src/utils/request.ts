@@ -24,5 +24,3 @@ export default async function requestRndNum(): Promise<number | undefined> {
   }
   return result;
 }
-
-

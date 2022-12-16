@@ -7,6 +7,7 @@
     "dev": "vise dev",
     "build": "vise build",
     "serve": "vise serve",
+    "lint": "eslint ./src",
     "test": "vitest run -c ./vitest.config.ts"
   },
   "dependencies": {

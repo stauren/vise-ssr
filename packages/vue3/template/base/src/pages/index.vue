@@ -9,7 +9,7 @@
       >
     </p>
     <div class="lucky-num">
-      Lucky Number from API: {{ luckyNumber }}
+      Lucky Number from API: {{ loading ? '--' : luckyNumber }}
     </div>
     <button @click="state.count++">
       local count is: {{ state.count }}
@@ -27,7 +27,7 @@
         target="_blank"
         class="link-item doc"
         href="https://stauren.github.io/vise-ssr/"
-      >项目文档</a>
+      >Documents</a>
     </div>&nbsp;&nbsp;&nbsp;
     <div class="link-btn">
       <a
@@ -39,33 +39,37 @@
   </div>
   <div class="desc">
     <p>
-      Vise 读音[vaɪs]，是一个同构 SSR 开发框架，致力于打造开箱即用的同构 Web 页面开发体验。通过插件化方式，支持任意服务端框架与任意前端框架的组合使用。
-      使用基于 esm、速度更快的 vite 代替常见 Webpack 作为开发构建工具，提供命令行工具支持一站式的开发、构建、发布 Web 应用，让业务项目可以关注在业务功能实现上。项目基于全方位 ESM 及 TypeScript。
+      Vise (pronounced [vaɪs]) is an isomorphic Web SSR framework based on
+      <a
+        href="https://vitejs.dev/"
+        rel="noreferrer"
+        target="_blank"
+      >Vite</a>
+      , dedicated to provide an out of the box SSR develop experience as easy as SPA.
+      It can work with multiple web user interface libraries such as React, Vue.
+      By abstract app specific logic into server hooks, multiple apps could be deployed
+      onto the same server and multiple hooks could be combined
+      as special purpose hooks plugins.
     </p>
-    <p>
-      Vise 将服务端渲染拆分为多个核心阶段，为每个阶段提供了基于 tapable 的 hooks，不管是服务端实现方、业务 app 实现方还是插件实现方，
-      都可以将自己的逻辑通过 hooks 扩展纳入。Vise 同时基于 hooks 提供了可重用的 plugin 插件。
-    </p>
-    <p>Vise 使用了较多在其开发日期 (2021年) 比较新的概念和技术，尽量面向未来进行开发，have fun.</p>
-    <h1>特点</h1>
+    <h1>Features</h1>
     <div class="features">
       <section class="feature">
-        💡 &nbsp; 底层使用 Vite, 开发服务器秒启, 全面支持 ESM
+        💡 &nbsp; Vite based dev server, start in a blink, full ESM support
       </section>
       <section class="feature">
-        💻 &nbsp; 已支持 Express 服务器
+        💻 &nbsp; Express Server supported
       </section>
       <section class="feature">
-        🛠️ &nbsp; 提供命令行工具，覆盖业务 App 开发全周期
+        🛠️ &nbsp; vise command-line tool, whole dev life cycle support
       </section>
       <section class="feature">
-        🔩 &nbsp; 基于 tapable 的服务端 hooks，插件化开发
+        🔩 &nbsp; tapable based server hooks and plugin for hooks
       </section>
       <section class="feature">
-        🔤 &nbsp; 全面使用 TypeScript
+        🔤 &nbsp; 100% TypeScript
       </section>
       <section class="feature">
-        📃 &nbsp; 已发布 vise-ssr 到 npm
+        📃 &nbsp; vise-ssr on npm
       </section>
     </div>
   </div>
@@ -85,16 +89,19 @@ const store = useStore();
 const { count, increaseCount } = useCount();
 
 const luckyNumber = computed(() => store.state.luckyNumber);
+const loading = computed(() => store.state.loading);
 const fetchLuckyNum = async () => {
+  store.commit(MutationTypes.UPDATE_LOADING, { loading: true });
   const newLuckyNumber = await fetchLuckyNumber();
   store.commit(MutationTypes.UPDATE_LUCKY_NUM, { newLuckyNumber });
+  store.commit(MutationTypes.UPDATE_LOADING, { loading: false });
 };
 
 onMounted(() => {
   if (luckyNumber.value === -1) {
     fetchLuckyNum();
   }
-})
+});
 
 const state = reactive({
   count: 0,

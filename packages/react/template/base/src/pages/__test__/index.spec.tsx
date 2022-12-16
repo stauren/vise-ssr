@@ -1,4 +1,6 @@
-import { describe, it, expect, vi } from 'vitest';
+import {
+  describe, it, expect, vi,
+} from 'vitest';
 import ReactTestRenderer from 'react-test-renderer';
 import { renderWithProviders, findByClassName } from '@/utils/test-utils';
 import IndexPage from '../index';
@@ -36,12 +38,12 @@ describe('index', () => {
   const tree = toJSON(renderer);
 
   it('UI render correct', () => {
-    expect(tree.props.className).toMatch('page-index');;
+    expect(tree.props.className).toMatch('page-index');
   });
 
   it('luckynumber 正确显示', () => {
     const el = findByClassName(tree, 'lucky-num');
-    expect(el!.children!.join('')).toBe('Lucky Number from API: 100');
+    expect(el!.children!.join('')).toBe('Lucky Number from API:100');
   });
 });
 

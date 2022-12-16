@@ -1,6 +1,6 @@
 import './styles/index.scss';
 
-function App({ RouterView }: { RouterView: () => JSX.Element}) {
+function App({ RouterView }: { RouterView: () => JSX.Element }) {
   return (
     <div className="theme-container">
       <main className="page">

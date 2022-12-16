@@ -1,5 +1,6 @@
 import React from 'react';
 import type { PreloadedState } from '@reduxjs/toolkit';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import ReactTestRenderer from 'react-test-renderer';
 import { Provider } from 'react-redux';
 
@@ -34,9 +35,12 @@ export function findByClassName(root: ReactTestRenderer.ReactTestRendererJSON, c
   const regClassName = new RegExp(`\\b${className}\\b`);
   do {
     nextNodes = waitingChildren.shift();
+    /* eslint-disable no-continue */
     if (!nextNodes) continue;
+    // eslint-disable-next-line no-restricted-syntax
     for (const node of nextNodes) {
       if (typeof node === 'string') continue;
+      /* eslint-enable no-continue */
       if (node.props?.className?.match(regClassName)) return node;
       if (node.children) {
         waitingChildren.push(node.children);
