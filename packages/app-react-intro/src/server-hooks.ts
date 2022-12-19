@@ -1,20 +1,16 @@
 import cookie from 'cookie';
 import type {
   ViseHooks,
-  SsrFetchResultOf,
 } from 'vise-ssr';
 import {
   RenderResultCategory,
   mergeConfig,
   refillRenderResult,
 } from 'vise-ssr';
-import formatLuckyNumber from './formatters/lucky-number';
-import request from './utils/request';
+import fetchLuckyNumber from './services';
 import type { RootState } from './store';
 
 type DeepPartial<T> = T extends object ? { [P in keyof T]?: DeepPartial<T[P]>; } : T;
-
-type LuckNumFetchResult = SsrFetchResultOf<{ value: number | string }>;
 
 /**
  * All hook callbacks could be function or array of functions
@@ -124,11 +120,8 @@ const serverHooks: ViseHooks = {
     let extraInitState = {};
     // request data for index page
     if (url === '/') {
-      const apiResult = await request({
-        url: 'https://www.randomnumberapi.com/api/v1.0/random?min=1000&max=9999&count=1',
-      }) as LuckNumFetchResult;
       extraInitState = {
-        luckyNumber: apiResult.code === 0 ? formatLuckyNumber(apiResult) : -1,
+        luckyNumber: await fetchLuckyNumber(),
       };
     }
     // strictInitState set to false, state could be updated during render

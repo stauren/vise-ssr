@@ -17,11 +17,14 @@
       "vite/client", // if using vite
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
     },
   },
   "include": [
     "src",
-    "types"
-  ]
+    "types",
+    "vise.config.ts",
+    "vitest.config.ts",
+    ".eslintrc.cjs",
+  ],
 }

@@ -1,4 +1,3 @@
-import type { AxiosRequestConfig } from 'axios';
 import type {
   PlainObject,
   JSONValue,
@@ -58,26 +57,6 @@ type SsrBundleSuccess = Record<'html', string> & SsrContext;
 type SsrBundleResult = SsrBundleSuccess | RenderError;
 type SsrBundleRender = (renderContext: RenderContext) => Promise<SsrBundleResult>;
 
-type SsrFetchConfig = AxiosRequestConfig & {
-  url?: string
-  path?: string
-  cookies?: {
-    [key: string]: string
-  }
-};
-
-type SsrFetchResultOf<T> = {
-  // 返回结果状态码
-  code: number
-  // 返回结果信息，通常当状态为错误时有意义
-  msg: string
-  // 返回结果，要求是 JSONValue 数据格式
-  data: T
-  // 可选原生返回结果，如 axios 可以返回 response
-  raw?: JSONObject
-};
-type SsrFetchResult = SsrFetchResultOf<JSONValue>;
-
 export type {
   PlainObject,
   JSONValue,
@@ -94,9 +73,6 @@ export type {
   SsrBundleSuccess,
   SsrBundleResult,
   SsrBundleRender,
-  SsrFetchConfig,
-  SsrFetchResultOf,
-  SsrFetchResult,
   ViseRenderBundle,
 };
 

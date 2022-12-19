@@ -1,6 +1,6 @@
+import { useSSRContext } from 'vue';
 import type { RenderContext } from 'vise-ssr';
 import { IS_SSR } from '@/data/env';
-import { useSSRContext } from 'vue';
 
 let title = '';
 export default function useTitle() {

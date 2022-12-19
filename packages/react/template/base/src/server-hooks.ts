@@ -1,18 +1,14 @@
 import type {
   ViseHooks,
-  SsrFetchResultOf,
 } from 'vise-ssr';
 import {
   mergeConfig,
   RenderResultCategory,
 } from 'vise-ssr';
-import { formatLuckyNumber } from './formatters';
-import request from './utils/request';
+import { fetchLuckyNumber } from './services';
 import type { RootState } from './store';
 
 type DeepPartial<T> = T extends object ? { [P in keyof T]?: DeepPartial<T[P]>; } : T;
-
-type LuckNumFetchResult = SsrFetchResultOf<{ value: number | string }>;
 
 /**
  * All hook callbacks could be function or array of functions
@@ -49,27 +45,26 @@ const serverHooks: ViseHooks = {
    * Tapped function calculate `CacheInfo` from `RenderContext`
    * Which will be used to find previous cached SSR data or save newly generated SSR data.
    */
-  beforeUseCache: async (renderRequest) => {
+  beforeUseCache: async (/* renderRequest */) => {
   },
 
   // Tapped functions will be notified with a successful cache hit event.
-  hitCache: async (hitCache) => {
+  hitCache: async (/* hitCache */) => {
   },
 
   /**
-   * Tapped functions will be called in order before rendering HTML with server renderer provided by web UI libraries
-   * Typically this could be used to fetch data for SSR. Data should be transferred in `RenderContext.extra`
+   * Tapped functions will be called in order before rendering HTML
+   * with server renderer provided by web UI libraries.
+   * Typically this could be used to fetch data for SSR.
+   * Data should be transferred in `RenderContext.extra`
    */
   beforeRender: async (renderContext) => {
     const { url } = renderContext.request;
     let extraInitState = {};
     // request data for index page
     if (url === '/') {
-      const apiResult = await request({
-        url: 'https://www.randomnumberapi.com/api/v1.0/random?min=1000&max=9999&count=1',
-      }) as LuckNumFetchResult;
       extraInitState = {
-        luckyNumber: apiResult.code === 0 ? formatLuckyNumber(apiResult) : -1,
+        luckyNumber: await fetchLuckyNumber(),
       };
     }
     // strictInitState set to false, state could be updated during render
@@ -109,14 +104,17 @@ const serverHooks: ViseHooks = {
   beforeResponse: async (renderResult) => {
     // successful render
     if (renderResult.type === RenderResultCategory.render) {
+      // change render result
     }
 
     // intercepted by receiveRequest hook
     if (renderResult.type === RenderResultCategory.receiveRequest) {
+      // build HTTPResponse for intercepted request
     }
 
     // render error happened, get detail in renderResult.context and renderResult.error
     if (renderResult.type === RenderResultCategory.error) {
+      // handle render error, fallback to CSR etc.
     }
   },
 };

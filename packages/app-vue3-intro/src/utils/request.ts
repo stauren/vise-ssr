@@ -1,33 +1,26 @@
 import axios from 'axios';
+import { IS_SSR } from '@/data/env';
 
-export type FetchResult = {
-  code: number,
-  msg: string,
-  data: any,
-};
+function genRandomNum() {
+  return Math.floor(Math.random() * 10000) + 1;
+}
 
-export default async function request(url: string): Promise<FetchResult> {
-  let result: FetchResult = {
-    code: -1,
-    msg: 'fetch fail',
-    data: '',
-  };
+export default async function requestRndNum(): Promise<number | undefined> {
+  let result;
   try {
-    const num: number[] = (await axios({
-      url,
-      timeout: 1000,
+    const num = (await axios({
+      url: 'https://www.randomnumberapi.com/api/v1.0/random?min=1&max=10000',
+      timeout: IS_SSR ? 1500 : 5000,
     })).data;
-    if (typeof num[0] === 'number') {
-      result = {
-        code: 0,
-        msg: 'ok',
-        data: {
-          value: num[0],
-        },
-      };
+    if (num && typeof num[0] === 'number') {
+      result = num[0] as number;
     }
   } catch {
     // ignore
+  }
+
+  if (!result && IS_SSR) {
+    result = genRandomNum();
   }
   return result;
 }

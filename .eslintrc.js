@@ -48,9 +48,9 @@ module.exports = {
         pattern: {
           json: 'always',
           vue: 'always',
-          tsx: 'always',
           md: 'always',
           scss: 'always',
+          tsx: 'never',
           'd.ts': 'never',
         },
       },

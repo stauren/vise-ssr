@@ -1,7 +1,6 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import 'vite/client';
 import { Store } from 'vuex';
-import { SsrFetchResultOf } from 'vise-ssr';
 import { State } from '../src/store/state';
 
 declare module '@vue/runtime-core' {
@@ -19,5 +18,3 @@ type MarkdownRenderResult = {
   toc: string,
   content: string,
 };
-
-type LuckNumFetchResult = SsrFetchResultOf<{ value: number | string }>;

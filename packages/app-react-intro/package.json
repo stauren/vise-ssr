@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.8.2",
-    "axios": "^0.21.4",
+    "axios": "^1.2.1",
     "cookie": "^0.4.1",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
@@ -18,13 +18,13 @@
     "react-router-dom": "^6.3.0",
     "redux": "^4.1.2",
     "sass": "^1.50.1",
-    "vise-ssr": "0.8.0"
+    "vise-ssr": "0.8.1"
   },
   "devDependencies": {
     "@types/cookie": "^0.4.1",
     "@types/react": "^18.0.0",
     "@types/react-router-dom": "^5.3.3",
-    "@vise-ssr/react": "0.8.0",
+    "@vise-ssr/react": "0.8.1",
     "rollup": "^2.79.1"
   }
 }

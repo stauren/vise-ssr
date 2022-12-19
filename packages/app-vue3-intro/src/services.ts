@@ -1,5 +1,4 @@
-import type { LuckNumFetchResult } from '../types';
-import request from './utils/request';
+import requestRndNum from './utils/request';
 import formatLuckyNumber from './formatters/lucky-number';
 
 export function mockFetchTime(): Promise<number> {
@@ -11,11 +10,9 @@ export function mockFetchTime(): Promise<number> {
 }
 
 export async function fetchLuckyNumber(): Promise<number> {
-  const result = await request(
-    'https://www.randomnumberapi.com/api/v1.0/random?min=1000&max=9999&count=1',
-  ) as LuckNumFetchResult;
+  const result = await requestRndNum();
 
-  if (result?.code === 0) {
+  if (result) {
     return formatLuckyNumber(result);
   }
   return -1;

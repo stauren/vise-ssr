@@ -97,6 +97,12 @@ type ParsedViseConfig = ViseConfigVue3 & {
    * url.match(regExp)[0] is the dynamic routerBase。
    */
   routerBase: RegExp[] | string,
+
+  /**
+   * generate CSR fallback html entries for CDN deploy in client bundle
+   * default to false
+   */
+  generateCsrHtml: boolean,
 };
 
 export type {

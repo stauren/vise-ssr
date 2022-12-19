@@ -11,7 +11,7 @@ module.exports = {
     ecmaFeatures: {
       jsx: true,
     },
-    extraFileExtensions: ['.cjs', '.mjs', '.tsx'],
+    extraFileExtensions: [],
   },
   extends: [
     'airbnb',
@@ -45,6 +45,24 @@ module.exports = {
       },
     ],
     'react/react-in-jsx-scope': 'off',
+    'no-throw-literal': 0,
+    '@typescript-eslint/no-throw-literal': 0,
+    'import/no-unresolved': 0,
+    'import/extensions': [
+      'error',
+      'never',
+      {
+        pattern: {
+          json: 'always',
+          vue: 'always',
+          tsx: 'never',
+          md: 'always',
+          scss: 'always',
+          'd.ts': 'never',
+        },
+      },
+    ],
+    'no-param-reassign': ['error', { props: true, ignorePropertyModificationsFor: ['state'] }],
   },
   settings: {
     react: {

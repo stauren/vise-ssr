@@ -1,15 +1,10 @@
 import {
-  ViseHooks,
-  SsrFetchResultOf,
-} from 'vise-ssr';
-import {
+  type ViseHooks,
   mergeConfig,
   RenderResultCategory,
 } from 'vise-ssr';
-import { fetchDataForSsrRender } from '@/utils/request';
+import { fetchLuckyNumber } from './services';
 import { State } from '@/store';
-
-type LuckNumFetchResult = SsrFetchResultOf<{ value: number | string }>;
 
 /**
  * All hook callbacks could be function or array of functions
@@ -40,47 +35,38 @@ const serverHooks: ViseHooks = {
    * Marks could be added to context of certain requests for later process.
    * Be careful of [hydration mismatch] if you change data in the HTTPRequest.
    */
-  requestResolved: async resolvedRequest => resolvedRequest,
+  requestResolved: async (resolvedRequest) => resolvedRequest,
 
   /**
    * Tapped function calculate `CacheInfo` from `RenderContext`
    * Which will be used to find previous cached SSR data or save newly generated SSR data.
    */
-  beforeUseCache: async (renderRequest) => {
+  beforeUseCache: async (/* renderRequest */) => {
   },
 
   // Tapped functions will be notified with a successful cache hit event.
-  hitCache: async (hitCache) => {
+  hitCache: async (/* hitCache */) => {
   },
 
   /**
-   * Tapped functions will be called in order before rendering HTML with server renderer provided by web UI libraries
-   * Typically this could be used to fetch data for SSR. Data should be transferred in `RenderContext.extra`
+   * Tapped functions will be called in order before rendering HTML
+   * with server renderer provided by web UI libraries.
+   * Typically this could be used to fetch data for SSR.
+   * Data should be transferred in `RenderContext.extra`
    */
   beforeRender: async (renderContext) => {
     const { url } = renderContext.request;
     let extraInitState = {};
     // request data for index page
     if (url === '/') {
-      try {
-        const apiResult = await fetchDataForSsrRender() as LuckNumFetchResult;
-        extraInitState = {
-          luckyNumber: parseInt(String(apiResult.data.value), 10),
-        };
-      } catch (e) {
-        return {
-          ...renderContext,
-          error: {
-            code: 500,
-            detail: e instanceof Error ? { Stack: e.stack } : undefined,
-            message: e instanceof Error ? e.message : String(e),
-          },
-        };
-      }
+      extraInitState = {
+        luckyNumber: await fetchLuckyNumber(),
+      };
     }
     // strictInitState set to false, state could be updated during render
     const initState: State = {
       count: 0,
+      loading: false,
       luckyNumber: -1,
       ...extraInitState,
     };
@@ -97,11 +83,11 @@ const serverHooks: ViseHooks = {
    * Failed SSR could be downgraded to CSR here.
    * Be careful of [hydration mismatch].
    */
-  afterRender: [async renderResult => renderResult,
+  afterRender: [async (renderResult) => renderResult,
     // multiple callbacks supported
     {
       enforce: 'post', // enforce execute order
-      callback: async renderResult => renderResult,
+      callback: async (renderResult) => renderResult,
     }],
 
   /**
@@ -114,14 +100,17 @@ const serverHooks: ViseHooks = {
   beforeResponse: async (renderResult) => {
     // successful render
     if (renderResult.type === RenderResultCategory.render) {
+      // change render result
     }
 
     // intercepted by receiveRequest hook
     if (renderResult.type === RenderResultCategory.receiveRequest) {
+      // build HTTPResponse for intercepted request
     }
 
     // render error happened, get detail in renderResult.context and renderResult.error
     if (renderResult.type === RenderResultCategory.error) {
+      // handle render error, fallback to CSR etc.
     }
   },
 };
