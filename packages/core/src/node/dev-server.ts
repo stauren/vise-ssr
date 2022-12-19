@@ -3,7 +3,7 @@ import express, { Express, Response } from 'express';
 import { createServer as viteCreateServer } from 'vite';
 import type { ViteDevServer } from 'vite';
 import type { SupportedScaffold } from '@vise-ssr/shared';
-import { mergeConfig, ScaffoldToPackage } from '@vise-ssr/shared';
+import { mergePartial, ScaffoldToPackage } from '@vise-ssr/shared';
 import type {
   HTTPResponse,
   SsrBundleRender,
@@ -79,7 +79,7 @@ class ViseDevServer {
       const result: SuccessRenderResult = {
         renderBy: DEV_RENDERER,
         type: 'render',
-        context: mergeConfig(renderContext, {
+        context: mergePartial(renderContext, {
           meta: {
             ...meta,
             template,
@@ -241,7 +241,7 @@ class ViseDevServer {
 
   private async initViteServer() {
     const viteDevConfig = await getViteDevConfig(this.appRoot);
-    const config = mergeConfig(viteDevConfig, {
+    const config = mergePartial(viteDevConfig, {
       logLevel: isTest ? 'error' : 'info',
     });
 

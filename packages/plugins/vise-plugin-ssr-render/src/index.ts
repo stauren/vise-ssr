@@ -1,5 +1,5 @@
 import {
-  RenderContext, RenderResultCategory, mergeConfig, SsrBundleSuccess,
+  RenderContext, RenderResultCategory, mergePartial, SsrBundleSuccess,
 } from 'vise-ssr';
 import SubProcessRender from './subprocess-render';
 import { SSR_RENDER } from './constants';
@@ -29,7 +29,7 @@ const ssrRenderPlugin = async (options: SSRrenderPlugin) => {
       const { extra, ...ssrResult } = subProcessRenderResult.data as SsrBundleSuccess;
       return {
         type: RenderResultCategory.render,
-        context: mergeConfig(renderContext, {
+        context: mergePartial(renderContext, {
           extra,
         }),
         ssrResult,
@@ -55,7 +55,7 @@ const ssrRenderPlugin = async (options: SSRrenderPlugin) => {
       const { extra, ...ssrResult } = renderRes as SsrBundleSuccess;
       return {
         type: RenderResultCategory.render,
-        context: mergeConfig(renderContext, {
+        context: mergePartial(renderContext, {
           extra,
         }),
         ssrResult,

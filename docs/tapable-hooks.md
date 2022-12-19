@@ -155,7 +155,7 @@ A Typical `server-hooks.ts` is as following:
 ```typescript
 import {
   ViseHooks,
-  mergeConfig,
+  mergePartial,
   fillSsrTemplate,
 } from 'vise-ssr';
 import { SIDEBAR_ITEMS } from './data/consts';
@@ -205,7 +205,7 @@ const serverHooks: ViseHooks = {
     if (url === '/hook-jump') {
       extraData.injectByHook = 'RequestResolved inject';
     }
-    return mergeConfig(resolvedRequest, {
+    return mergePartial(resolvedRequest, {
       resolved: {
         extra: extraData,
       }
@@ -251,7 +251,7 @@ const serverHooks: ViseHooks = {
       const apiResult = await request({
         url: 'https://www.randomnumberapi.com/api/v1.0/random?min=1000&max=9999&count=1',
       });
-      return mergeConfig(renderContext, {
+      return mergePartial(renderContext, {
         meta: {
           initState: apiResult
         },
@@ -269,7 +269,7 @@ const serverHooks: ViseHooks = {
   afterRender: async (renderResult) => {
     if (renderResult.type === RenderResultCategory.render) {
       if (renderResult.context.request.url === '/hook-jump') {
-        const newSsrResult = mergeConfig<typeof renderResult.ssrResult>(
+        const newSsrResult = mergePartial<typeof renderResult.ssrResult>(
           renderResult.ssrResult,
           {
             ssrContext: {
@@ -286,7 +286,7 @@ const serverHooks: ViseHooks = {
         };
       }
     } else if (renderResult.type === RenderResultCategory.error) {
-      return mergeConfig<typeof renderResult>(renderResult, {
+      return mergePartial<typeof renderResult>(renderResult, {
         error: {
           detail: {
             reason: 'info sent with error result, can be read by beforeResponse hook',
@@ -345,7 +345,7 @@ From the example we could see:
 - All hooks could be tapped multiple times. Different logics in the same hook lifecycle could be decoupled in different callbacks
 - The default export value is constraint by the `ViseHooks` type, all parameter and return value types could have IDE notice.
 - Vise defined multiple data types in the lifecycle such as `HTTPRequest`, `HTTPResponse`, `RenderContext`, `ResolvedRequest`, `RenderResult` to support data transmission during multiple hooks, all these types could be imported from vise-ssr package. More detail at: [Key Data Types](./key-data-types.html)
-- A typical operation in a tapped function is to modify a small part of a complex data structure such as `RenderContext`. Vise provided `mergeConfig` util function with deep partial type support to help.
+- A typical operation in a tapped function is to modify a small part of a complex data structure such as `RenderContext`. Vise provided `mergePartial` util function with deep partial type support to help.
 
 ### HTTP Server Developer
 #### Core Hook Classes

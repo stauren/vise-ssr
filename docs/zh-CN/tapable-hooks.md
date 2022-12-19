@@ -150,7 +150,7 @@ App 开发者首先使用 [Vise 命令行工具](./commandline-tool.html)新建�
 ```typescript
 import {
   ViseHooks,
-  mergeConfig,
+  mergePartial,
   fillSsrTemplate,
 } from 'vise-ssr';
 import { SIDEBAR_ITEMS } from './data/consts';
@@ -260,7 +260,7 @@ const serverHooks: ViseHooks = {
       // 可以重载渲染结果，根据 ssrResult 重新拼装模板
       // 这里是一个很好的重载 ssrResult.template 的时机，外层模板跟 vue app 无关，不会引起 hydration mismatch
       if (renderResult.context.request.url === '/hook-jump') {
-        const newSsrResult = mergeConfig<typeof renderResult.ssrResult>(
+        const newSsrResult = mergePartial<typeof renderResult.ssrResult>(
           renderResult.ssrResult,
           {
             ssrContext: {
@@ -279,7 +279,7 @@ const serverHooks: ViseHooks = {
     } else if (renderResult.type === RenderResultCategory.error) {
       // 如果发生渲染异常，这里没法做跳转，只能将异常重载为一个正常的渲染结果
       // 或者把一个异常映射为另外的异常，为异常添加具体的 meta data，具体的跳转，需要在 beforeResponse 钩子里面做
-      return mergeConfig<typeof renderResult>(renderResult, {
+      return mergePartial<typeof renderResult>(renderResult, {
         error: {
           detail: {
             reason: 'info sent with error result, can be read by beforeResponse hook',
@@ -335,7 +335,7 @@ export default serverHooks;
 - 所有的钩子都支持多次 tap（即支持传入多个回调函数），可以把一些可以解耦的同一生命周期但属于不同模块的逻辑放入不同回调函数，以便管理
 - hooks 配置文件需要满足 Vise 提供的 `ViseHooks` 类型约束，使用 VS Code 等开发工具，可以清楚的看到每个 hooks 回调函数的入参和返回值类型，有助于开发者在不查询文档的情况下编写 hooks 回调
 - hooks 为多个生命周期定义了 HTTPRequest, HTTPResponse, RenderContext, ResolvedRequest, RenderResult 等多个数据类型，主要用来定义各个 hooks 的参数和返回值类型，同时便于在各个 hooks 之间传递关于同一次 HTTP 请求的上下文（context）信息，这些类型都可以从 Vise import 得到，详细请参见：[关键数据类型](./key-data-types.html)
-- hooks 的一个常见操作是在 context 或 result 中修改部分内容，为了方便修改一个较大的数据结构中的部分数据，Vise 提供了 `mergeConfig` 方法
+- hooks 的一个常见操作是在 context 或 result 中修改部分内容，为了方便修改一个较大的数据结构中的部分数据，Vise 提供了 `mergePartial` 方法
 
 ### Server 开发者
 #### 核心 Hook Classes

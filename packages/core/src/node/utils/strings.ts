@@ -2,7 +2,6 @@ import serialize from 'serialize-javascript';
 import {
   replaceContentBetweenMarks,
   replacePlaceholderWithValue,
-  mergeConfig,
 } from '@vise-ssr/shared';
 import type {
   JSONObject,
@@ -58,7 +57,8 @@ export function fillSsrTemplate({ meta }: RenderContext): string {
 }
 
 export function refillRenderResult(renderResult: SuccessRenderResult): SuccessRenderResult {
-  return mergeConfig(renderResult, {
+  return {
+    ...renderResult,
     html: fillSsrTemplate(renderResult.context),
-  });
+  };
 }

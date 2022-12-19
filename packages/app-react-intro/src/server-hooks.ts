@@ -4,7 +4,7 @@ import type {
 } from 'vise-ssr';
 import {
   RenderResultCategory,
-  mergeConfig,
+  mergePartial,
   refillRenderResult,
 } from 'vise-ssr';
 import fetchLuckyNumber from './services';
@@ -59,7 +59,7 @@ const serverHooks: ViseHooks = {
     if (url === '/hook-jump') {
       extraData.injectByHook = 'RequestResolved inject';
     }
-    return mergeConfig(resolvedRequest, {
+    return mergePartial(resolvedRequest, {
       resolved: {
         extra: extraData,
       },
@@ -68,7 +68,7 @@ const serverHooks: ViseHooks = {
     // multiple tapped functions allowed
     callback: async (resolvedRequest) => {
       const { original: { request: { headers } } } = resolvedRequest;
-      return mergeConfig(resolvedRequest, {
+      return mergePartial(resolvedRequest, {
         resolved: {
           // pass user agent and cookie as context extra data
           // which could be accessed as ssr context
@@ -131,7 +131,7 @@ const serverHooks: ViseHooks = {
         ...extraInitState,
       },
     };
-    return mergeConfig(renderContext, {
+    return mergePartial(renderContext, {
       meta: {
         initState,
       },
@@ -148,7 +148,7 @@ const serverHooks: ViseHooks = {
     if (renderResult.type === RenderResultCategory.render) {
       const { url } = renderResult.context.request;
 
-      let newMeta = mergeConfig(renderResult.context.meta, {
+      let newMeta = mergePartial(renderResult.context.meta, {
         initState: {
           viseIntro: {
             renderEndTime: Date.now(),
@@ -156,18 +156,18 @@ const serverHooks: ViseHooks = {
         },
       });
       if (url === '/hook-jump') {
-        newMeta = mergeConfig(newMeta, {
+        newMeta = mergePartial(newMeta, {
           title: 'render finish override2',
         });
       }
-      return refillRenderResult(mergeConfig(renderResult, {
+      return refillRenderResult(mergePartial(renderResult, {
         context: {
           meta: newMeta,
         },
       }));
     }
     if (renderResult.type === RenderResultCategory.error) {
-      return mergeConfig(renderResult, {
+      return mergePartial(renderResult, {
         error: {
           detail: {
             reason: 'info sent with error result, can be read by beforeResponse hook',
