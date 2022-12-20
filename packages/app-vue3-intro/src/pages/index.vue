@@ -10,10 +10,10 @@
         >
       </p>
       <div class="lucky-num">
-        Lucky Number from API: {{ luckyNumber }}
+        {{ subTitle.join(' ') }} {{ luckyNumber }}
       </div>
-      <button @click="state.count++">
-        local count is: {{ state.count }}
+      <button @click="localState.count++">
+        local count is: {{ localState.count }}
       </button>&nbsp;
       <button @click="increaseCount()">
         store count is: {{ count }}
@@ -69,9 +69,11 @@ export default defineComponent({
       }
     });
 
-    const state = reactive({
+    const localState = reactive({
       count: 0,
     });
+
+    const subTitle = computed(() => store.state.subTitle);
 
     return {
       title,
@@ -82,7 +84,8 @@ export default defineComponent({
       luckyNumber,
       fetchLuckyNum,
 
-      state,
+      localState,
+      subTitle,
     };
   },
 });

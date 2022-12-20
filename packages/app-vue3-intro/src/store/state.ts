@@ -6,6 +6,7 @@ export interface State extends JSONObject {
   renderEndTime: number
   count: number
   luckyNumber: number
+  subTitle: string[]
   sidebarToc: Record<string, string>
 }
 
@@ -14,6 +15,7 @@ export default function state(): State {
     startTime: IS_SSR ? Date.now() : -1,
     renderEndTime: -1,
     count: 0,
+    subTitle: [],
     luckyNumber: -1,
     sidebarToc: {},
   };

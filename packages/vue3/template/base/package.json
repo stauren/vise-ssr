@@ -9,11 +9,11 @@
     "vue-router": "^4.0.14",
     "vuex": "^4.0.2",
     "sass": "^1.50.1",
-    "vise-ssr": "0.8.1"
+    "vise-ssr": "0.8.2"
   },
   "devDependencies": {
-    "vise-ssr": "0.8.1",
-    "@vise-ssr/express-server": "0.8.1",
+    "vise-ssr": "0.8.2",
+    "@vise-ssr/express-server": "0.8.2",
     "@typescript-eslint/eslint-plugin": "^5.46.0",
     "@typescript-eslint/parser": "^5.46.0",
     "@vue/test-utils": "^2.0.0",

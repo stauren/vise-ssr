@@ -5,9 +5,6 @@ import type {
   RenderResult,
   RenderError,
 } from 'vise-ssr';
-import {
-  mergeConfig,
-} from 'vise-ssr';
 import { log } from 'src/utils/logger';
 import { getRenderProcessFilePath } from 'src/utils/path';
 import ERROR_CODE from 'src/ssr-server/constants';
@@ -98,10 +95,11 @@ export default class SSRRenderService {
         resolve({
           type: 'render',
           renderBy: RENDER_NAME,
-          context: mergeConfig(renderContext, {
+          context: {
+            ...renderContext,
             meta,
             extra,
-          }),
+          },
           html,
         });
       });

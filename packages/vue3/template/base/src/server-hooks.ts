@@ -1,6 +1,6 @@
 import {
   type ViseHooks,
-  mergeConfig,
+  mergePartial,
   RenderResultCategory,
 } from 'vise-ssr';
 import { fetchLuckyNumber } from './services';
@@ -70,7 +70,7 @@ const serverHooks: ViseHooks = {
       luckyNumber: -1,
       ...extraInitState,
     };
-    return mergeConfig(renderContext, {
+    return mergePartial(renderContext, {
       meta: {
         initState,
       },

@@ -18,13 +18,13 @@
     "react-router-dom": "^6.3.0",
     "redux": "^4.1.2",
     "sass": "^1.50.1",
-    "vise-ssr": "0.8.1"
+    "vise-ssr": "0.8.2"
   },
   "devDependencies": {
     "@types/cookie": "^0.4.1",
     "@types/react": "^18.0.0",
     "@types/react-router-dom": "^5.3.3",
-    "@vise-ssr/react": "0.8.1",
+    "@vise-ssr/react": "0.8.2",
     "rollup": "^2.79.1"
   }
 }
