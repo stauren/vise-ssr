@@ -2,7 +2,7 @@
   <aside class="sidebar">
     <ul class="sidebar-links">
       <p class="sidebar-heading sidebar-item active">
-        使用向导
+        Vise Guide
       </p>
       <ul class="item-ctn">
         <sidebar-item

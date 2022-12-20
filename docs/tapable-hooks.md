@@ -4,7 +4,6 @@ title: "Tapable hooks"
 permalink: /tapable-hooks.html
 lang: en
 ---
-translation in progress
 ## Tapable hooks in server
 It's an important step of the HTTP servers using server renderers of web user interface libraries such as `vue/server-renderer` and `react-dom/server` to render web applications to strings or streams during SSR (server side rendering). Vise is built around the SSR process.
 

@@ -2,11 +2,11 @@
   {
     "id": "introduction",
     "to": "/",
-    "title": "介绍"
+    "title": "Introduction"
   },
   {
     "id": "start-develop",
-    "title": "开始开发"
+    "title": "Quick Start"
   },
   {
     "id": "tapable-hooks",
@@ -14,27 +14,27 @@
   },
   {
     "id": "data-fetch",
-    "title": "数据加载及传输"
+    "title": "Data Transport"
   },
   {
     "id": "server-api",
-    "title": "服务端 SSR 渲染"
+    "title": "Server Render"
   },
   {
     "id": "cache-key",
-    "title": "SSR 缓存及唯一 key"
+    "title": "SSR Cache Key"
   },
   {
     "id": "commandline-tool",
-    "title": "命令行工具"
+    "title": "Command-line Tool"
   },
   {
     "id": "key-data-types",
-    "title": "关键数据类型"
+    "title": "Key Data Types"
   },
   {
     "id": "vise-config",
-    "title": "Vise 配置文件"
+    "title": "Vise Config"
   },
   {
     "id": "vise-react",
@@ -44,10 +44,10 @@
   },
   {
     "id": "unit-test",
-    "title": "单元测试"
+    "title": "Unit Test"
   },
   {
     "id": "doc-resource",
-    "title": "文档资料及常见问题"
+    "title": "FAQ & More"
   }
 ]

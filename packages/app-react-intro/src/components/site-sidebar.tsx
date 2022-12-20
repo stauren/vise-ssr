@@ -14,7 +14,7 @@ export default function SiteSidebar() {
     <aside className="sidebar">
       <ul className="sidebar-links">
         <p className="sidebar-heading sidebar-item active">
-          使用向导
+          Vise Guide
         </p>
         <ul className="item-ctn">
           {
