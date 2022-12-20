@@ -23,7 +23,7 @@ app-my-project
         ├── server-hooks.js
         └── entry-server.js
 ```
-`client` 目录中的文件为直接部署在静态 CDN 服务器上的浏览器文件，同时也是一个完整的 CSR 的 [SPA](https://en.wikipedia.org/wiki/Single-page_application) 客户端，可以在 Node.js 服务异常的时候直接通过静态 SPA 提供服务。
+`client` 目录中的文件为直接部署在静态 CDN 服务器上的浏览器文件，同时也是一个完整的 CSR 的 [SPA](https://en.wikipedia.org/wiki/Single-page_application) 客户端，可以在 Node.js 服务异常的时候直接通过静态 SPA 提供服务。如果希望为所有页面生成 CSR 访问入口，可以启用 `generateCsrHtml` [配置参数](./vise-config.html)。
 
 `server` 目录中的文件主要有包含所有模块信息以便生成用户当前访问页面的 preload 标签的 `ssr-manifest.json`，包含当前业务 app 所有服务端逻辑的 `server-hooks.js`，以及以 `entry-server.ts` 为入口的 `entry-server.js`，即 Vue3 等页面框架的 Server Render Bundle (以下简称 Render bundle)，该 bundle 需要在 Node.js 服务器中 require 引入，在服务代码打包的时候，Render bundle 应该以 external 形式异步引入，以便服务器同时支持多个业务 app 部署。
 

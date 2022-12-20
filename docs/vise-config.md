@@ -4,14 +4,12 @@ title: "Vise config file"
 permalink: /vise-config.html
 lang: en
 ---
-translation in progress
 
-Vise 配置文件为 app 项目根目录中的 `vise.config.ts`，支持 typescript 格式。
-
-## 可用配置项
+Vise's config file is the `vise.config.ts` in the app root directory.
+## Available Configs
 
 ```typescript
-export type ParsedViseConfig = {
+type ParsedViseConfig = ViseConfigVue3 & {
   // scaffold of current app, such as 'vue3-app' or 'react-app'
   scaffold: SupportedScaffold,
 
@@ -78,6 +76,11 @@ export type ParsedViseConfig = {
    * url.match(regExp)[0] is the dynamic routerBase。
    */
   routerBase: RegExp[] | string,
-};
 
+  /**
+   * generate CSR fallback html entries for CDN deploy in client bundle
+   * default to false
+   */
+  generateCsrHtml: boolean,
+};
 ```

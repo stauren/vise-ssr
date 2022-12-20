@@ -1,14 +1,14 @@
 #!/usr/bin/env node
-import { promises as fsPromise } from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import { promises as fsPromise } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 // it IS a dev dep
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { $ } from 'zx';
 
-export const DIR_NAME = path.dirname(fileURLToPath(import.meta.url));
+const DIR_NAME = path.dirname(fileURLToPath(import.meta.url));
 
-export const SIDEBAR_ITEMS = JSON.parse(await fsPromise.readFile(
+const SIDEBAR_ITEMS = JSON.parse(await fsPromise.readFile(
   path.resolve(DIR_NAME, '../src/data/sidebar-items.json'),
   'utf8',
 ));
