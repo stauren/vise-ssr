@@ -167,11 +167,11 @@ const serverHooks: ViseHooks = {
       }));
     }
     if (renderResult.type === RenderResultCategory.error) {
+      const err = renderResult.error;
       return mergePartial(renderResult, {
         error: {
-          detail: {
-            reason: 'info sent with error result, can be read by beforeResponse hook',
-          },
+          // handle error in beforeResponse hook
+          message: err.code === 404 ? (err.detail!.reason as string) : err.message,
         },
       });
     }

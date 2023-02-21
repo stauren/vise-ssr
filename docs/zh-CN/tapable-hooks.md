@@ -279,11 +279,11 @@ const serverHooks: ViseHooks = {
     } else if (renderResult.type === RenderResultCategory.error) {
       // 如果发生渲染异常，这里没法做跳转，只能将异常重载为一个正常的渲染结果
       // 或者把一个异常映射为另外的异常，为异常添加具体的 meta data，具体的跳转，需要在 beforeResponse 钩子里面做
-      return mergePartial<typeof renderResult>(renderResult, {
+      const err = renderResult.error;
+      return mergePartial(renderResult, {
         error: {
-          detail: {
-            reason: 'info sent with error result, can be read by beforeResponse hook',
-          },
+          // handle error in beforeResponse hook
+          message: err.code === 404 ? (err.detail!.reason as string) : err.message,
         },
       });
     }

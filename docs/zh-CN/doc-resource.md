@@ -5,12 +5,11 @@ permalink: /zh-CN/doc-resource.html
 ---
 ## Vise 系列 npm 包
 - [vise-ssr](https://www.npmjs.com/package/vise-ssr)
+- [@vise-ssr/shared](https://www.npmjs.com/package/@vise-ssr/shared)
+- [@vise-ssr/vue3](https://www.npmjs.com/package/@vise-ssr/vue3)
+- [@vise-ssr/react](https://www.npmjs.com/package/@vise-ssr/react)
 - [@vise-ssr/express-server](https://www.npmjs.com/package/@vise-ssr/express-server)
-- [@vise-ssr/plugin-foot-note](https://www.npmjs.com/package/@vise-ssr/plugin-foot-note)
-- [@vise-ssr/plugin-render-error](https://www.npmjs.com/package/@vise-ssr/plugin-render-error)
-- [@vise-ssr/plugin-ssr-render](https://www.npmjs.com/package/@vise-ssr/plugin-ssr-render)
-- [@vise-ssr/vite-plugin-visecss](https://www.npmjs.com/package/@vise-ssr/vite-plugin-visecss)
-- [@vise-ssr/vite-plugin-inline-entry-css](https://www.npmjs.com/package/@vise-ssr/vite-plugin-inline-entry-css)
+
 ## 常见问题
 ### CSR 数据加载相关
 __1. 是不是只有在 beforeRender hook 中数据加载失败时，才去用 CSR 的方法加载呢？__

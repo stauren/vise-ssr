@@ -23,11 +23,14 @@ type DetailCallbackConfig = {
 };
 
 export type VisePlugin = {
-  // 插件名应该与 npm 包名一致，满足约定：
-  // vise core：vise:${componentName}
-  // 插件：vise-plugin-${myPluginName}
-  // app: app-${myAppName}
-  // 其中自定义名应该只由以字母开头的只包含小写字母、数字、连接线(-)，并以小写字母开头
+  /**
+   * Plugin should have the same name in setting as the corresponding npm package name
+   * Plugin name should start with 'vise-plugin-',
+   * unless it's an internal plugin.
+   * Plugin name should only contain lowercase letter, number and hyphens and start with letter
+   * internal: `vise:${name}`
+   * external: `vise-plugin-${name}`
+   */
   name: string,
   hooks: HookCallbackConfig,
 };

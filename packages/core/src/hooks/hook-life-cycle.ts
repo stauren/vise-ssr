@@ -176,13 +176,13 @@ class HookLifeCycle {
 
     let code = HTTP_RESPONSE_CODE.success;
     let body;
-    switch (renderResult.type) {
+    switch (finalRenderResult.type) {
       case 'hitCache':
-        body = renderResult.content;
+        body = finalRenderResult.content;
         break;
       case 'error':
-        code = renderResult.error.code;
-        body = renderResult.error.message;
+        code = finalRenderResult.error.code;
+        body = finalRenderResult.error.message;
         break;
       case 'receiveRequest':
         // should not end here, plugin intercept at receiveRequest should finish render
@@ -191,7 +191,7 @@ class HookLifeCycle {
         body = 'Fatal Error: Hooks intercept the request with receiveRequest without finish rendering';
         break;
       default: // render
-        body = renderResult.html;
+        body = finalRenderResult.html;
     }
 
     return {

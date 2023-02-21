@@ -13,9 +13,13 @@ const SIDEBAR_ITEMS = JSON.parse(await fsPromise.readFile(
   'utf8',
 ));
 
+const pageTitle = {};
+
 const toCamel = (id) => id.replace(/-([a-z])/g, (whole, match) => match.toUpperCase());
+
 function getPage(name) {
   const camelVersionName = toCamel(name);
+  const title = pageTitle[`${name}.md`];
   return `<template>
   <div class="${name}">
     <filled-markdown-viewer />
@@ -26,7 +30,7 @@ import { defineComponent } from 'vue';
 import useMarkdown from '@/composable/use-markdown';
 import mdContent from '@/data/markdown/${name}.md?raw';
 
-const { FilledMarkdownViewer, setTitle } = useMarkdown('${camelVersionName}', mdContent);
+const { FilledMarkdownViewer, setTitle } = useMarkdown('${camelVersionName}', '${title}', mdContent);
 export default defineComponent({
   components: {
     FilledMarkdownViewer,
@@ -82,10 +86,14 @@ async function generateMarkdown() {
         // const content = (await ($`cat ${filePath}`)).stdout;
         const content = await fsPromise.readFile(filePath, 'utf8');
         const contentInfo = parseFrontMatter(content);
-        const destPath = `${destDir}${filePath.substring(filePath.lastIndexOf('/'))}`;
-        const header = `[[toc]]
-# ${contentInfo.title}
-`;
+
+        const fileName = filePath.substring(filePath.lastIndexOf('/') + 1);
+        const destPath = `${destDir}/${fileName}`;
+
+        // save page title globally, side effect
+        pageTitle[fileName] = contentInfo.title;
+
+        const header = '[[toc]]\n';
         const result = filePath.endsWith('index.md')
           ? contentInfo.body
           : `${header}${contentInfo.body}`;

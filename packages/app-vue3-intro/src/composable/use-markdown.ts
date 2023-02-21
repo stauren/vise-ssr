@@ -1,10 +1,15 @@
 import { defineComponent, h } from 'vue';
 import MarkdownViewer from '@/components/markdown-viewer.vue';
 import useTitle from '@/composable/use-title';
-import SIDEBAR_ITEMS from '@/data/sidebar-items.json';
 
-const toKebab = (id: string) => id.replace(/([A-Z])/g, (char) => `-${char.toLowerCase()}`);
-export default function useMarkdown(name: string, mdContent: string) {
+const defaultTitle = 'Vise: SSR with Vite + TypeScript + Server Hooks';
+// const toKebab = (id: string) => id.replace(/([A-Z])/g, (char) => `-${char.toLowerCase()}`);
+
+export default function useMarkdown(
+  name: string,
+  title: string,
+  mdContent: string,
+) {
   const { setTitle } = useTitle();
   return {
     FilledMarkdownViewer: defineComponent({
@@ -16,19 +21,18 @@ export default function useMarkdown(name: string, mdContent: string) {
           },
           h(MarkdownViewer, {
             name,
+            title,
             markdown: mdContent,
           }),
         );
       },
     }),
     setTitle() {
-      const itemId = toKebab(name);
-      const matchItem = SIDEBAR_ITEMS.find((item) => item.id === itemId);
-      let title = 'Vise: SSR with Vite + TypeScript + Server Hooks';
-      if (matchItem) {
-        title = `Vise: ${matchItem.title}`;
+      if (title) {
+        setTitle(`Vise: ${title}`);
+      } else {
+        setTitle(defaultTitle);
       }
-      setTitle(title);
     },
   };
 }
