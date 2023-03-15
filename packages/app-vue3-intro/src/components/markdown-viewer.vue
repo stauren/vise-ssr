@@ -1,4 +1,5 @@
 <template>
+  <h1>{{ title }}</h1>
   <!-- eslint-disable vue/no-v-html -->
   <div
     class="markdown-content"
@@ -12,11 +13,13 @@ import { MutationTypes, useStore } from '@/store/';
 
 interface Props {
   name: string
+  title: string,
   markdown: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
   name: '',
+  title: '',
   markdown: '',
 });
 

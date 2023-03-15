@@ -98,11 +98,8 @@ export type HookCallback = //...;
 export type HookCallbackConfig = {
   [K in HookNames]?: ArrayOrSingle<HookCallback[K]> | ArrayOrSingle<{
     callback: HookCallback[K],
-    // 如果是 waterfall 类型 hooks，支持将对应回调放入当前回调数组头或尾
-    // 注意 pre 并不一定意味为数组头，当多个 pre 回调同时应用时，
-    // 最后一个回调放入数组头，post 同理
-    // 另外注意服务端可能有固定兜底回调不受此控制
-    // 默认 post
+    // enforce the execution order of waterfall type callbacks
+    // execution order: pre => default (without enforce) => post
     enforce?: 'pre' | 'post',
   }>;
 };

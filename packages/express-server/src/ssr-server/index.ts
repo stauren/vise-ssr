@@ -220,6 +220,7 @@ export default class SSRServer {
     this.express.use('*', (req, res) => {
       const { projectName, routerBase } = matchAppForUrl(this.routerBaseConfigs, req.originalUrl);
       if (!projectName || !this.hooksRunners[projectName]) {
+        // TODO 404 callback
         SSRServer.sendResponse(res, {
           code: 404,
           headers: {},

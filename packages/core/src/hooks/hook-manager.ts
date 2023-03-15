@@ -31,32 +31,30 @@ export type InnerHookNames = typeof HOOK_TO_INNER[keyof typeof HOOK_TO_INNER];
 // and the data shared between multiple hooks
 export type RenderContext = {
   request: HTTPRequest,
-  error?: RenderError, // 当各个钩子发生异常时，可以在渲染上下文携带该error信息
+  error?: RenderError, // hooks should put their error here when render failed
 } & SsrContext;
 
-// 渲染解析类型，存储原始渲染上下文及解析后上下文
+// used for storing original context and changed context
 export type ResolvedRequest = {
-  // 被解析的处理该请求的 app
   readonly original: RenderContext,
   resolved: RenderContext,
 };
 
 export type CacheInfo = {
-  // 业务缓存 key
+  // cache key generated from HTTP request, must be unique
   key: string,
-  // 缓存过期时间点, unix timestamp
+  // unix timestamp expire time
   expire: number,
-  // 是否先使用已过期数据再更新缓存
+  // use expired data first then update it
   stale: boolean,
   context: RenderContext,
 };
 
-// 注意：命中缓存 key 不包括非业务的框架生成的缓存 key 部分
 export type HitCache = CacheInfo & {
   content: string,
 };
 
-// 内部 hook findCacheInner 的返回值
+// return value of inner hook findCacheInner
 export type FindCacheResult = {
   content: string,
   renderBy: string,
@@ -76,34 +74,31 @@ export const RenderResultCategory = {
 } as const;
 
 type RenderResultBase = {
-  // 传递渲染中的参数和各个钩子的注入的 metadata
   context: RenderContext,
-  // 渲染者，便于定位页面生成的责任方
+  // renderer is used for tracing
   renderBy: string,
 };
 
 export type SuccessRenderResult = RenderResultBase & {
-  // 完成了全新 SSR 渲染时触发
+  // this is a successful new rendering
   type: 'render',
-  // SSR 渲染结果
+  // complete html generated from template and rendered app's html
   html: string,
-  // afterRender hooks 需要 cacheInfo 来更新缓存，如果 beforeUseCache 有返回则会带入
+  // afterRender hooks could use it to update cache
   cacheInfo?: CacheInfo,
 };
 
-// 服务器渲染结果，包括渲染上下文、缓存相关信息和 SSR 渲染结果，也有可能是渲染异常
 export type RenderResult = (RenderResultBase & ({
   type: 'error',
-  // 在渲染异常时触发，RenderError 中包含完整错误信息
-  // 可据此在 beforeResponse 中生成相关错误对应的 HTTPResponse 页面
+  // HTTP response of the render error could by generated from the error details
+  // eg: displaying the error or redirect to another url
   error: RenderError,
 } | {
-  // 这一类渲染请求是被 receiveRequest 拦截的请求
-  // Plugin 或者 App 应该在 afterRender 或/和 beforeResponse 中
-  // 识别到自己的拦截，并自行完成页面的渲染或 HTTPResponse 构建
+  // this request is intercepted in receiveRequest hook, SSR is bypassed
+  // generate HTTP response with custom logic
   type: 'receiveRequest',
 } | {
-  // 命中缓存的渲染结果，没有发生真正渲染
+  // cache hit, no real render happens
   type: 'hitCache',
   content: string,
   cacheInfo: CacheInfo,
@@ -116,18 +111,17 @@ type SecondArgOf<T> = T extends (arg1: any, arg2: infer U, ...args: any[]) => an
 
 export type ArrayOrSingle<T> = T | T[];
 
+// defined callbacks of all Vise hooks
 export type HookCallback = {
   [K in HookNames]: SecondArgOf<InstanceType<typeof HookManager>[K]['tapPromise']>;
 };
 
+// added array of callbacks and callback calling timing enforce support
 export type HookCallbackConfig = {
   [K in HookNames]?: ArrayOrSingle<HookCallback[K] | {
     callback: HookCallback[K],
-    // 如果是 waterfall 类型 hooks，支持将对应回调放入当前回调数组头或尾
-    // 注意 pre 并不一定意味为数组头，当多个 pre 回调同时应用时，
-    // 最后一个回调放入数组头，post 同理
-    // 另外注意服务端可能有固定兜底回调不受此控制
-    // 默认 post
+    // enforce the execution order of waterfall type callbacks
+    // execution order: pre => default (without enforce) => post
     enforce?: 'pre' | 'post',
   }>;
 };
@@ -141,12 +135,14 @@ export type StdHookCallbackConfig = {
 // so routerBaseConfig's type is string | string[]
 export type HookRouterBase = string | string[];
 
+// exported type of server-hooks.ts
+// can config callbacks for hooks and vise hook plugin
 export type ViseHooks = HookCallbackConfig & {
   appName: string,
   plugins?: Array<VisePlugin>,
   /**
-   * 以下 2 个 base 不由用户配置，是一个从 build time 的 vise.config.ts 向
-   * runtime 的 vise-hooks.ts 传递参数的设计，是自动注入的
+   * the following 2 base is NOT set by user
+   * they are generated in build time base on vise.config.ts
    */
   routerBaseConfig?: HookRouterBase,
   base?: string,
