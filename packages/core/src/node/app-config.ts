@@ -29,6 +29,7 @@ export const DEFAULT_VISE_CONFIG: ParsedViseConfig = {
   htmlMinify: true,
   routerBase: '/',
   generateCsrHtml: false,
+  legacy: false,
 
   // ViseConfigVue3
   directiveTransforms: {},

@@ -1,5 +1,5 @@
 import type { PluginOption } from 'vite';
-import reactPlugin from '@vitejs/plugin-react';
+import reactPlugin from '@vitejs/plugin-react-swc';
 import type {
   ParsedViseConfig,
 } from '@vise-ssr/shared';

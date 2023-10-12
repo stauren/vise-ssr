@@ -1,6 +1,6 @@
 {
   "name": "@vise-ssr/vue3",
-  "version": "0.8.2",
+  "version": "0.9.0",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -14,34 +14,34 @@
     "build": "npm run clean && rollup -c ./rollup.config.js"
   },
   "peerDependencies": {
-    "vise-ssr": "0.8.2"
+    "vise-ssr": "workspace:*"
   },
   "dependencies": {
-    "@vitejs/plugin-vue": "^3.1.0",
-    "@vise-ssr/shared": "0.8.2",
+    "@vitejs/plugin-vue": "^4.4.0",
+    "@vise-ssr/shared": "workspace:*",
     "chalk": "^5.0.0",
     "enquirer": "^2.3.6",
     "jsdom": "^20.0.0",
     "ora": "^6.1.0",
-    "vue": "^3.2.25",
-    "vue-router": "^4.0.14",
+    "vue": "^3.3.4",
+    "vue-router": "^4.1.6",
     "vuex": "^4.0.2",
     "zx": "^6.0.7"
   },
   "devDependencies": {
     "@types/jsdom": "^20.0.0",
-    "@rollup/plugin-commonjs": "^20.0.0",
-    "@rollup/plugin-terser": "^0.2.0",
-    "@rollup/plugin-typescript": "^8.3.0",
-    "@vue/compiler-core": "^3.2.25",
+    "@rollup/plugin-commonjs": "^25.0.5",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^11.1.0",
+    "@vue/compiler-core": "^3.3.4",
     "dotenv": "^16.0.1",
     "eslint": "^8.29.0",
     "eslint-plugin-vue": "^9.8.0",
-    "rollup": "^2.79.1",
+    "rollup": "^3.27.1",
     "rollup-plugin-preserve-shebangs": "^0.2.0",
     "rollup-plugin-visualizer": "^5.8.3",
     "typescript": "~4.6.3",
-    "vite": "^3.1.4",
+    "vite": "^4.4.11",
     "vue-tsc": "^0.40.0"
   },
   "engines": {

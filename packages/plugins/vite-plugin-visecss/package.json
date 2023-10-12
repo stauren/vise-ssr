@@ -19,11 +19,11 @@
     "postcss-pxtorem": "^6.0.0"
   },
   "devDependencies": {
-    "vite": "^3.1.4",
+    "vite": "^4.4.11",
     "rimraf": "^3.0.2",
-    "@rollup/plugin-commonjs": "^20.0.0",
-    "@rollup/plugin-node-resolve": "^13.0.6",
-    "@rollup/plugin-typescript": "^8.3.0"
+    "@rollup/plugin-commonjs": "^25.0.5",
+    "@rollup/plugin-node-resolve": "^15.0.2",
+    "@rollup/plugin-typescript": "^11.1.0"
   },
   "engines": {
     "node": ">=16.0.0"

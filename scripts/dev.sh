@@ -1,3 +1,3 @@
 #!/bin/bash
 
-(cd ./packages/$1 && npm run dev)
+pnpm --filter "*$1*" run dev

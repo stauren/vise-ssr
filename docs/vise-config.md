@@ -82,5 +82,11 @@ type ParsedViseConfig = ViseConfigVue3 & {
    * default to false
    */
   generateCsrHtml: boolean,
+
+  /**
+   * generate legacy js bundle
+   * default to false
+   */
+  legacy: boolean,
 };
 ```

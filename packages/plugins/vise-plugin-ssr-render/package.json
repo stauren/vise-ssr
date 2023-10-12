@@ -14,13 +14,13 @@
     "build": "npm run clean && rollup -c ./rollup.config.js"
   },
   "peerDependencies": {
-    "vise-ssr": "0.8.2"
+    "vise-ssr": "workspace:*"
   },
   "dependencies": {},
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^20.0.0",
-    "@rollup/plugin-typescript": "^8.3.0",
-    "rollup": "^2.79.1",
+    "@rollup/plugin-commonjs": "^25.0.5",
+    "@rollup/plugin-typescript": "^11.1.0",
+    "rollup": "^3.27.1",
     "rollup-plugin-preserve-shebangs": "^0.2.0"
   },
   "engines": {

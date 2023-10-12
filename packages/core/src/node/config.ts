@@ -1,12 +1,12 @@
 import path from 'path';
 import { promises as fs } from 'fs';
 import {
-  mergeConfig, UserConfig, SSROptions, type PluginOption,
+  UserConfig, SSROptions, type PluginOption,
 } from 'vite';
-import legacy from '@vitejs/plugin-legacy';
+import legacyPlugin from '@vitejs/plugin-legacy';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import { visualizer } from 'rollup-plugin-visualizer';
-import { type ParsedViseConfig } from '@vise-ssr/shared';
+import { type ParsedViseConfig, mergeConfig } from '@vise-ssr/shared';
 import { getScaffoldPlugins as reactScaffoldPlugin } from '@vise-ssr/react';
 import { getScaffoldPlugins as vueScaffoldPlugin } from '@vise-ssr/vue3';
 import viseHtmlPost from './plugin/vise-html-post';
@@ -43,18 +43,22 @@ async function mergeWithBaseAndCustomConfig(
   const {
     base = '/',
     viteConfig = {},
+    legacy,
   } = userConfig;
 
   const isProduction = modeConfig.mode === 'production';
-  const modeDefaultConfig = mergeConfig({
+  const modeDefaultConfig = mergeConfig<UserConfigVite>({
     root: appRoot,
     build: {
       emptyOutDir: true,
     },
     optimizeDeps: {
       include: userConfig.scaffold === 'react-app'
-        ? ['react-dom/client', 'react-redux']
+        ? ['react-dom/client', 'react-redux', 'react', 'react-router-dom']
         : ['vue'],
+      entries: userConfig.scaffold === 'react-app'
+        ? './src/app.tsx'
+        : './src/app.vue',
     },
     resolve: {
       extensions: ['.ts', '.js', '.tsx', '.jsx'],
@@ -77,10 +81,17 @@ async function mergeWithBaseAndCustomConfig(
 
   const scaffoldPlugin = await getUserScaffoldPlugin(appRoot, isProduction, userConfig);
 
-  const result = mergeConfig(modeDefaultConfig, {
+  let result = mergeConfig(modeDefaultConfig, {
     base,
     plugins: scaffoldPlugin,
   });
+
+  if (isProduction && legacy) {
+    result = mergeConfig(result, {
+      plugins: [legacyPlugin()],
+    });
+  }
+
   return mergeConfig(result, viteConfig) as UserConfigVite;
 }
 
@@ -148,7 +159,6 @@ export async function getViteClientConfig(appRoot: string): Promise<UserConfigVi
       outDir: './dist/client',
     },
     plugins: [
-      legacy(),
       visualizer({
         filename: 'client-stats.html',
         sourcemap: true,
