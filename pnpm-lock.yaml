@@ -85,7 +85,7 @@ importers:
         version: 4.4.11(@types/node@18.11.13)(terser@5.16.1)
       vitest:
         specifier: ^0.25.7
-        version: 0.25.7(jsdom@20.0.3)(terser@5.16.1)
+        version: 0.25.7(jsdom@20.0.3)
       vue:
         specifier: ^3.3.4
         version: 3.3.4
@@ -98,9 +98,6 @@ importers:
       '@reduxjs/toolkit':
         specifier: ^1.8.2
         version: 1.9.1(react-redux@8.0.5)(react@18.2.0)
-      axios:
-        specifier: ^1.2.1
-        version: 1.2.1
       cookie:
         specifier: ^0.4.1
         version: 0.4.2
@@ -141,9 +138,6 @@ importers:
 
   packages/app-vue3-intro:
     dependencies:
-      axios:
-        specifier: ^1.2.1
-        version: 1.2.1
       cookie:
         specifier: ^0.4.1
         version: 0.4.2
@@ -329,9 +323,6 @@ importers:
       '@vise-ssr/shared':
         specifier: workspace:*
         version: link:../shared
-      axios:
-        specifier: ^1.2.1
-        version: 1.2.1
       chalk:
         specifier: ^5.0.0
         version: 5.2.0
@@ -529,7 +520,7 @@ importers:
         version: 4.6.4
       vitest:
         specifier: ^0.25.7
-        version: 0.25.7(jsdom@20.0.3)(terser@5.16.1)
+        version: 0.25.7(jsdom@20.0.3)
 
   packages/vue3:
     dependencies:
@@ -2027,7 +2018,6 @@ packages:
     resolution: {integrity: sha512-F0SAmZ8iUtS//m8DmCTA0jlh6TDKkHQyK6xc6V4KDTyZKA9dnvX9/3sRTVQrWm79glUAZbnmmNcdYwUIHWVybw==}
     engines: {node: '>=0.4.0'}
     hasBin: true
-    dev: true
 
   /acorn@8.8.1:
     resolution: {integrity: sha512-7zFpHzhnqYKrkYdUjF1HI1bzd0VygEGX8lFk4k5zVMqHEoES+P+7TKI+EvLO9WVMJ8eekdO0aDEK044xTXwPPA==}
@@ -2183,16 +2173,6 @@ packages:
     resolution: {integrity: sha512-L3ZNbXPTxMrl0+qTXAzn9FBRvk5XdO56K8CvcCKtlxv44Aw2w2NCclGuvCWxHPw1Riiq3ncP/sxFYj2nUqdoTw==}
     engines: {node: '>=4'}
     dev: true
-
-  /axios@1.2.1:
-    resolution: {integrity: sha512-I88cFiGu9ryt/tfVEi4kX2SITsvDddTajXTOFmt2uK1ZVA8LytjtdeyefdQWEf5PU8w+4SSJDoYnggflB5tW4A==}
-    dependencies:
-      follow-redirects: 1.15.2
-      form-data: 4.0.0
-      proxy-from-env: 1.1.0
-    transitivePeerDependencies:
-      - debug
-    dev: false
 
   /axobject-query@2.2.0:
     resolution: {integrity: sha512-Td525n+iPOOyUQIeBfcASuG6uJsDOITl7Mds5gFyerkWiX7qhUTdYUBlSgNMyVqtSJqwpt1kXGLdUt6SykLMRA==}
@@ -3668,16 +3648,6 @@ packages:
     resolution: {integrity: sha512-5nqDSxl8nn5BSNxyR3n4I6eDmbolI6WT+QqR547RwxQapgjQBmtktdP+HTBb/a/zLsbzERTONyUB5pefh5TtjQ==}
     dev: true
 
-  /follow-redirects@1.15.2:
-    resolution: {integrity: sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA==}
-    engines: {node: '>=4.0'}
-    peerDependencies:
-      debug: '*'
-    peerDependenciesMeta:
-      debug:
-        optional: true
-    dev: false
-
   /form-data@4.0.0:
     resolution: {integrity: sha512-ETEklSGi5t0QMZuiXoA/Q6vcnxcLQP5vdugSpuAyi6SVGi2clPPp+xgEhuMaHC+zGgn31Kd235W35f7Hykkaww==}
     engines: {node: '>= 6'}
@@ -5077,7 +5047,7 @@ packages:
     resolution: {integrity: sha512-2x9oGnBms+e0cYtBJOZdlwrFg/mLR4P1g2IFu7jYKvnqnH/HLhoKyareW2Q/x4sg0BgklHlP1qeWo2oCyPm8FQ==}
     dependencies:
       object-assign: 4.1.1
-      postcss: 8.4.20
+      postcss: 8.4.31
     dev: false
 
   /postcss-selector-parser@6.0.11:
@@ -5141,10 +5111,6 @@ packages:
     dependencies:
       forwarded: 0.2.0
       ipaddr.js: 1.9.1
-    dev: false
-
-  /proxy-from-env@1.1.0:
-    resolution: {integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==}
     dev: false
 
   /ps-tree@1.2.0:
@@ -5868,7 +5834,7 @@ packages:
   /strip-literal@1.0.0:
     resolution: {integrity: sha512-5o4LsH1lzBzO9UFH63AJ2ad2/S2AVx6NtjOcaz+VTT2h1RiRvbipW72z8M/lxEhcPHDBQwpDrnTF7sXy/7OwCQ==}
     dependencies:
-      acorn: 8.8.1
+      acorn: 8.10.0
 
   /supports-color@5.5.0:
     resolution: {integrity: sha512-QjVjwdXIt408MIiAqCX4oUKsgU2EqAGzs2Ppkm4aQYbjm+ZEWEcW4SfFNTr4uMNZma0ey4f5lgLrkB0aX0QMow==}
@@ -6224,6 +6190,53 @@ packages:
     optionalDependencies:
       fsevents: 2.3.2
 
+  /vitest@0.25.7(jsdom@20.0.3):
+    resolution: {integrity: sha512-lJ+Ue+v8kHl2JzjaKHJ9u5Yo/loU7zrWK2/Whn8OKQjtq5G7nkeWfXuq3elZaC8xKdkdIuWiiIicaNBG1F5yzg==}
+    engines: {node: '>=v14.16.0'}
+    hasBin: true
+    peerDependencies:
+      '@edge-runtime/vm': '*'
+      '@vitest/browser': '*'
+      '@vitest/ui': '*'
+      happy-dom: '*'
+      jsdom: '*'
+    peerDependenciesMeta:
+      '@edge-runtime/vm':
+        optional: true
+      '@vitest/browser':
+        optional: true
+      '@vitest/ui':
+        optional: true
+      happy-dom:
+        optional: true
+      jsdom:
+        optional: true
+    dependencies:
+      '@types/chai': 4.3.4
+      '@types/chai-subset': 1.3.3
+      '@types/node': 18.11.13
+      acorn: 8.10.0
+      acorn-walk: 8.2.0
+      chai: 4.3.7
+      debug: 4.3.4
+      jsdom: 20.0.3
+      local-pkg: 0.4.2
+      source-map: 0.6.1
+      strip-literal: 1.0.0
+      tinybench: 2.3.1
+      tinypool: 0.3.0
+      tinyspy: 1.0.2
+      vite: 4.4.11(@types/node@18.11.13)(terser@5.16.1)
+    transitivePeerDependencies:
+      - less
+      - lightningcss
+      - sass
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+    dev: true
+
   /vitest@0.25.7(jsdom@20.0.3)(sass@1.56.2):
     resolution: {integrity: sha512-lJ+Ue+v8kHl2JzjaKHJ9u5Yo/loU7zrWK2/Whn8OKQjtq5G7nkeWfXuq3elZaC8xKdkdIuWiiIicaNBG1F5yzg==}
     engines: {node: '>=v14.16.0'}
@@ -6249,7 +6262,7 @@ packages:
       '@types/chai': 4.3.4
       '@types/chai-subset': 1.3.3
       '@types/node': 18.11.13
-      acorn: 8.8.1
+      acorn: 8.10.0
       acorn-walk: 8.2.0
       chai: 4.3.7
       debug: 4.3.4
@@ -6316,6 +6329,7 @@ packages:
       - sugarss
       - supports-color
       - terser
+    dev: false
 
   /vue-eslint-parser@9.1.0(eslint@8.29.0):
     resolution: {integrity: sha512-NGn/iQy8/Wb7RrRa4aRkokyCZfOUWk19OP5HP6JEozQFX5AoS/t+Z0ZN7FY4LlmWc4FNI922V7cvX28zctN8dQ==}

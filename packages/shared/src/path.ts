@@ -1,4 +1,4 @@
-import path from 'path';
+import path from 'node:path';
 
 // 获取 app 根路径，即当前 process 启动路径，vise 命令需要在 app 根目录执行
 export function getAppRoot() {

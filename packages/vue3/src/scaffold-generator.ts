@@ -215,7 +215,11 @@ async function getServerEntryContent(isProduction: boolean, strictInitState: boo
   import template from '${path.join(clientPath, 'index.html?raw')}';`,
     });
   }
-  return content;
+  return replaceContentBetweenMarks({
+    source: content,
+    mark: 'SERVER_HOOKS',
+    replacement: 'import \'@/server-hooks\'',
+  });
 }
 
 export function getScaffoldModules(

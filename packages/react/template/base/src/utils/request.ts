@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { IS_SSR } from '@/data/env';
 
 function genRandomNum() {
@@ -6,20 +5,12 @@ function genRandomNum() {
 }
 
 export default async function requestRndNum(): Promise<number | undefined> {
-  let result;
-  try {
-    const num = (await axios({
-      url: 'https://www.randomnumberapi.com/api/v1.0/random?min=1&max=10000',
-      timeout: IS_SSR ? 1500 : 5000,
-    })).data;
-    if (num && typeof num[0] === 'number') {
-      result = num[0] as number;
-    }
-  } catch {
-    // ignore
-  }
+  let result: number;
 
-  if (!result && IS_SSR) {
+  if (IS_SSR) {
+    // different data fetch method could be use in node.js server
+    result = genRandomNum();
+  } else {
     result = genRandomNum();
   }
   return result;

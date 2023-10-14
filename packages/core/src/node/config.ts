@@ -10,6 +10,7 @@ import { type ParsedViseConfig, mergeConfig } from '@vise-ssr/shared';
 import { getScaffoldPlugins as reactScaffoldPlugin } from '@vise-ssr/react';
 import { getScaffoldPlugins as vueScaffoldPlugin } from '@vise-ssr/vue3';
 import viseHtmlPost from './plugin/vise-html-post';
+import serverHooksHmr from './plugin/server-hooks-hmr';
 import getAppViseConfig from './app-config';
 import DIR_NAME from './dirname';
 import { getAppVisePath } from './utils/path';
@@ -130,6 +131,7 @@ export async function getViteDevConfig(appRoot: string): Promise<UserConfigVite>
       ],
       noExternal: [],
     },
+    plugins: [serverHooksHmr()],
     build: {
       rollupOptions: {
         input: path.resolve(appRoot, 'index.html'),

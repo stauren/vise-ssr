@@ -6,6 +6,12 @@ import {
   cloneDeep,
 } from 'vise-ssr';
 import { createApp } from './main';
+
+// add dependency to hooks config in dev so hmr will be triggered if server-hooks
+// related source files are changed, vise server need to reinstall hooks
+// <!--START_SERVER_HOOKS
+// END_SERVER_HOOKS-->
+
 // do NOT remove the comment below
 // <!--START_TPL_REPLACE
 const manifest = {};
