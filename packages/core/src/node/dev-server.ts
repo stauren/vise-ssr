@@ -3,7 +3,7 @@ import express, { Express, Response } from 'express';
 import { createServer as viteCreateServer } from 'vite';
 import type { ViteDevServer } from 'vite';
 import type { SupportedScaffold } from '@vise-ssr/shared';
-import { mergePartial, ScaffoldToPackage } from '@vise-ssr/shared';
+import { mergePartial, ScaffoldToPackage, setActiveServer } from '@vise-ssr/shared';
 import type {
   HTTPResponse,
   SsrBundleRender,
@@ -35,6 +35,8 @@ const DEV_RENDERER = 'vise:dev-server';
 const SERVER_HOOK_CONFIG = 'src/server-hooks.ts';
 
 class ViseDevServer {
+  public viteServer: ViteDevServer | undefined;
+
   private static async sendResponse(res: Response, data: HTTPResponse) {
     res.set(data.headers)
       .status(data.code)
@@ -50,8 +52,6 @@ class ViseDevServer {
   private scaffold: SupportedScaffold;
 
   private mapScaffoldFiles: Record<string, string> = {};
-
-  private viteServer: ViteDevServer | undefined;
 
   private port: number;
 
@@ -120,23 +120,13 @@ class ViseDevServer {
   public async init() {
     await prepareViseDir(this.appVisePath);
     await this.importScaffoldFiles();
-    await this.initHooks();
+    await this.initViteServer();
+    await this.setupHookLifeCycle();
     await this.setupExpress();
   }
 
-  private async importScaffoldFiles() {
-    this.mapScaffoldFiles = (await import(ScaffoldToPackage[this.scaffold])).SCAFFOLD_FILES;
-  }
-
-  private async loadAppHookConfig() {
-    // 加载 app 服务端 hooks 文件
-    const hookConfigFile = path.resolve(this.appRoot, SERVER_HOOK_CONFIG);
-    return dynamicImportTs<ViseHooks>(hookConfigFile);
-  }
-
-  private async initHooks() {
+  public async setupHookLifeCycle() {
     try {
-      await this.initViteServer();
       const hookConfig = await this.loadAppHookConfig();
       if (hookConfig) {
         const { routerBase } = await getAppViseConfig();
@@ -168,6 +158,16 @@ class ViseDevServer {
       error('loadServerHooks fail', e);
       throw e;
     }
+  }
+
+  private async importScaffoldFiles() {
+    this.mapScaffoldFiles = (await import(ScaffoldToPackage[this.scaffold])).SCAFFOLD_FILES;
+  }
+
+  private async loadAppHookConfig() {
+    // 加载 app 服务端 hooks 文件
+    const hookConfigFile = path.resolve(this.appRoot, SERVER_HOOK_CONFIG);
+    return dynamicImportTs<ViseHooks>(hookConfigFile);
   }
 
   private addServerPlugin(appHookConfig: ViseHooks): ViseHooks {
@@ -259,5 +259,8 @@ class ViseDevServer {
 export default function createServer(projectScaffold: SupportedScaffold, port: number) {
   const server = new ViseDevServer(getAppRoot(), projectScaffold, port);
   server.init();
+  setActiveServer(server);
   return server;
 }
+
+export { ViseDevServer };

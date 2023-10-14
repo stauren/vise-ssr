@@ -19,7 +19,6 @@ export default [{
     'events',
     'serve-static',
     'express',
-    'axios',
     'cors',
     'child_process',
     /node_modules/,
