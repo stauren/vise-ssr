@@ -1,3 +1,4 @@
+import React from 'react';
 import SiteHeader from '@/components/site-header';
 import SiteSidebar from '@/components/site-sidebar';
 import './styles/index.scss';

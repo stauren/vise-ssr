@@ -1,3 +1,11 @@
+# [0.9.0](https://github.com/stauren/vise-ssr/tree/v0.9.0) (2023-10-12)
+### Features
+- Upgrade from vite 3 to vite 4
+- Use "@vitejs/plugin-react-swc" to replace "@vitejs/plugin-react"
+- Upgrade other npm package version
+- Added 'legacy' option in vise config;
+### Bug Fixes
+- Missing pre-build bundle on the first dev run;
 # [0.8.1](https://github.com/stauren/vise-ssr/tree/v0.8.1) (2022-12-16)
 ### Features
 - **Merge vite config in vise config**:
@@ -10,7 +18,7 @@
   4. Project created by vise now use airbnb eslint config;
   5. Fixed all eslint error;
 - **Change data structure in RenderContext**: move extra.initState to meta.initState
-- Added generateCsrHtml in vise config;
+- Added 'generateCsrHtml' option in vise config;
 - SsrFetchConfig, SsrFetchResult & SsrFetchResultOf removed;
 - **"Data Fetch & Transportation" translated**: finish English version of "Data Fetch & Transportation"
 - **refactor mergeConfig, better array merge**: now can merge `T|T[]` type value into `T[]`; add and change all comments to English; add more fp flavor;
@@ -36,7 +44,7 @@
 # [0.7.2](https://github.com/stauren/vise-ssr/tree/v0.7.2) (2022-10-13)
 ### Features
 - using vitest to replace jest
-- add unit test to vise created temlate projects
+- add unit test to vise created template projects
 ### Bug Fixes
 - fix a bug in vise create caused by random execute order of copy
 # [0.7.0](https://github.com/stauren/vise-ssr/tree/v0.7.0) (2022-10-09)

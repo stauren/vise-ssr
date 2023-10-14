@@ -22,12 +22,12 @@
   "license": "MIT",
   "dependencies": {
     "cheerio": "^1.0.0-rc.10",
-    "rollup": "^2.79.1",
-    "vite": "^3.1.4"
+    "rollup": "^3.27.1",
+    "vite": "^4.4.11"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^20.0.0",
-    "@rollup/plugin-node-resolve": "^13.0.6",
-    "@rollup/plugin-typescript": "^8.3.0"
+    "@rollup/plugin-commonjs": "^25.0.5",
+    "@rollup/plugin-node-resolve": "^15.0.2",
+    "@rollup/plugin-typescript": "^11.1.0"
   }
 }

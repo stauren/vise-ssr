@@ -1,5 +1,5 @@
 import { resolve } from 'path';
-import React from '@vitejs/plugin-react';
+import React from '@vitejs/plugin-react-swc';
 
 import { defineConfig } from 'vitest/config';
 

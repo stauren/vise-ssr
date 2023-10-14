@@ -5,7 +5,7 @@ import executable from 'rollup-plugin-executable';
 import { preserveShebangs } from 'rollup-plugin-preserve-shebangs';
 import terser from '@rollup/plugin-terser';
 import dotenv from 'dotenv';
-import pkg from './package.json';
+import pkg from './package.json' assert { type: 'json' };
 
 dotenv.config({ path: '../../.env' });
 

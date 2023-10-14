@@ -32,13 +32,13 @@ import {
 } from 'vue';
 import useMarkdown from '@/composable/use-markdown';
 import useCount from '@/composable/use-count';
-import useTitle from '@/composable/use-title';
 import mdContent from '@/data/markdown/index.md?raw';
 import { useStore, MutationTypes } from '@/store/';
 import { fetchLuckyNumber } from '@/services';
 import BenchmarkNav from '@/components/benchmark-nav.vue';
 
-const { FilledMarkdownViewer } = useMarkdown('introduction', mdContent);
+const title = 'Vise: SSR with Vite + TypeScript + Server Hooks';
+const { FilledMarkdownViewer } = useMarkdown('introduction', title, mdContent);
 
 export default defineComponent({
   components: {
@@ -46,10 +46,6 @@ export default defineComponent({
     BenchmarkNav,
   },
   setup() {
-    const { setTitle } = useTitle();
-    const title = 'Vise: SSR with Vite + TypeScript + Server Hooks';
-    setTitle(title);
-
     const store = useStore();
     const { count, increaseCount } = useCount();
 

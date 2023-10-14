@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
-import { $ } from 'zx';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { $, fs } from 'zx';
 import 'zx/globals';
 
 const mainPackageJson = './packages/core/package.json';

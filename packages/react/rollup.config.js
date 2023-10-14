@@ -23,7 +23,7 @@ export default [{
     'url',
     'jsdom',
     '@vise-ssr/shared',
-    '@vitejs/plugin-react',
+    '@vitejs/plugin-react-swc',
     'zx',
     'ora',
     'enquirer',
