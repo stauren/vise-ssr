@@ -1,4 +1,4 @@
-# Vise
+# vise-ssr [![npm](https://img.shields.io/npm/v/vise-ssr)](https://npmjs.com/package/vise-ssr)
 English | [简体中文](./README-zh_CN.md)
 
 Vise (pronounced [vaɪs]) is an isomorphic Web SSR framework based on [Vite][vite], dedicated to provide an out of the box SSR develop experience as easy as SPA. It can work with multiple web user interface libraries such as React, Vue. By abstract app specific logic into server hooks, multiple apps could be deployed onto the same server and multiple hooks could be combined as special purpose hooks plugins. 

@@ -5,6 +5,8 @@ permalink: /index.html
 lang: en
 ---
 
+# vise-ssr [![npm](https://img.shields.io/npm/v/vise-ssr)](https://npmjs.com/package/vise-ssr)
+
 > Isomorphic SSR framework based on Vite
 
 ## Background

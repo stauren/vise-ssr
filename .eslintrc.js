@@ -58,6 +58,8 @@ module.exports = {
     'react/react-in-jsx-scope': 0,
     'no-param-reassign': ['error', { props: true, ignorePropertyModificationsFor: ['state'] }],
     ...a11yOff,
+    'import/no-named-as-default': 0,
+    'arrow-body-style': 0,
   },
   ignorePatterns: [
     'packages/plugins',

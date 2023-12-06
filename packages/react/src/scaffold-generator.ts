@@ -165,7 +165,7 @@ async function getEnvTsContent() {
   return replaceContentBetweenMarks({
     source: await getScaffoldContent('env'),
     mark: 'APP_PAGES',
-    replacement: `import.meta.globEager('${path.join(pagesPath, '*')}.tsx');`,
+    replacement: `import.meta.glob('${path.join(pagesPath, '*')}.tsx', { eager: true });`,
   });
 }
 
@@ -183,10 +183,14 @@ async function getServerEntryContent(isProduction: boolean, strictInitState: boo
       getAppVisePath({ root: '/' }),
       '/dist/client',
     );
+    const serverPath = path.relative(
+      getAppVisePath({ root: '/' }),
+      '/dist/server',
+    );
     return replaceContentBetweenMarks({
       source: content,
       mark: 'TPL_REPLACE',
-      replacement: `import manifest from '${path.join(clientPath, 'ssr-manifest.json')}';
+      replacement: `import manifest from '${path.join(serverPath, 'ssr-manifest.json')}';
   import template from '${path.join(clientPath, 'index.html?raw')}';`,
     });
   }

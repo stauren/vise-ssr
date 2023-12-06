@@ -189,7 +189,7 @@ async function getEnvTsContent(config: ParsedViseConfig) {
     source: replacedContent,
     mark: 'SYNC_APP_PAGES',
     replacement: syncPagesPattern
-      ? `import.meta.globEager('${path.join(pagesPath, syncPagesPattern)}.vue');`
+      ? `import.meta.glob('${path.join(pagesPath, syncPagesPattern)}.vue', { eager: true });`
       : '{};',
   });
 }
@@ -208,10 +208,14 @@ async function getServerEntryContent(isProduction: boolean, strictInitState: boo
       getAppVisePath({ root: '/' }),
       '/dist/client',
     );
+    const serverPath = path.relative(
+      getAppVisePath({ root: '/' }),
+      '/dist/server',
+    );
     return replaceContentBetweenMarks({
       source: content,
       mark: 'TPL_REPLACE',
-      replacement: `import manifest from '${path.join(clientPath, 'ssr-manifest.json')}';
+      replacement: `import manifest from '${path.join(serverPath, 'ssr-manifest.json')}';
   import template from '${path.join(clientPath, 'index.html?raw')}';`,
     });
   }

@@ -27,7 +27,7 @@ export default async function buildProject() {
   await build(viteClientConfig);
   await build(viteServerConfig);
   await rename(
-    `${appRoot}/dist/client/ssr-manifest.json`,
+    `${appRoot}/dist/client/.vite/ssr-manifest.json`,
     `${appRoot}/dist/server/ssr-manifest.json`,
   );
 

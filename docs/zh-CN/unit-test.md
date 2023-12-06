@@ -6,7 +6,7 @@ permalink: /zh-CN/unit-test.html
 Vise app 目前使用全套 typescript + esm 配置进行单元测试。使用的工具如下：
 ```JSON
   "@vue/test-utils": "^2.0.0",
-  "vitest": "^0.25.7"
+  "vitest": "^0.34.6"
 ```
 测试配置文件请参考 [vitest 文档](https://vitest.dev/).
 
