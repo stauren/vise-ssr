@@ -1,6 +1,6 @@
 {
   "name": "vise-ssr",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "type": "module",
   "bin": {
     "vise": "bin/vise.js"
@@ -22,12 +22,12 @@
     "lint": "eslint --ext .ts,.js,.vue ./src"
   },
   "dependencies": {
-    "@rollup/plugin-node-resolve": "^15.0.2",
+    "@rollup/plugin-node-resolve": "^15.2.3",
     "@types/html-minifier-terser": "^6.1.0",
     "@vise-ssr/shared": "workspace:*",
     "@vise-ssr/react": "workspace:*",
     "@vise-ssr/vue3": "workspace:*",
-    "@vitejs/plugin-legacy": "^3.0.1",
+    "@vitejs/plugin-legacy": "^5.2.0",
     "chalk": "^5.0.0",
     "commander": "^8.1.0",
     "copyfiles": "^2.4.1",
@@ -40,18 +40,18 @@
     "minimist": "^1.2.5",
     "postcss": "^8.3.8",
     "rimraf": "^3.0.2",
-    "rollup": "^3.27.1",
-    "rollup-plugin-visualizer": "^5.8.3",
+    "rollup": "^4.6.0",
+    "rollup-plugin-visualizer": "^5.10.0",
     "serialize-javascript": "^6.0.0",
     "tapable": "^2.2.1",
     "terser": "^5.15.0",
-    "vite": "^4.4.11",
-    "vitest": "^0.25.7",
+    "vite": "^5.0.4",
+    "vitest": "^0.34.6",
     "zx": "^6.0.7"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^25.0.5",
-    "@rollup/plugin-typescript": "^11.1.0",
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-typescript": "^11.1.5",
     "@types/copyfiles": "^2.4.1",
     "@types/express": "^4.17.13",
     "@types/glob": "^8.0.0",
@@ -70,7 +70,7 @@
     }
   },
   "engines": {
-    "node": ">=14.8.0"
+    "node": ">=18.0.0"
   },
   "keywords": [
     "vise",
@@ -78,7 +78,7 @@
     "vite",
     "vue3"
   ],
-  "description": "Vise 读音[vaɪs]，是一个同构 SSR 开发框架，致力于打造开箱即用的同构 Web 页面开发体验。通过插件化方式，支持任意服务端框架与任意前端框架的组合使用。使用基于 esm、速度更快的 vite 代替常见 Webpack 作为开发构建工具，提供命令行工具支持一站式的开发、构建、发布 Web 应用，让业务项目可以关注在业务功能实现上。项目基于全方位 ESM 及 TypeScript。",
+  "description": "Vise (pronounced [vaɪs]) is an isomorphic Web SSR framework based on [Vite][vite], dedicated to provide an out of the box SSR develop experience as easy as SPA. It can work with multiple web user interface libraries such as React, Vue. By abstract app specific logic into server hooks, multiple apps could be deployed onto the same server and multiple hooks could be combined as special purpose hooks plugins",
   "homepage": "https://stauren.github.io/vise-ssr/",
   "bugs": {
     "email": "stauren@qq.com"

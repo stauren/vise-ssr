@@ -1,4 +1,4 @@
-import type { SSROptions, Plugin } from 'vite';
+import type { SSROptions, Plugin, UserConfig } from 'vite';
 
 // 基础类型声明
 type Primitive =
@@ -77,6 +77,8 @@ type ViseConfig = {
    * 例如：将 pages/index.vue 页面配置为路由同步模式，则只需设置：`routerSyncPages: ['index']`，其他页面路由会保持异步模式
    */
   routerSyncPages: string[],
+
+  viteConfig: UserConfig,
 };
 
 export type {

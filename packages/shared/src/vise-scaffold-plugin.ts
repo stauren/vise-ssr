@@ -1,4 +1,5 @@
 import path from 'node:path';
+import type { Plugin } from 'vite';
 import { getAppVisePath } from './path';
 
 type ScaffoldModule = string | {
@@ -21,7 +22,7 @@ const getResolvedWithVirtualConfig = (id: string, mod: ScaffoldModule) => {
 const isTsFile = (filePath: string) => path.extname(filePath) === '.ts';
 const hasNoFileExtension = (filePath: string) => path.extname(filePath) === '';
 
-export default function viseScaffold({ modules }: ScaffoldConfig) {
+export default function viseScaffold({ modules }: ScaffoldConfig): Plugin {
   const resolvedIds = new Map();
   let indexModule: ScaffoldModule | undefined;
 
@@ -37,7 +38,7 @@ export default function viseScaffold({ modules }: ScaffoldConfig) {
     name: 'vise:scaffold',
     enforce: 'pre',
 
-    resolveId(source: string, importer: string) {
+    resolveId(source, importer) {
       let sourceID = source;
       if (source.startsWith(APP_VISE_PATH)) { // when import from browser in dev use absolute path
         sourceID = `.${source}`;
@@ -82,8 +83,8 @@ export default function viseScaffold({ modules }: ScaffoldConfig) {
     },
 
     transformIndexHtml: {
-      enforce: 'pre',
-      transform: async function transformIndexHtml(html: string) {
+      order: 'pre',
+      handler: async function transformIndexHtml(html: string) {
         if (html !== '') return html;
         const content = typeof indexModule === 'string' ? indexModule : indexModule!.content;
         return typeof content === 'string' ? content : content();

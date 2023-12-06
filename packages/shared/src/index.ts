@@ -37,7 +37,7 @@ export {
   getAppVisePath,
 } from './path';
 
-export { mergeConfig, mergePartial } from './merge-config';
+export { mergeConfig, mergePartial, getMerger } from './merge-config';
 
 export { default as stringifyJSONWithReg } from './stringify-json-with-reg';
 

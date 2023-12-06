@@ -23,6 +23,6 @@
     "@types/react": "^18.0.2",
     "@types/react-router-dom": "^5.3.3",
     "@vise-ssr/react": "workspace:*",
-    "rollup": "^3.27.1"
+    "rollup": "^4.6.0"
   }
 }

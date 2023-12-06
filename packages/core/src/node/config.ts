@@ -1,5 +1,5 @@
-import path from 'path';
-import { promises as fs } from 'fs';
+import path from 'node:path';
+import { promises as fs } from 'node:fs';
 import {
   UserConfig, SSROptions, type PluginOption,
 } from 'vite';
@@ -155,7 +155,7 @@ export async function getViteClientConfig(appRoot: string): Promise<UserConfigVi
     },
     build: {
       sourcemap: true,
-      manifest: true,
+      manifest: false,
       ssrManifest: true,
       minify: 'terser',
       outDir: './dist/client',
