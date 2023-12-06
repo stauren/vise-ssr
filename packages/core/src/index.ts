@@ -85,6 +85,7 @@ export {
   getAppVisePath,
   mergeConfig,
   mergePartial,
+  getMerger,
 } from '@vise-ssr/shared';
 
 // utils 相关

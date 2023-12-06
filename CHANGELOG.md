@@ -1,10 +1,14 @@
+# [0.9.2](https://github.com/stauren/vise-ssr/tree/v0.9.2) (2023-12-06)
+### Features
+- Upgrade from Vite 4 to Vite 5
+- add `getMerger` method in `@vise-ssr/shared`
 # [0.9.1](https://github.com/stauren/vise-ssr/tree/v0.9.1) (2023-10-14)
 ### Features
 - Added HMR support for 'server-hooks.ts' related change
 - remove axios dependencies
 # [0.9.0](https://github.com/stauren/vise-ssr/tree/v0.9.0) (2023-10-12)
 ### Features
-- Upgrade from vite 3 to vite 4
+- Upgrade from Vite 3 to Vite 4
 - Use "@vitejs/plugin-react-swc" to replace "@vitejs/plugin-react"
 - Upgrade other npm package version
 - Added 'legacy' option in vise config;

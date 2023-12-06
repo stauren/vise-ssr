@@ -7,11 +7,29 @@ type MergeResult = {
   value: unknown,
 };
 
-type MergeMethod = (existing: unknown, newValue: unknown) => MergeResult;
+type MergeMethod = (existing: unknown, newValue: unknown, option: MergeOption) => MergeResult;
+
+type MergeOption = {
+  array: 'concat' | 'newer',
+  allowDupeInArray: boolean,
+  allowEmptyInArray: boolean,
+  emptyValue: 'prefer_newer' | 'prefer_valid', // empty means undefined or null
+  strictTypeMatch: boolean,
+};
+
+const DEFAULT_MERGE_OPTION: MergeOption = {
+  array: 'concat',
+  emptyValue: 'prefer_newer',
+  allowDupeInArray: false,
+  allowEmptyInArray: false,
+  strictTypeMatch: false,
+};
 
 const isObject = (value: unknown): value is object => Object.prototype.toString.call(value) === '[object Object]';
 
 const arraify = <T>(target: T | T[]): T[] => (Array.isArray(target) ? target : [target]);
+
+const isEmpty = (obj: unknown) => obj === undefined || obj === null;
 
 /**
  * mergeWith and pass are used by all merge methods
@@ -20,100 +38,109 @@ const arraify = <T>(target: T | T[]): T[] => (Array.isArray(target) ? target : [
 const mergeWith = (value: unknown): MergeResult => ({ value, merged: true });
 const passWith = (value: unknown): MergeResult => ({ value, merged: false });
 
-// if value of neither side is empty, use the other
-const simpleMerge: MergeMethod = (existing, newValue) => {
-  if (newValue === undefined) return mergeWith(existing);
-  if (existing === undefined) return mergeWith(newValue);
+// at least one of the value is empty
+const emptyMerge: MergeMethod = (existing, newValue, option) => {
+  if (isEmpty(newValue) || isEmpty(existing)) {
+    if (option.emptyValue === 'prefer_newer') {
+      return mergeWith(newValue);
+    }
+    if (isEmpty(newValue)) return mergeWith(existing);
+    if (isEmpty(existing)) return mergeWith(newValue);
+  }
+  return passWith(existing);
+};
+
+const filterArray = (array: unknown[], option: MergeOption) => {
+  let result = array;
+  if (!option.allowDupeInArray) {
+    result = [...new Set(array)];
+  }
+  if (!option.allowEmptyInArray) {
+    result = result.filter((o) => !isEmpty(o));
+  }
+  return result;
+};
+
+/**
+ * one of the value is an array
+ * 1. only one is an array, put the other into the array if it's not empty
+ * 2. both are arrays, concat or use newer
+ */
+const arrayMerge: MergeMethod = (existing, newValue, option) => {
+  const existingIsArray = Array.isArray(existing);
+  const newValueIsArray = Array.isArray(newValue);
+  if (existingIsArray || newValueIsArray) {
+    if (existingIsArray && newValueIsArray) {
+      if (option.array === 'newer') return mergeWith(filterArray(newValue, option));
+    }
+    return mergeWith(filterArray([...arraify(existing), ...arraify(newValue)], option));
+  }
   return passWith(existing);
 };
 
 /**
- * merge 2 array by concat them together
- * maybe need to support both array & non-array field
- * may need dedupe in the future
- */
-const arrayMerge: MergeMethod = (existing, newValue) => (
-  (Array.isArray(newValue) || Array.isArray(existing))
-    ? mergeWith([...arraify(existing), ...arraify(newValue)])
-    : passWith(existing)
-);
-
-/**
- * merge 2 array by using new array
- */
-const arrayOverwriteMerge: MergeMethod = (existing, newValue) => (
-  (Array.isArray(newValue) && Array.isArray(existing))
-    ? mergeWith(newValue)
-    : passWith(existing)
-);
-
-/**
- * if both values are object type, call mergeOneConfig recursively
- */
-const objectMerge: MergeMethod = (existing, newValue) => (
-  isObject(existing) && isObject(newValue)
-    // function mutually call each other scenario
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    ? mergeWith(mergeOneConfig(existing, newValue))
-    : passWith(existing)
-);
-
-/**
- * if both values are object type, call mergeOneConfig recursively
- */
-const objectMergeArrOverwrite: MergeMethod = (existing, newValue) => (
-  isObject(existing) && isObject(newValue)
-    // function mutually call each other scenario
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    ? mergeWith(mergeOneConfigArrOverwrite(existing, newValue))
-    : passWith(existing)
-);
-
-/**
+ * in strict mode
  * if 2 values have the same type (but not array and object)
  * use the new value to overwrite the existing one
+ * in non-strict mode: always use the newer value
  */
-const sameTypeMerge: MergeMethod = (existing, newValue) => (
-  typeof existing === typeof newValue
-    ? mergeWith(newValue)
-    : passWith(existing)
-);
+const primitiveMerge: MergeMethod = (existing, newValue, { strictTypeMatch }) => {
+  if (strictTypeMatch) {
+    if (typeof existing === typeof newValue) return mergeWith(newValue);
+    return passWith(existing);
+  }
+  return mergeWith(newValue);
+};
 
-const makeMerge = (methods: MergeMethod[]) => <T extends object>(
+const makeMergerWithMergeMethods = (
+  methods: MergeMethod[],
+  options: MergeOption,
+) => <T extends object>(
   defaults: T,
   override: DeepPartial<T>,
 ): T => (Object.keys(override) as Array<keyof DeepPartial<T>>)
-    .reduce((target, key) => ({
-      ...target,
+    .reduce((result, key) => ({
+      ...result,
       [key as keyof T]:
           // try all merge methods to merge a property
           methods
             .reduce<MergeResult>(
             (mergeResult, fn) => (mergeResult.merged ? mergeResult : fn(
-              target[key as keyof T],
+              result[key as keyof T],
               override[key],
+              options,
             )),
-            passWith(target[key as keyof T]),
+            passWith(result[key as keyof T]),
           ).value,
     }), defaults);
 
-const MERGE_METHODS = [
-  simpleMerge,
-  arrayMerge,
-  objectMerge,
-  sameTypeMerge,
-];
+const getMerger = (options: Partial<MergeOption> = {}) => {
+  const optionsWithDefault: MergeOption = { ...DEFAULT_MERGE_OPTION, ...options };
+  /**
+   * if both values are object type, call mergeOneConfig recursively
+   */
+  const objectMerge: MergeMethod = (existing, newValue) => (
+    isObject(existing) && isObject(newValue)
+      // function mutually call each other scenario
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      ? mergeWith(mergeOneConfig(existing, newValue))
+      : passWith(existing)
+  );
 
-const OVERWRITE_ARR_MERGE_METHODS = [
-  simpleMerge,
-  arrayOverwriteMerge,
-  objectMergeArrOverwrite,
-  sameTypeMerge,
-];
+  const mergeMethods = [
+    emptyMerge,
+    arrayMerge,
+    objectMerge,
+    primitiveMerge,
+  ];
 
-const mergeOneConfig = makeMerge(MERGE_METHODS);
+  const mergeOneConfig = makeMergerWithMergeMethods(mergeMethods, optionsWithDefault);
 
-const mergeOneConfigArrOverwrite = makeMerge(OVERWRITE_ARR_MERGE_METHODS);
+  return <T extends object>(
+    defaults: T,
+    ...overrides: Array<DeepPartial<T>>
+  ): T => overrides.reduce(mergeOneConfig, defaults);
+};
 
 /**
  * merge a config object with config fragments which are
@@ -121,23 +148,14 @@ const mergeOneConfigArrOverwrite = makeMerge(OVERWRITE_ARR_MERGE_METHODS);
  * a plugin who only care about their own aspect
  * multiple overrides object accepted
  */
-const mergeConfig = <T extends object>(
-  defaults: T,
-  ...overrides: Array<DeepPartial<T>>
-): T => overrides.reduce(mergeOneConfig, defaults);
+const mergeConfig = getMerger();
 
-/**
- * some as mergeConfig, but do now merge array
- * using the new array to replace old one
- */
-const mergePartial = <T extends object>(
-  defaults: T,
-  ...overrides: Array<DeepPartial<T>>
-): T => overrides.reduce(mergeOneConfigArrOverwrite, defaults);
+const mergePartial = getMerger({ array: 'newer' });
 
 export {
-  mergePartial,
+  getMerger,
   mergeConfig,
+  mergePartial,
 };
 
 export default mergeConfig;

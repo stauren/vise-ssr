@@ -20,7 +20,6 @@ const packagesDependCore = [
   './packages/react/template/base/package.json',
   './packages/plugins/vise-plugin-render-error/package.json',
   './packages/plugins/vise-plugin-half-ssr/package.json',
-  './packages/plugins/vise-plugin-foot-note/package.json',
   './packages/plugins/vise-plugin-ssr-render/package.json',
   './packages/express-server/package.json',
   './packages/app-vue3-intro/package.json',

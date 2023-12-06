@@ -75,18 +75,34 @@ describe('mergeConfig', () => {
       ssr: {
         target: 'node',
       },
+      viteConfig: {
+        build: {
+          minify: 'terser',
+        },
+      },
     };
 
     const newConfig: Partial<ViseConfig> = {
+      viteConfig: {
+        build: {
+          minify: false,
+        },
+      },
       ssr: {
-        format: 'esm',
+        target: 'webworker',
+        external: ['test'],
       },
     };
 
     const mergedConfig = {
       ssr: {
-        format: 'esm',
-        target: 'node',
+        target: 'webworker',
+        external: ['test'],
+      },
+      viteConfig: {
+        build: {
+          minify: false,
+        },
       },
     };
 
