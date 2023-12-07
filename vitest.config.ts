@@ -15,12 +15,12 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': resolve(DIR_NAME, './packages/app-vue3-intro/src'),
+      '@': resolve(DIR_NAME, './playground/app-vue3-intro/src'),
     },
   },
   test: {
-    include: ['./packages/**/*.spec.[tj]s'],
-    exclude: ['./packages/vue3/template', './packages/react/template', './packages/**/node_modules'],
+    include: ['./packages/**/*.spec.[tj]s', './playground/**/*.spec.[tj]s'],
+    exclude: ['./packages/vue3/template', './packages/react/template', './packages/**/node_modules', './playground/**/node_modules'],
     setupFiles: [],
     globalSetup: [],
     testTimeout: timeout,
@@ -29,6 +29,6 @@ export default defineConfig({
     environment: 'jsdom',
   },
   esbuild: {
-    target: 'node16',
+    target: 'node18',
   },
 });

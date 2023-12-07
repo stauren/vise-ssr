@@ -18,8 +18,8 @@ CHANGELOG: [CHANGELOG](https://github.com/stauren/vise-ssr/blob/main/CHANGELOG.m
 Download from npm: [vise-ssr](https://www.npmjs.com/package/vise-ssr)
 
 # Design
-![Vise SSR framework 整体设计](https://cdn.rawgit.com/stauren/vise-ssr/main/packages/app-vue3-intro/public/images/ssr.drawio.png)
-![Vise Hooks](https://cdn.rawgit.com/stauren/vise-ssr/main/packages/app-vue3-intro/public/images/tapable-hooks.png)
-![Data Flow](https://cdn.rawgit.com/stauren/vise-ssr/main/packages/app-vue3-intro/public/images/data-flow.png)
-![Render Process](https://cdn.rawgit.com/stauren/vise-ssr/main/packages/app-vue3-intro/public/images/render-process.png)
-![SSR Cache](https://cdn.rawgit.com/stauren/vise-ssr/main/packages/app-vue3-intro/public/images/ssr-cache.png)
+![Vise SSR framework 整体设计](https://cdn.rawgit.com/stauren/vise-ssr/main/playground/app-vue3-intro/public/images/ssr.drawio.png)
+![Vise Hooks](https://cdn.rawgit.com/stauren/vise-ssr/main/playground/app-vue3-intro/public/images/tapable-hooks.png)
+![Data Flow](https://cdn.rawgit.com/stauren/vise-ssr/main/playground/app-vue3-intro/public/images/data-flow.png)
+![Render Process](https://cdn.rawgit.com/stauren/vise-ssr/main/playground/app-vue3-intro/public/images/render-process.png)
+![SSR Cache](https://cdn.rawgit.com/stauren/vise-ssr/main/playground/app-vue3-intro/public/images/ssr-cache.png)

@@ -85,7 +85,7 @@ importers:
         version: 4.6.4
       vite:
         specifier: ^5.0.4
-        version: 5.0.4(@types/node@18.11.13)(terser@5.16.1)
+        version: 5.0.4(@types/node@18.11.13)(sass@1.56.2)
       vitest:
         specifier: ^0.34.6
         version: 0.34.6(jsdom@20.0.3)
@@ -95,110 +95,6 @@ importers:
       zx:
         specifier: ^7.0.0
         version: 7.1.1
-
-  packages/app-react-intro:
-    dependencies:
-      '@reduxjs/toolkit':
-        specifier: ^1.8.2
-        version: 1.9.1(react-redux@8.0.5)(react@18.2.0)
-      cookie:
-        specifier: ^0.4.1
-        version: 0.4.2
-      react:
-        specifier: ^18.2.0
-        version: 18.2.0
-      react-dom:
-        specifier: ^18.0.2
-        version: 18.2.0(react@18.2.0)
-      react-redux:
-        specifier: ^8.0.2
-        version: 8.0.5(@types/react-dom@18.2.13)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)(redux@4.2.0)
-      react-router-dom:
-        specifier: ^6.3.0
-        version: 6.4.5(react-dom@18.2.0)(react@18.2.0)
-      sass:
-        specifier: ^1.50.1
-        version: 1.56.2
-      vise-ssr:
-        specifier: workspace:*
-        version: link:../core
-    devDependencies:
-      '@types/cookie':
-        specifier: ^0.4.1
-        version: 0.4.1
-      '@types/react':
-        specifier: ^18.0.2
-        version: 18.2.28
-      '@types/react-router-dom':
-        specifier: ^5.3.3
-        version: 5.3.3
-      '@vise-ssr/react':
-        specifier: workspace:*
-        version: link:../react
-      rollup:
-        specifier: ^4.6.0
-        version: 4.6.0
-
-  packages/app-vue3-intro:
-    dependencies:
-      cookie:
-        specifier: ^0.4.1
-        version: 0.4.2
-      highlight.js:
-        specifier: ^11.2.0
-        version: 11.7.0
-      markdown-it:
-        specifier: ^13.0.2
-        version: 13.0.2
-      markdown-it-anchor:
-        specifier: ^8.3.1
-        version: 8.6.5(@types/markdown-it@12.2.3)(markdown-it@13.0.2)
-      markdown-it-toc-done-right:
-        specifier: ^4.2.0
-        version: 4.2.0
-      postcss-px-to-viewport:
-        specifier: ^1.1.1
-        version: 1.1.1
-      sass:
-        specifier: ^1.50.1
-        version: 1.56.2
-      vise-ssr:
-        specifier: workspace:*
-        version: link:../core
-      vue:
-        specifier: ^3.3.4
-        version: 3.3.4
-      vue-router:
-        specifier: ^4.1.6
-        version: 4.1.6(vue@3.3.4)
-      vuex:
-        specifier: ^4.0.2
-        version: 4.1.0(vue@3.3.4)
-    devDependencies:
-      '@types/cookie':
-        specifier: ^0.4.1
-        version: 0.4.1
-      '@types/markdown-it':
-        specifier: ^12.2.3
-        version: 12.2.3
-      '@vue/test-utils':
-        specifier: ^2.0.0
-        version: 2.2.6(vue@3.3.4)
-      eslint:
-        specifier: ^8.29.0
-        version: 8.29.0
-      rollup:
-        specifier: ^4.6.0
-        version: 4.6.0
-      vite:
-        specifier: ^5.0.4
-        version: 5.0.4(@types/node@18.11.13)(sass@1.56.2)
-      vitest:
-        specifier: ^0.34.6
-        version: 0.34.6(jsdom@20.0.3)(sass@1.56.2)
-      zx:
-        specifier: ^6.0.7
-        version: 6.2.5
 
   packages/core:
     dependencies:
@@ -428,7 +324,7 @@ importers:
         version: link:../core
       vite:
         specifier: ^5.0.4
-        version: 5.0.4(@types/node@18.11.13)(terser@5.16.1)
+        version: 5.0.4(@types/node@18.11.13)(sass@1.56.2)
       zx:
         specifier: ^6.0.7
         version: 6.2.5
@@ -489,7 +385,7 @@ importers:
         version: link:../core
       vite:
         specifier: ^5.0.4
-        version: 5.0.4(@types/node@18.11.13)(terser@5.16.1)
+        version: 5.0.4(@types/node@18.11.13)(sass@1.56.2)
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^25.0.7
@@ -599,7 +495,111 @@ importers:
         version: 4.6.4
       vite:
         specifier: ^5.0.4
-        version: 5.0.4(@types/node@18.11.13)(terser@5.16.1)
+        version: 5.0.4(@types/node@18.11.13)(sass@1.56.2)
+
+  playground/app-react-intro:
+    dependencies:
+      '@reduxjs/toolkit':
+        specifier: ^1.8.2
+        version: 1.9.1(react-redux@8.0.5)(react@18.2.0)
+      cookie:
+        specifier: ^0.4.1
+        version: 0.4.2
+      react:
+        specifier: ^18.2.0
+        version: 18.2.0
+      react-dom:
+        specifier: ^18.0.2
+        version: 18.2.0(react@18.2.0)
+      react-redux:
+        specifier: ^8.0.2
+        version: 8.0.5(@types/react-dom@18.2.13)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)(redux@4.2.0)
+      react-router-dom:
+        specifier: ^6.3.0
+        version: 6.4.5(react-dom@18.2.0)(react@18.2.0)
+      sass:
+        specifier: ^1.50.1
+        version: 1.56.2
+      vise-ssr:
+        specifier: workspace:*
+        version: link:../../packages/core
+    devDependencies:
+      '@types/cookie':
+        specifier: ^0.4.1
+        version: 0.4.1
+      '@types/react':
+        specifier: ^18.0.2
+        version: 18.2.28
+      '@types/react-router-dom':
+        specifier: ^5.3.3
+        version: 5.3.3
+      '@vise-ssr/react':
+        specifier: workspace:*
+        version: link:../../packages/react
+      rollup:
+        specifier: ^4.6.0
+        version: 4.6.0
+
+  playground/app-vue3-intro:
+    dependencies:
+      cookie:
+        specifier: ^0.4.1
+        version: 0.4.2
+      highlight.js:
+        specifier: ^11.2.0
+        version: 11.7.0
+      markdown-it:
+        specifier: ^13.0.2
+        version: 13.0.2
+      markdown-it-anchor:
+        specifier: ^8.3.1
+        version: 8.6.5(@types/markdown-it@12.2.3)(markdown-it@13.0.2)
+      markdown-it-toc-done-right:
+        specifier: ^4.2.0
+        version: 4.2.0
+      postcss-px-to-viewport:
+        specifier: ^1.1.1
+        version: 1.1.1
+      sass:
+        specifier: ^1.50.1
+        version: 1.56.2
+      vise-ssr:
+        specifier: workspace:*
+        version: link:../../packages/core
+      vue:
+        specifier: ^3.3.4
+        version: 3.3.4
+      vue-router:
+        specifier: ^4.1.6
+        version: 4.1.6(vue@3.3.4)
+      vuex:
+        specifier: ^4.0.2
+        version: 4.1.0(vue@3.3.4)
+    devDependencies:
+      '@types/cookie':
+        specifier: ^0.4.1
+        version: 0.4.1
+      '@types/markdown-it':
+        specifier: ^12.2.3
+        version: 12.2.3
+      '@vue/test-utils':
+        specifier: ^2.0.0
+        version: 2.2.6(vue@3.3.4)
+      eslint:
+        specifier: ^8.29.0
+        version: 8.29.0
+      rollup:
+        specifier: ^4.6.0
+        version: 4.6.0
+      vite:
+        specifier: ^5.0.4
+        version: 5.0.4(@types/node@18.11.13)(sass@1.56.2)
+      vitest:
+        specifier: ^0.34.6
+        version: 0.34.6(jsdom@20.0.3)(sass@1.56.2)
+      zx:
+        specifier: ^6.0.7
+        version: 6.2.5
 
 packages:
 
@@ -2193,6 +2193,7 @@ packages:
     dependencies:
       '@jridgewell/gen-mapping': 0.3.2
       '@jridgewell/trace-mapping': 0.3.17
+    dev: false
 
   /@jridgewell/source-map@0.3.5:
     resolution: {integrity: sha512-UTYAUj/wviwdsMfzoSJspJxbkH5o1snzwX0//0ENX1u/55kkZZkcTZP6u9bwKGkv+dkk9at4m1Cpt0uY80kcpQ==}
@@ -2384,7 +2385,6 @@ packages:
     resolution: {integrity: sha512-Ed8uJI3kM11de9S0j67wAV07JUNhbAqIrDYhQBrQW42jGopgheyk/cdcshgGO4fW5Wjq97COCY/BHogdGvKVNQ==}
     cpu: [arm64]
     os: [linux]
-    libc: [glibc]
     requiresBuild: true
     optional: true
 
@@ -2392,7 +2392,6 @@ packages:
     resolution: {integrity: sha512-mZoNQ/qK4D7SSY8v6kEsAAyDgznzLLuSFCA3aBHZTmf3HP/dW4tNLTtWh9+LfyO0Z1aUn+ecpT7IQ3WtIg3ViQ==}
     cpu: [arm64]
     os: [linux]
-    libc: [musl]
     requiresBuild: true
     optional: true
 
@@ -2400,7 +2399,6 @@ packages:
     resolution: {integrity: sha512-rouezFHpwCqdEXsqAfNsTgSWO0FoZ5hKv5p+TGO5KFhyN/dvYXNMqMolOb8BkyKcPqjYRBeT+Z6V3aM26rPaYg==}
     cpu: [x64]
     os: [linux]
-    libc: [glibc]
     requiresBuild: true
     optional: true
 
@@ -2408,7 +2406,6 @@ packages:
     resolution: {integrity: sha512-Bbm+fyn3S6u51urfj3YnqBXg5vI2jQPncRRELaucmhBVyZkbWClQ1fEsRmdnCPpQOQfkpg9gZArvtMVkOMsh1w==}
     cpu: [x64]
     os: [linux]
-    libc: [musl]
     requiresBuild: true
     optional: true
 
@@ -2926,7 +2923,7 @@ packages:
       vite: ^4 || ^5
     dependencies:
       '@swc/core': 1.3.100
-      vite: 5.0.4(@types/node@18.11.13)(terser@5.16.1)
+      vite: 5.0.4(@types/node@18.11.13)(sass@1.56.2)
     transitivePeerDependencies:
       - '@swc/helpers'
     dev: false
@@ -2938,7 +2935,7 @@ packages:
       vite: ^4.0.0 || ^5.0.0
       vue: ^3.2.25
     dependencies:
-      vite: 5.0.4(@types/node@18.11.13)(terser@5.16.1)
+      vite: 5.0.4(@types/node@18.11.13)(sass@1.56.2)
       vue: 3.3.4
 
   /@vitest/expect@0.34.6:
@@ -5657,7 +5654,6 @@ packages:
     engines: {node: '>=12'}
     dependencies:
       '@jridgewell/sourcemap-codec': 1.4.15
-    dev: false
 
   /make-error@1.3.6:
     resolution: {integrity: sha512-s8UhlNe7vPKomQhC1qFelMokr/Sc3AgNbso3n74mVPA5LTZwkB9NlXf4XPamLxJE8h0gh73rM94xvwRT2CVInw==}
@@ -7117,6 +7113,7 @@ packages:
       acorn: 8.8.1
       commander: 2.20.3
       source-map-support: 0.5.21
+    dev: false
 
   /terser@5.21.0:
     resolution: {integrity: sha512-WtnFKrxu9kaoXuiZFSGrcAvvBqAdmKx0SFNmVNYdJamMu9yyN3I/QF0FbH4QcqJQ+y1CJnzxGIKH0cSj+FGYRw==}
@@ -7405,7 +7402,7 @@ packages:
       mlly: 1.4.2
       pathe: 1.1.1
       picocolors: 1.0.0
-      vite: 5.0.4(@types/node@18.11.13)(terser@5.16.1)
+      vite: 5.0.4(@types/node@18.11.13)(sass@1.56.2)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -7496,7 +7493,6 @@ packages:
       sass: 1.56.2
     optionalDependencies:
       fsevents: 2.3.3
-    dev: true
 
   /vite@5.0.4(@types/node@18.11.13)(terser@5.16.1):
     resolution: {integrity: sha512-RzAr8LSvM8lmhB4tQ5OPcBhpjOZRZjuxv9zO5UcxeoY2bd3kP3Ticd40Qma9/BqZ8JS96Ll/jeBX9u+LJZrhVg==}
@@ -7533,6 +7529,7 @@ packages:
       terser: 5.16.1
     optionalDependencies:
       fsevents: 2.3.3
+    dev: false
 
   /vitest@0.34.6(jsdom@20.0.3):
     resolution: {integrity: sha512-+5CALsOvbNKnS+ZHMXtuUC7nL8/7F1F2DnHGjSsszX8zCjWSSviphCb/NuS9Nzf4Q03KyyDRBAXhF/8lffME4Q==}
@@ -7580,14 +7577,14 @@ packages:
       debug: 4.3.4
       jsdom: 20.0.3
       local-pkg: 0.4.3
-      magic-string: 0.30.4
+      magic-string: 0.30.5
       pathe: 1.1.1
       picocolors: 1.0.0
       std-env: 3.5.0
       strip-literal: 1.3.0
       tinybench: 2.5.1
       tinypool: 0.7.0
-      vite: 5.0.4(@types/node@18.11.13)(terser@5.16.1)
+      vite: 5.0.4(@types/node@18.11.13)(sass@1.56.2)
       vite-node: 0.34.6(@types/node@18.11.13)
       why-is-node-running: 2.2.2
     transitivePeerDependencies:
@@ -7646,7 +7643,7 @@ packages:
       debug: 4.3.4
       jsdom: 20.0.3
       local-pkg: 0.4.3
-      magic-string: 0.30.4
+      magic-string: 0.30.5
       pathe: 1.1.1
       picocolors: 1.0.0
       std-env: 3.5.0

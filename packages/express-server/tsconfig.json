@@ -9,6 +9,7 @@
   },
   "include": [
     "rollup.config.js",
+    "pm2.config.cjs",
     "src/**/*.ts"
   ],
   "exclude": [

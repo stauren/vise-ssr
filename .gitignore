@@ -12,9 +12,9 @@ packages/express-server/bundle
 packages/express-server/bundles
 packages/express-server/public
 packages/**/stats.html
-packages/**/client-stats.html
-packages/**/server-stats.html
-packages/**/hooks-stats.html
+playground/**/client-stats.html
+playground/**/server-stats.html
+playground/**/hooks-stats.html
 /coverage/
 /result.json
 packages/**/coverage

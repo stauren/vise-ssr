@@ -17,27 +17,21 @@
     },
     "rootDirs": [
       "packages/core",
-      "packages/app-vue3-intro",
-      "packages/app-react-intro",
+      "packages/shared",
+      "packages/vue3",
+      "packages/react",
       "packages/express-server",
-      "packages/vite-plugin-visecss"
+      "playground/app-vue3-intro",
+      "playground/app-react-intro"
     ]
   },
   "include": [
-    "packages/**/src/**/*.ts",
-    "packages/**/src/**/*.vue",
-    "packages/**/src/**/*.d.ts",
-    "packages/**/vise-config/**/*.ts",
-    "packages/**/vise-config/**/*.d.ts",
-    "packages/**/types/**/*.d.ts",
-    "packages/**/pm2.config.cjs",
-    "packages/**/vise.config.ts",
-    "packages/**/generate-cache-key.ts",
+    "packages/**/src/**/*",
+    "packages/**/types/**/*",
     "packages/**/rollup.config.js",
-    "packages/**/.eslintrc.cjs",
     "packages/**/scripts/*.js",
-    "packages/**/src/**/*.tsx",
-    "scripts/*.mjs",
+    "playground/**/src/**/*",
+    "scripts/*",
     "vitest.config.ts",
     ".eslintrc.js"
   ],
