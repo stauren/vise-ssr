@@ -14,6 +14,6 @@ Full Documentation: [https://stauren.github.io/vise-ssr/](https://stauren.github
 Download from npm: [vise-ssr](https://www.npmjs.com/package/vise-ssr)
 
 # Design
-![Vise SSR framework](https://cdn.rawgit.com/stauren/vise-ssr/main/packages/app-vue3-intro/public/images/ssr.drawio.png)
+![Vise SSR framework](./docs/images/ssr.drawio.png)
 
 [vite]: <https://vitejs.dev/>

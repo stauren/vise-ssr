@@ -18,7 +18,7 @@ export const DEFAULT_VISE_CONFIG: ParsedViseConfig = {
   base: '/',
   strictInitState: true,
   defaultTitle: 'Vise Powered App',
-  faviconLink: 'https://cdn.rawgit.com/stauren/vise-ssr/main/packages/app-vue3-intro/public/logo.svg',
+  faviconLink: 'https://cdn.rawgit.com/stauren/vise-ssr/main/playground/app-vue3-intro/public/logo.svg',
   useFlexible: false,
   customTemplate: '',
   viteConfig: {},

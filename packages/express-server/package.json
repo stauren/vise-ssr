@@ -17,7 +17,7 @@
     "build": "rollup -c ./rollup.config.js",
     "clean": "rimraf ./dist ./client",
     "lint": "eslint --ext .ts,.js,.vue ./src",
-    "benchmark": "./bin/vise-express.js start -r 100 -c false ../app-vue3-intro",
+    "benchmark": "./bin/vise-express.js start -r 100 -c false ../../playground/app-vue3-intro",
     "serve": "rimraf ./client/client/*.html && cross-env NODE_ENV=production node ./dist/index.js start"
   },
   "dependencies": {

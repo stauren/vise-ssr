@@ -11,10 +11,10 @@ module.exports = {
   parserOptions: {
     parser: '@typescript-eslint/parser',
     tsconfigRootDir: __dirname,
-    project: ['./tsconfig.json', './packages/**/tsconfig.json'],
+    project: ['./tsconfig.json', './packages/**/tsconfig.json', './playground/**/tsconfig.json'],
     sourceType: 'module',
     ecmaVersion: 'latest',
-    extraFileExtensions: ['.vue', '.cjs', '.mjs'],
+    extraFileExtensions: ['.vue'],
   },
   extends: [
     'airbnb',

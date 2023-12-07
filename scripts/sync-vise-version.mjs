@@ -22,8 +22,8 @@ const packagesDependCore = [
   './packages/plugins/vise-plugin-half-ssr/package.json',
   './packages/plugins/vise-plugin-ssr-render/package.json',
   './packages/express-server/package.json',
-  './packages/app-vue3-intro/package.json',
-  './packages/app-react-intro/package.json',
+  './playground/app-vue3-intro/package.json',
+  './playground/app-react-intro/package.json',
 ];
 
 async function getCoreVersion() {

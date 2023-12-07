@@ -8,6 +8,6 @@ Vise 是一个 Web 同构 SSR 开发框架，包含项目创建、开发、打�
 下载 npm 包：[vise-ssr](https://www.npmjs.com/package/vise-ssr)
 
 # 整体设计
-![Vise SSR framework](https://cdn.rawgit.com/stauren/vise-ssr/main/packages/app-vue3-intro/public/images/ssr.drawio.png)
+![Vise SSR framework](./docs/images/ssr.drawio.png)
 
 [vite]: <https://vitejs.dev/>

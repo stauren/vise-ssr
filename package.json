@@ -20,7 +20,8 @@
   "license": "MIT",
   "workspaces": [
     "packages/*",
-    "packages/plugins/*"
+    "packages/plugins/*",
+    "playground/*"
   ],
   "engines": {
     "node": ">=18.0.0"

@@ -24,6 +24,7 @@
   "include": [
     "src",
     "types",
-    ".eslint.cjs"
+    "vise.config.ts",
+    ".eslintrc.cjs"
   ],
 }
